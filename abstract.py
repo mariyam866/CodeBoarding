@@ -1,14 +1,22 @@
-from google import genai
 import os
 import re
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
 
-api_key = "AIzaSyCrQcAiL9IJA5GQQ4R6WEzcUr6G77E_h7Y"
-client = genai.Client(api_key=api_key)
+load_dotenv()
+api_key = os.getenv("API_KEY")
 
-response = client.models.generate_content(
-    model="gemini-2.0-flash", contents="Explain how AI works in a few words"
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.0-flash-001",
+    temperature=0,
+    max_tokens=None,
+    timeout=None,
+    max_retries=2,
+    google_api_key=api_key,
 )
-print(response)
+
+response = llm.invoke("Explain how AI works in a few words")
+print(response["content"])
 
 ENTRYPOINT_PATTERNS = {
     "main_block": re.compile(r'if\s+__name__\s*==\s*[\'"]__main__[\'"]'),
