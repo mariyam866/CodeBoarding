@@ -1,32 +1,150 @@
-from agent import AbstractionAgent, Component
-from static_analyzer import Analyzer
+import os
+import shutil
+import logging
+from pathlib import Path
+from dotenv import load_dotenv
+from git import Repo
+from tqdm import tqdm
+from utils import caching_enabled
+from agents.abstraction_agent import AbstractionAgent
+from agents.details_agent import DetailsAgent
+from agents.markdown_enhancement import MarkdownEnhancer
+from agents.tools.utils import clean_dot_file_str
+from static_analyzer.pylint_analyze.call_graph_builder import CallGraphBuilder
+from static_analyzer.pylint_analyze.structure_graph_builder import StructureGraphBuilder
+from static_analyzer.pylint_graph_transform import DotGraphTransformer
+from logging_config import setup_logging
+
+def generate_on_boarding_documentation(repo_location: Path):
+    dot_suffix = 'structure.dot'
+    graph_builder = StructureGraphBuilder(repo_location, dot_suffix, verbose=True)
+    graph_builder.build()
+    # Now I have to find and collect the _structure.dot files
+    # Scan the current directory for files which end on dot_suffix
+    structures = []
+    for path in Path('.').rglob(f'*{dot_suffix}'):
+        with open(path, 'r') as f:
+            structures.append((path.name.split(dot_suffix)[0], f.read()))
+
+    builder = CallGraphBuilder(repo_location, max_depth=15, verbose=True)
+    builder.build()
+    builder.write_dot('./call_graph.dot')
+    # Now transform the call_graph
+    call_graph_str = DotGraphTransformer('./call_graph.dot', repo_location).transform()
+    call_graph_str = clean_dot_file_str(call_graph_str)
+    packages = []
+    for path in Path('.').rglob(f'packages_*.dot'):
+        with open(path, 'r') as f:
+            # The file name is the package name
+            package_name = path.name.split('_')[1].split('.dot')[0]
+            packages.append((package_name, f.read()))
+    return structures, packages, call_graph_str
 
 
-def main():
-    code = """from markitdown import MarkItDown
+def clean_files(directory):
+    # delete all the .dot files in the directory
+    for f in os.listdir(directory):
+        if f.endswith('.dot'):
+            os.remove(os.path.join(directory, f))
+        if f.endswith('.md') and f != "README.md":
+            os.remove(os.path.join(directory, f))
+    logger.info("Cleaned up old .dot and .md files in %s", directory)
 
-md = MarkItDown(enable_plugins=False) # Set to True to enable plugins
-result = md.convert("./resources/test.xlsx")
-"""
-    stat_analyzer = Analyzer(module_name='markitdown', code=code)
-    cfg_str, groups, nodes, edges = stat_analyzer.analyze()
 
-    agent = AbstractionAgent("MarkItDown")
-    abstract_modules = agent.get_interesting_modules(cfg_str)
-    mermaid_str = "```mermaid\nflowchart LR\n"
-    modules = abstract_modules['interesting_modules']
-    for id in range(len(modules) - 1):
-        # For now I will just do a naive diagram generation
-        node, next_node = modules[id], modules[id + 1]
-        node, next_node = Component.model_validate(node), Component.model_validate(next_node)
-        descr = node.description.replace("(", "").replace(")", "")
-        next_descr = next_node.description.replace("(", "").replace(")", "")
-        mm_string = f"    {node.name}[<b>{node.name}</b><br><i>{descr}</i>] -- {node.communication} --> {next_node.name}[<b>{next_node.name}</b><br><i>{next_descr}</i>]\n"
-        mermaid_str += mm_string
-    mermaid_str += '```'
-    with open("markitdown_diagram.md", "w") as f:
-        f.write(mermaid_str)
+def onboarding_materials_exist(project_name, source_dir="/home/ivan/StartUp/GeneratedOnBoardings/"):
+    repo = Repo(source_dir)
+    origin = repo.remote(name='origin')
+    origin.pull()
 
+    onboarding_repo_path = os.path.join(source_dir, project_name)
+    return os.path.isdir(onboarding_repo_path) and len(os.listdir(onboarding_repo_path))
+
+
+def upload_onboarding_materials(project_name, repo_dir="/home/ivan/StartUp/GeneratedOnBoardings/"):
+    repo = Repo(repo_dir)
+    origin = repo.remote(name='origin')
+    origin.pull()
+
+    onboarding_repo_location = os.path.join(repo_dir, project_name)
+    if os.path.exists(onboarding_repo_location):
+        shutil.rmtree(onboarding_repo_location)
+    os.makedirs(onboarding_repo_location)
+
+    for filename in os.listdir("./"):
+        if filename.endswith('.md') and filename != "README.md":
+            shutil.copy(filename, os.path.join(onboarding_repo_location, filename))
+    # Now commit the changes
+    repo.git.add(A=True)  # Equivalent to `git add .`
+    repo.index.commit(f"Uploading onboarding materials for {project_name}")
+    origin.push()
+
+
+def main(repo_name):
+    load_dotenv()
+    ROOT = os.getenv("ROOT")
+    ROOT_RESULT = os.getenv("ROOT_RESULT")
+    repo_dir = Path(ROOT) / 'repos' / repo_name
+
+    if caching_enabled() and onboarding_materials_exist(repo_name, ROOT_RESULT):
+        logging.info(f"Cache hit for '{repo_name}', skipping documentation generation.")
+        return
+
+    structures, packages, call_graph_str = generate_on_boarding_documentation(repo_dir)
+    abstraction_agent = AbstractionAgent(ROOT, repo_dir, repo_name)
+    abstraction_agent.step_cfg(call_graph_str)
+    abstraction_agent.step_source()
+
+    final_response = abstraction_agent.generate_markdown()
+    with open("on_boarding.md", "w") as f:
+        f.write(final_response.content.strip())
+
+    details_agent = DetailsAgent(ROOT, repo_dir, repo_name)
+    for component in tqdm(final_response.components, desc="Analyzing details"):
+        # Here I want to filter out based on the qualified names:
+        if details_agent.step_subcfg(call_graph_str, component) is None:
+            logging.info(f"[Details Agent - ERROR] Failed to analyze subcfg for {component.name}")
+            continue
+        details_agent.step_cfg(component)
+        details_agent.step_enhance_structure(component)
+        details_results = details_agent.step_markdown(component)
+        if type(details_results) is str:
+            content = details_results
+        else:
+            content = details_results.content
+        if "/" in component.name:
+            component.name = component.name.replace("/", "-")
+        with open(f"{component.name}.md", "w") as f:
+            f.write(content)
+
+    # Upload the onboarding materials to the repo
+
+    # Final touches:
+    md_enhancer = MarkdownEnhancer()
+    current_files = os.listdir("./")
+    for file in tqdm(current_files, desc="Enhancing the markdown files"):
+        if file.endswith('.md') and file != "README.md":
+            with open(file, 'r') as f:
+                content = f.read()
+            # content = md_enhancer.fix_diagram(content)
+            if file.endswith("on_boarding.md"):
+                content = md_enhancer.link_components(content, repo_name, current_files)
+                with open(file, 'w') as f:
+                    f.write(content)
+
+    upload_onboarding_materials(repo_name, ROOT_RESULT)
+
+
+def generate_docs(repo_name):
+    clean_files(Path('./'))
+    main(repo_name)
+
+def clone_repository(repo_url: str):
+    pass
 
 if __name__ == "__main__":
-    main()
+    setup_logging()
+    logger = logging.getLogger(__name__)
+    logger.info("Starting up…")
+    repos = ["markitdown"]
+    for repo in tqdm(repos, desc="Generating docs for repos"):
+        generate_docs(repo)
