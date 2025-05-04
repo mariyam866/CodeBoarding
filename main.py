@@ -14,6 +14,26 @@ from static_analyzer.pylint_analyze.call_graph_builder import CallGraphBuilder
 from static_analyzer.pylint_analyze.structure_graph_builder import StructureGraphBuilder
 from static_analyzer.pylint_graph_transform import DotGraphTransformer
 from logging_config import setup_logging
+from utils import remote_repo_exists, RepoDontExistError, sanitize_repo_url, NoGithubTokenFoundError
+import subprocess
+from opencensus.ext.azure.log_exporter import AzureLogHandler
+
+setup_logging()
+logger = logging.getLogger(__name__)
+#logger.addHandler(AzureLogHandler(connection_string=os.environ["CONNECTION_STRING"]))
+
+def store_token():
+    if os.environ['GITHUB_TOKEN']:
+        raise NoGithubTokenFoundError()
+    logging.info(f"Setting up credentials with token: {os.environ['GITHUB_TOKEN'][:7]}") # only first 7 for safety
+    cred = (
+        "protocol=https\n"
+        "host=github.com\n"
+        f"username=git\n"
+        f"password={os.environ['GITHUB_TOKEN']}\n"
+        "\n"
+    ).encode()
+    subprocess.run(["git", "credential", "approve"], input=cred)
 
 def generate_on_boarding_documentation(repo_location: Path):
     dot_suffix = 'structure.dot'
@@ -48,7 +68,7 @@ def clean_files(directory):
             os.remove(os.path.join(directory, f))
         if f.endswith('.md') and f != "README.md":
             os.remove(os.path.join(directory, f))
-    logger.info("Cleaned up old .dot and .md files in %s", directory)
+    logging.info("Cleaned up old .dot and .md files in %s", directory)
 
 
 def onboarding_materials_exist(project_name, source_dir="/home/ivan/StartUp/GeneratedOnBoardings/"):
@@ -79,18 +99,20 @@ def upload_onboarding_materials(project_name, repo_dir="/home/ivan/StartUp/Gener
     origin.push()
 
 
-def main(repo_name):
+def generate_docs(repo_name):
+    clean_files(Path('./'))
     load_dotenv()
     ROOT = os.getenv("ROOT")
     ROOT_RESULT = os.getenv("ROOT_RESULT")
-    repo_dir = Path(ROOT) / 'repos' / repo_name
+    repo_path = Path(ROOT) / 'repos' / repo_name
+    repo_folder = Path(ROOT) / 'repos'
 
     if caching_enabled() and onboarding_materials_exist(repo_name, ROOT_RESULT):
         logging.info(f"Cache hit for '{repo_name}', skipping documentation generation.")
         return
 
-    structures, packages, call_graph_str = generate_on_boarding_documentation(repo_dir)
-    abstraction_agent = AbstractionAgent(ROOT, repo_dir, repo_name)
+    structures, packages, call_graph_str = generate_on_boarding_documentation(repo_path)
+    abstraction_agent = AbstractionAgent(ROOT, repo_folder, repo_name)
     abstraction_agent.step_cfg(call_graph_str)
     abstraction_agent.step_source()
 
@@ -98,7 +120,7 @@ def main(repo_name):
     with open("on_boarding.md", "w") as f:
         f.write(final_response.content.strip())
 
-    details_agent = DetailsAgent(ROOT, repo_dir, repo_name)
+    details_agent = DetailsAgent(ROOT, repo_path, repo_name)
     for component in tqdm(final_response.components, desc="Analyzing details"):
         # Here I want to filter out based on the qualified names:
         if details_agent.step_subcfg(call_graph_str, component) is None:
@@ -134,17 +156,42 @@ def main(repo_name):
     upload_onboarding_materials(repo_name, ROOT_RESULT)
 
 
-def generate_docs(repo_name):
-    clean_files(Path('./'))
-    main(repo_name)
+def generate_docs_remote(repo_url: str, local_dev=False) -> Path:
+    """
+    Clone a git repo to target_dir/<repo-name>.
+    Returns the Path to the cloned repository.
+    """
+    if not local_dev:
+        store_token()
+    repo_name = clone_repository(repo_url)
+    generate_docs(repo_name)
+    return repo_name
 
-def clone_repository(repo_url: str):
-    pass
+
+def clone_repository(repo_url: str, target_dir: Path = Path("./repos")):
+    repo_url = sanitize_repo_url(repo_url)
+    if not remote_repo_exists(repo_url):
+        raise RepoDontExistError()
+    # 1) sanitize URL
+    # 2) derive repo name without the .git suffix
+    base = repo_url.rstrip("/").split("/")[-1]  # e.g. "markitdown.git"
+    name, ext = os.path.splitext(base)         # ("markitdown", ".git")
+    repo_name = name
+
+    dest = target_dir / repo_name
+    if dest.exists():
+        logging.info(f"Repository {repo_name} already exists at {dest}, pulling latest.")
+        repo = Repo(dest)
+        repo.remotes.origin.pull()
+    else:
+        logging.info(f"Cloning {repo_url} into {dest}")
+        repo = Repo.clone_from(repo_url, dest)
+    logging.info("Cloning finished!")
+    return repo_name
 
 if __name__ == "__main__":
     setup_logging()
-    logger = logging.getLogger(__name__)
-    logger.info("Starting up…")
-    repos = ["markitdown"]
+    logging.info("Starting up…")
+    repos = ["https://github.com/t-dillon/tdoku"]
     for repo in tqdm(repos, desc="Generating docs for repos"):
-        generate_docs(repo)
+        generate_docs_remote(repo)

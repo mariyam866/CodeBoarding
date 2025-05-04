@@ -15,7 +15,7 @@ def setup_logging(
       - Rotating file handler at DEBUG level writing into logs/app.log
     """
     if not os.path.exists("logs"):
-        raise Exception("Logs directory not found!")
+        os.makedirs("logs", exist_ok=True)
     log_path = Path("logs") / log_filename
 
     config = {

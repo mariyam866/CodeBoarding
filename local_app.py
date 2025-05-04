@@ -1,0 +1,77 @@
+# app.py
+import logging
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import PlainTextResponse
+from fastapi.middleware.cors import CORSMiddleware
+
+from utils import RepoDontExistError, RepoIsNone, CFGGenerationError
+from main import generate_docs_remote
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+app = FastAPI(
+    title="Onboarding Diagram Generator",
+    description="Generate docs/diagrams for a GitHub repo via `generate_docs_remote`",
+    version="1.0.0",
+)
+
+# ---- CORS setup ----
+origins = [
+    "*"  # or e.g. "https://your-frontend.com"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=["GET", "OPTIONS"],
+    allow_headers=["Content-Type", "ngrok-skip-browser-warning"],
+)
+# ---------------------
+
+@app.options("/myroute")
+async def preflight():
+    # FastAPI + CORSMiddleware handles this automatically,
+    # but you can still explicitly return 204 if you like:
+    return PlainTextResponse(status_code=204)
+
+@app.get(
+    "/myroute",
+    response_class=PlainTextResponse,
+    summary="Generate onboarding docs for a GitHub repo",
+    responses={
+        200: {"description": "Returns the GitHub URL of the generated markdown"},
+        404: {"description": "Repo not found or diagram generation failed"},
+        500: {"description": "Internal server error"},
+    },
+)
+async def myroute(url: str = Query(..., description="The HTTPS URL of the GitHub repository")):
+    """
+    Example:
+        GET /myroute?url=https://github.com/your/repo
+    """
+    logger.info("Received request to generate docs for %s", url)
+
+    try:
+        repo_name = generate_docs_remote(url, local_dev=True)
+    except (RepoDontExistError, RepoIsNone):
+        logger.warning("Repo not found or clone failed: %s", url)
+        raise HTTPException(404, detail=f"Repository not found or failed to clone: {url}")
+    except CFGGenerationError:
+        logger.warning("CFG generation error for: %s", url)
+        raise HTTPException(404, detail="Failed to generate diagram. We will look into it 🙂")
+    except Exception as e:
+        logger.exception("Unexpected error processing repo %s", url)
+        raise HTTPException(500, detail="Internal server error")
+
+    result_url = (
+        f"https://github.com/CodeBoarding/GeneratedOnBoardings"
+        f"/blob/main/{repo_name}/on_boarding.md"
+    )
+    logger.info("Successfully generated docs: %s", result_url)
+    return result_url
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)

@@ -1,3 +1,5 @@
+import logging
+
 from langchain.prompts import PromptTemplate
 from langchain_core.exceptions import OutputParserException
 from langchain_core.output_parsers import PydanticOutputParser
@@ -36,7 +38,7 @@ class AbstractionAgent(CodeBoardingAgent):
         }
 
     def step_cfg(self, cfg_str):
-        print(f"[INFO] Analyzing CFG for project: {self.project_name}")
+        logging.info(f"[INFO] Analyzing CFG for project: {self.project_name}")
         prompt = self.prompts["cfg"].format(project_name=self.project_name, cfg_str=cfg_str)
         response = self._invoke(prompt)
         parsed = self.parsers["cfg"].parse(response)
@@ -44,7 +46,7 @@ class AbstractionAgent(CodeBoardingAgent):
         return parsed
 
     def step_packages(self, packages):
-        print(f"[INFO] Analyzing Packages for project: {self.project_name}")
+        logging.info(f"[INFO] Analyzing Packages for project: {self.project_name}")
         insight_str = ""
         for pkg in packages:
             insight_str += f"- `{pkg}`\n"
@@ -53,7 +55,7 @@ class AbstractionAgent(CodeBoardingAgent):
 
 
     def step_source(self):
-        print(f"[INFO] Analyzing Source for project: {self.project_name}")
+        logging.info(f"[INFO] Analyzing Source for project: {self.project_name}")
         insight_str = ""
         for insight_type, analysis_insight in self.context.items():
             insight_str += f"## {insight_type.capitalize()} Insight\n"
@@ -72,7 +74,7 @@ class AbstractionAgent(CodeBoardingAgent):
     def generate_markdown(self, rerun=3):
         if rerun < 0:
             raise Exception("Max rerun attempts exceeded.")
-        print(f"[INFO] Generating markdown for project: {self.project_name}")
+        logging.info(f"[INFO] Generating markdown for project: {self.project_name}")
         prompt = self.prompts["markdown"].format(
             project_name=self.project_name,
             cfg_insight=self.context.get('cfg_insight').llm_str(),
@@ -83,10 +85,10 @@ class AbstractionAgent(CodeBoardingAgent):
         try:
             return self.parsers["markdown"].parse(response)
         except OutputParserException as e:
-            print(response)
-            print(f"[Warn] Error in parsing markdown: {e}")
+            logging.info(response)
+            logging.info.infoint(f"[Warn] Error in parsing markdown: {e}")
             return self.generate_markdown(rerun=rerun - 1)
         except Exception as e:
-            print(response)
-            print(f"[Warn] Error in generating markdown: {e}")
+            logging.info(response)
+            logging.info(f"[Warn] Error in generating markdown: {e}")
             return self.generate_markdown(rerun=rerun - 1)

@@ -1,12 +1,40 @@
-import json
 import os
 from pathlib import Path
 from typing import Set
 
-import networkx as nx
 from astroid import InferenceError, nodes, Uninferable, MANAGER
 
 from static_analyzer.pylint_analyze import _banner
+
+
+class DiGraph:
+    def __init__(self):
+        self.nodes = set()
+        self.edges = dict()  # key: src, value: list of (dst, data)
+
+    def add_node(self, node):
+        self.nodes.add(node)
+
+    def add_edge(self, src, dst, **data):
+        self.add_node(src)
+        self.add_node(dst)
+        self.edges.setdefault(src, []).append((dst, data))
+
+    def number_of_nodes(self):
+        return len(self.nodes)
+
+    def number_of_edges(self):
+        return sum(len(edges) for edges in self.edges.values())
+
+    def to_node_link_data(self):
+        # Convert to format similar to networkx.node_link_data
+        nodes = [{"id": n} for n in self.nodes]
+        links = [
+            {"source": src, "target": dst, **attrs}
+            for src, dsts in self.edges.items()
+            for dst, attrs in dsts
+        ]
+        return {"directed": True, "multigraph": False, "nodes": nodes, "links": links}
 
 
 def _expr_to_str(expr: nodes.NodeNG) -> str:
@@ -71,12 +99,12 @@ class CallGraphBuilder:
 
     def __init__(self, root: Path, max_depth: int | None = None, verbose: bool = False):
         self.root = root
-        self.graph: nx.DiGraph = nx.DiGraph()
+        self.graph: DiGraph = DiGraph()
         self._visited_files: Set[Path] = set()
         self.max_depth = max_depth
         self.verbose = verbose
 
-    def build(self) -> nx.DiGraph:
+    def build(self) -> DiGraph:
         _banner("Building ASTs…", self.verbose)
         for pyfile in self._iter_py_files():
             if "test" in pyfile.parts or "tests" in pyfile.parts:
@@ -189,9 +217,10 @@ class CallGraphBuilder:
         return "<?>"
 
     def write_dot(self, filename: Path):
-        from networkx.drawing.nx_agraph import write_dot  # Lazy import
-        write_dot(self.graph, filename)
-
-    def write_json(self, filename: Path):
-        data = nx.node_link_data(self.graph)
-        filename.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        with open(filename, 'w', encoding='utf-8') as f:
+            f.write('digraph G {\n')
+            for src, dsts in self.graph.edges.items():
+                for dst, attrs in dsts:
+                    label = f" [label=\"{attrs.get('lineno', '')}\"]"
+                    f.write(f'  "{src}" -> "{dst}"{label};\n')
+            f.write('}\n')

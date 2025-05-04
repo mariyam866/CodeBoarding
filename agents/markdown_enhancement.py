@@ -1,4 +1,5 @@
 import os
+import logging
 from typing import List
 
 from dotenv import load_dotenv
@@ -21,7 +22,7 @@ class MarkdownEnhancer:
         """
         Fix the diagram in the markdown string.
         """
-        print(f"[Markdown Enhancer] Fixing diagram in markdown.")
+        logging.info(f"[Markdown Enhancer] Fixing diagram in markdown.")
         prompt = f'Check the mermaid diagram in the markdown string.\n{markdown_str}\n\nIf there are labels such as A[Component name (extra information about it)] change to A["Component name (extra information about it)"], same if you have A(B(D)) to A("B(D)"). DON\'T change anything else, just change the labels. Return the full markdown string.\nReturn the full markdown string. It should not start and end with ```markdown```. Just give the content as if you are writing a markdown file.'
         response = self.llm.invoke(prompt)
         return response.content
@@ -31,7 +32,7 @@ class MarkdownEnhancer:
         Link the components in the markdown string.
         """
         base_url = base_url + project_name + "/"
-        print(f"[Markdown Enhancer] Linking components in markdown.")
+        logging.info(f"[Markdown Enhancer] Linking components in markdown.")
         prompt = f'''Check the markdown string and link each component to its details file.
 {markdown_str}
 
