@@ -52,7 +52,7 @@ async def myroute(url: str = Query(..., description="The HTTPS URL of the GitHub
     logger.info("Received request to generate docs for %s", url)
 
     # Setup a dedicated temp folder for this run
-    create_temp_repo_folder()
+    temp_repo_folder = create_temp_repo_folder()
     try:
         # generate the docs
         repo_name = generate_docs_remote(url, local_dev=True)
@@ -78,7 +78,7 @@ async def myroute(url: str = Query(..., description="The HTTPS URL of the GitHub
 
     finally:
         # cleanup temp folder for this run
-        remove_temp_repo_folder()
+        remove_temp_repo_folder(temp_repo_folder)
 
 
 if __name__ == "__main__":
