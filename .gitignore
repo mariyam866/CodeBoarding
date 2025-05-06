@@ -177,6 +177,7 @@ cython_debug/
 # Ignore all repositories downloaded for analysis
 repos/
 repos/*
+temp
 
 .idea
 .idea/*

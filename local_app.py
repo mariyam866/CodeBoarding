@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from utils import RepoDontExistError, RepoIsNone, CFGGenerationError
+from utils import RepoDontExistError, RepoIsNone, CFGGenerationError, create_temp_repo_folder, remove_temp_repo_folder
 from main import generate_docs_remote
 
 logging.basicConfig(level=logging.INFO)
@@ -27,7 +27,6 @@ app.add_middleware(
     allow_methods=["GET", "OPTIONS"],
     allow_headers=["Content-Type", "ngrok-skip-browser-warning"],
 )
-# ---------------------
 
 @app.options("/myroute")
 async def preflight():
@@ -52,24 +51,34 @@ async def myroute(url: str = Query(..., description="The HTTPS URL of the GitHub
     """
     logger.info("Received request to generate docs for %s", url)
 
+    # Setup a dedicated temp folder for this run
+    create_temp_repo_folder()
     try:
+        # generate the docs
         repo_name = generate_docs_remote(url, local_dev=True)
+
+        result_url = (
+            f"https://github.com/CodeBoarding/GeneratedOnBoardings"
+            f"/blob/main/{repo_name}/on_boarding.md"
+        )
+        logger.info("Successfully generated docs: %s", result_url)
+        return result_url
+
     except (RepoDontExistError, RepoIsNone):
         logger.warning("Repo not found or clone failed: %s", url)
         raise HTTPException(404, detail=f"Repository not found or failed to clone: {url}")
+
     except CFGGenerationError:
         logger.warning("CFG generation error for: %s", url)
         raise HTTPException(404, detail="Failed to generate diagram. We will look into it 🙂")
+
     except Exception as e:
         logger.exception("Unexpected error processing repo %s", url)
         raise HTTPException(500, detail="Internal server error")
 
-    result_url = (
-        f"https://github.com/CodeBoarding/GeneratedOnBoardings"
-        f"/blob/main/{repo_name}/on_boarding.md"
-    )
-    logger.info("Successfully generated docs: %s", result_url)
-    return result_url
+    finally:
+        # cleanup temp folder for this run
+        remove_temp_repo_folder()
 
 
 if __name__ == "__main__":

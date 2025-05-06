@@ -1,11 +1,11 @@
 import re
 import os
-from typing import Callable
 from agents.agent import AnalysisInsights
-from dotenv import load_dotenv
+from pathlib import Path
+import shutil
+import uuid
 from langchain_google_genai import ChatGoogleGenerativeAI
 from git import Git, GitCommandError
-from typing import Optional
 
 
 class NoGithubTokenFoundError(Exception):
@@ -23,6 +23,17 @@ class RepoDontExistError(Exception):
 class RepoIsNone(Exception):
     pass
 
+def create_temp_repo_folder():
+    unique_id = uuid.uuid4().hex
+    temp_dir = os.path.join('temp', unique_id)
+    os.makedirs(temp_dir, exist_ok=False)
+    return temp_dir
+
+def remove_temp_repo_folder(temp_path: str):
+    p = Path(temp_path)
+    if not p.parts or p.parts[0] != "temp":
+        raise ValueError(f"Refusing to delete outside of 'temp/': {temp_path!r}")
+    shutil.rmtree(temp_path)
 
 def init_llm():
     api_key = os.getenv("API_KEY")
