@@ -15,7 +15,7 @@ from logging_config import setup_logging
 from static_analyzer.pylint_analyze.call_graph_builder import CallGraphBuilder
 from static_analyzer.pylint_analyze.structure_graph_builder import StructureGraphBuilder
 from static_analyzer.pylint_graph_transform import DotGraphTransformer
-from utils import caching_enabled
+from utils import caching_enabled, create_temp_repo_folder, remove_temp_repo_folder
 from utils import generate_mermaid
 from utils import remote_repo_exists, RepoDontExistError, sanitize_repo_url, NoGithubTokenFoundError
 
@@ -39,7 +39,7 @@ def store_token():
     subprocess.run(["git", "credential", "approve"], input=cred)
 
 
-def generate_on_boarding_documentation(repo_location: Path):
+def generate_on_boarding_documentation(repo_location: Path, temp_repo_folder: str):
     dot_suffix = 'structure.dot'
     graph_builder = StructureGraphBuilder(repo_location, dot_suffix, verbose=True)
     graph_builder.build()
@@ -52,7 +52,7 @@ def generate_on_boarding_documentation(repo_location: Path):
 
     builder = CallGraphBuilder(repo_location, max_depth=15, verbose=True)
     builder.build()
-    builder.write_dot('./call_graph.dot')
+    builder.write_dot(f'{temp_repo_folder}/call_graph.dot')
     # Now transform the call_graph
     call_graph_str = DotGraphTransformer('./call_graph.dot', repo_location).transform()
     call_graph_str = clean_dot_file_str(call_graph_str)
@@ -103,7 +103,7 @@ def upload_onboarding_materials(project_name, repo_dir="/home/ivan/StartUp/Gener
     origin.push()
 
 
-def generate_docs(repo_name):
+def generate_docs(repo_name: str, temp_repo_folder: str):
     clean_files(Path('./'))
     load_dotenv()
     ROOT = os.getenv("ROOT")
@@ -115,7 +115,7 @@ def generate_docs(repo_name):
         logging.info(f"Cache hit for '{repo_name}', skipping documentation generation.")
         return
 
-    structures, packages, call_graph_str = generate_on_boarding_documentation(repo_path)
+    structures, packages, call_graph_str = generate_on_boarding_documentation(repo_path, temp_repo_folder)
     abstraction_agent = AbstractionAgent(ROOT, repo_folder, repo_name)
     abstraction_agent.step_cfg(call_graph_str)
     abstraction_agent.step_source()
@@ -123,7 +123,7 @@ def generate_docs(repo_name):
     final_response = abstraction_agent.generate_markdown()
     markdown_response = generate_mermaid(final_response, repo_name)
 
-    with open("on_boarding.md", "w") as f:
+    with open(f"{temp_repo_folder}/on_boarding.md", "w") as f:
         f.write(markdown_response.strip())
 
     details_agent = DetailsAgent(ROOT, repo_path, repo_name)
@@ -139,13 +139,13 @@ def generate_docs(repo_name):
         details_markdown = generate_mermaid(details_results)
         if "/" in component.name:
             component.name = component.name.replace("/", "-")
-        with open(f"{component.name}.md", "w") as f:
+        with open(f"{temp_repo_folder}/{component.name}.md", "w") as f:
             f.write(details_markdown)
 
     upload_onboarding_materials(repo_name, ROOT_RESULT)
 
 
-def generate_docs_remote(repo_url: str, local_dev=False) -> Path:
+def generate_docs_remote(repo_url: str, temp_repo_folder: str, local_dev=False) -> Path:
     """
     Clone a git repo to target_dir/<repo-name>.
     Returns the Path to the cloned repository.
@@ -153,7 +153,7 @@ def generate_docs_remote(repo_url: str, local_dev=False) -> Path:
     if not local_dev:
         store_token()
     repo_name = clone_repository(repo_url)
-    generate_docs(repo_name)
+    generate_docs(repo_name, temp_repo_folder)
     return repo_name
 
 
@@ -182,5 +182,7 @@ if __name__ == "__main__":
     setup_logging()
     logging.info("Starting up…")
     repos = ["https://github.com/browser-use/browser-use"]
+    temp_repo_folder = create_temp_repo_folder()
     for repo in tqdm(repos, desc="Generating docs for repos"):
-        generate_docs_remote(repo, local_dev=True)
+        generate_docs_remote(repo,temp_repo_folder,local_dev=True)
+    remove_temp_repo_folder(temp_repo_folder)

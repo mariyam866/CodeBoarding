@@ -55,7 +55,7 @@ async def myroute(url: str = Query(..., description="The HTTPS URL of the GitHub
     temp_repo_folder = create_temp_repo_folder()
     try:
         # generate the docs
-        repo_name = generate_docs_remote(url, local_dev=True)
+        repo_name = generate_docs_remote(repo_url=url, temp_repo_folder=temp_repo_folder, local_dev=True)
 
         result_url = (
             f"https://github.com/CodeBoarding/GeneratedOnBoardings"
