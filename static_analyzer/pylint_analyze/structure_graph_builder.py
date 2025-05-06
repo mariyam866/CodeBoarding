@@ -9,10 +9,11 @@ from static_analyzer.pylint_analyze import _banner
 
 class StructureGraphBuilder:
 
-    def __init__(self, root_package, dot_file_prefix, verbose: bool = False):
+    def __init__(self, root_package, dot_file_prefix, output_dir, verbose: bool = False):
         self.root_package = root_package
         self.dot_file = dot_file_prefix
         self.verbose = verbose
+        self.output_dir = output_dir
 
     def run_pyreverse(self, package: Path) -> None:
         """
@@ -25,14 +26,14 @@ class StructureGraphBuilder:
         _banner("Running pyreverse…", self.verbose)
         try:
             # Equivalent to: pyreverse -o dot   <package>
-            _PyreverseRun([str(package), "-o", "dot", "-p", package.name])
+            _PyreverseRun([str(package), "-o", "dot", "-p", package.name, "-d", str(self.output_dir.resolve())])
         except SystemExit as e:
             # pyreverse calls sys.exit() after finishing.
             if e.code not in (0, None):
                 raise
-
+        
         root_name = Path(package.name).resolve().name.replace("-", "_")
-        produced = Path().glob(f"*{root_name}*.dot")
+        produced = Path().glob(f"{self.output_dir}/*{root_name}*.dot")
         picked = None
         for f in produced:
             if "classes_" in f.name:
@@ -41,7 +42,7 @@ class StructureGraphBuilder:
         if picked is None:
             raise RuntimeError("pyreverse did not produce a classes_*.dot file!")
 
-        picked.replace(f"{package.name}_{self.dot_file}")
+        picked.replace(f"{self.output_dir}/{package.name}_{self.dot_file}")
         _banner(f"Saved structure graph to {self.dot_file}", self.verbose)
 
     def build(self):

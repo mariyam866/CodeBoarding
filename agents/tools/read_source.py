@@ -23,10 +23,10 @@ class CodeExplorerTool(BaseTool):
     return_direct: bool = False
     cached_files: Optional[List[str]] = None
 
-    def __init__(self, root_project_dir):
+    def __init__(self, repo_dir):
         super().__init__()
         self.cached_files = []
-        self.walk_dir(root_project_dir)
+        self.walk_dir(repo_dir)
 
     def walk_dir(self, root_project_dir):
         """

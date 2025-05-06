@@ -56,7 +56,7 @@ class AnalysisInsights(BaseModel):
         return title + body + relations
 
 class CodeBoardingAgent:
-    def __init__(self, root_dir, root_repo_dir, system_message):
+    def __init__(self, repo_dir, output_dir, system_message):
         self._setup_env_vars()
         self.llm = ChatGoogleGenerativeAI(
             model="gemini-2.0-flash",
@@ -64,9 +64,9 @@ class CodeBoardingAgent:
             max_retries=2,
             google_api_key=self.api_key
         )
-        self.read_source_code = CodeExplorerTool(root_project_dir=root_repo_dir)
-        self.read_packages_tool = PackageRelationsTool(root_project_dir=root_dir)
-        self.read_structure_tool = CodeStructureTool(root_project_dir=root_dir)
+        self.read_source_code = CodeExplorerTool(repo_dir=repo_dir)
+        self.read_packages_tool = PackageRelationsTool(analysis_dir=output_dir)
+        self.read_structure_tool = CodeStructureTool(analysis_dir=output_dir)
         self.agent = create_react_agent(model=self.llm, tools=[self.read_source_code, self.read_packages_tool,
                                                                self.read_structure_tool])
         self.system_message = SystemMessage(content=system_message)

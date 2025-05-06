@@ -16,10 +16,10 @@ class CodeStructureTool(BaseTool):
     cached_files: Optional[List[str]] = None
 
 
-    def __init__(self, root_project_dir):
+    def __init__(self, analysis_dir):
         super().__init__()
         self.cached_files = []
-        self.walk_dir(root_project_dir)
+        self.walk_dir(analysis_dir)
 
     def walk_dir(self, root_project_dir):
         """

@@ -27,7 +27,7 @@ def create_temp_repo_folder():
     unique_id = uuid.uuid4().hex
     temp_dir = os.path.join('temp', unique_id)
     os.makedirs(temp_dir, exist_ok=False)
-    return temp_dir
+    return Path(temp_dir)
 
 def remove_temp_repo_folder(temp_path: str):
     p = Path(temp_path)

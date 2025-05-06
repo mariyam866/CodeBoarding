@@ -39,9 +39,9 @@ def store_token():
     subprocess.run(["git", "credential", "approve"], input=cred)
 
 
-def generate_on_boarding_documentation(repo_location: Path, temp_repo_folder: str):
+def generate_static_analysis(repo_location: Path, temp_repo_folder: Path):
     dot_suffix = 'structure.dot'
-    graph_builder = StructureGraphBuilder(repo_location, dot_suffix, verbose=True)
+    graph_builder = StructureGraphBuilder(repo_location, dot_suffix, temp_repo_folder, verbose=True)
     graph_builder.build()
     # Now I have to find and collect the _structure.dot files
     # Scan the current directory for files which end on dot_suffix
@@ -54,10 +54,10 @@ def generate_on_boarding_documentation(repo_location: Path, temp_repo_folder: st
     builder.build()
     builder.write_dot(f'{temp_repo_folder}/call_graph.dot')
     # Now transform the call_graph
-    call_graph_str = DotGraphTransformer('./call_graph.dot', repo_location).transform()
+    call_graph_str = DotGraphTransformer(f'{temp_repo_folder}/call_graph.dot', repo_location).transform()
     call_graph_str = clean_dot_file_str(call_graph_str)
     packages = []
-    for path in Path('.').rglob(f'packages_*.dot'):
+    for path in Path('.').rglob(f'{temp_repo_folder}/packages_*.dot'):
         with open(path, 'r') as f:
             # The file name is the package name
             package_name = path.name.split('_')[1].split('.dot')[0]
@@ -84,7 +84,7 @@ def onboarding_materials_exist(project_name, source_dir="/home/ivan/StartUp/Gene
     return os.path.isdir(onboarding_repo_path) and len(os.listdir(onboarding_repo_path))
 
 
-def upload_onboarding_materials(project_name, repo_dir="/home/ivan/StartUp/GeneratedOnBoardings/"):
+def upload_onboarding_materials(project_name, output_dir, repo_dir="/home/ivan/StartUp/GeneratedOnBoardings/"):
     repo = Repo(repo_dir)
     origin = repo.remote(name='origin')
     origin.pull()
@@ -94,29 +94,28 @@ def upload_onboarding_materials(project_name, repo_dir="/home/ivan/StartUp/Gener
         shutil.rmtree(onboarding_repo_location)
     os.makedirs(onboarding_repo_location)
 
-    for filename in os.listdir("./"):
+    for filename in os.listdir(output_dir):
         if filename.endswith('.md') and filename != "README.md":
-            shutil.copy(filename, os.path.join(onboarding_repo_location, filename))
+            shutil.copy(os.path.join(output_dir,filename), os.path.join(onboarding_repo_location, filename))
     # Now commit the changes
     repo.git.add(A=True)  # Equivalent to `git add .`
     repo.index.commit(f"Uploading onboarding materials for {project_name}")
     origin.push()
 
 
-def generate_docs(repo_name: str, temp_repo_folder: str):
+def generate_docs(repo_name: str, temp_repo_folder: Path):
     clean_files(Path('./'))
     load_dotenv()
     ROOT = os.getenv("ROOT")
     ROOT_RESULT = os.getenv("ROOT_RESULT")
     repo_path = Path(ROOT) / 'repos' / repo_name
-    repo_folder = Path(ROOT) / 'repos'
 
     if caching_enabled() and onboarding_materials_exist(repo_name, ROOT_RESULT):
         logging.info(f"Cache hit for '{repo_name}', skipping documentation generation.")
         return
 
-    structures, packages, call_graph_str = generate_on_boarding_documentation(repo_path, temp_repo_folder)
-    abstraction_agent = AbstractionAgent(ROOT, repo_folder, repo_name)
+    structures, packages, call_graph_str = generate_static_analysis(repo_path, temp_repo_folder)
+    abstraction_agent = AbstractionAgent(repo_dir=repo_path, output_dir=temp_repo_folder, project_name=repo_name)
     abstraction_agent.step_cfg(call_graph_str)
     abstraction_agent.step_source()
 
@@ -126,7 +125,7 @@ def generate_docs(repo_name: str, temp_repo_folder: str):
     with open(f"{temp_repo_folder}/on_boarding.md", "w") as f:
         f.write(markdown_response.strip())
 
-    details_agent = DetailsAgent(ROOT, repo_path, repo_name)
+    details_agent = DetailsAgent(repo_dir=repo_path, output_dir=temp_repo_folder, project_name=repo_name)
     for component in tqdm(final_response.components, desc="Analyzing details"):
         # Here I want to filter out based on the qualified names:
         if details_agent.step_subcfg(call_graph_str, component) is None:
@@ -142,7 +141,7 @@ def generate_docs(repo_name: str, temp_repo_folder: str):
         with open(f"{temp_repo_folder}/{component.name}.md", "w") as f:
             f.write(details_markdown)
 
-    upload_onboarding_materials(repo_name, ROOT_RESULT)
+    upload_onboarding_materials(repo_name, temp_repo_folder, ROOT_RESULT)
 
 
 def generate_docs_remote(repo_url: str, temp_repo_folder: str, local_dev=False) -> Path:
