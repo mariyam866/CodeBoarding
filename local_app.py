@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
-
+from starlette.concurrency import run_in_threadpool
 from utils import RepoDontExistError, RepoIsNone, CFGGenerationError, create_temp_repo_folder, remove_temp_repo_folder
 from main import generate_docs_remote
 
@@ -55,7 +55,12 @@ async def myroute(url: str = Query(..., description="The HTTPS URL of the GitHub
     temp_repo_folder = create_temp_repo_folder()
     try:
         # generate the docs
-        repo_name = generate_docs_remote(repo_url=url, temp_repo_folder=temp_repo_folder, local_dev=True)
+        repo_name = await run_in_threadpool(
+            generate_docs_remote,
+            repo_url=url,
+            temp_repo_folder=temp_repo_folder,
+            local_dev=True,
+        )
 
         result_url = (
             f"https://github.com/CodeBoarding/GeneratedOnBoardings"
