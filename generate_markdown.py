@@ -8,9 +8,9 @@ from dotenv import load_dotenv
 from git import Repo
 from tqdm import tqdm
 
-from agents.abstraction_agent import AbstractionAgent
-from agents.details_agent import DetailsAgent
+from agents.agent_responses import AnalysisInsights
 from agents.tools.utils import clean_dot_file_str
+from diagram_generator import DiagramGenerator
 from logging_config import setup_logging
 from static_analyzer.pylint_analyze.call_graph_builder import CallGraphBuilder
 from static_analyzer.pylint_analyze.structure_graph_builder import StructureGraphBuilder
@@ -19,14 +19,14 @@ from utils import caching_enabled, create_temp_repo_folder, remove_temp_repo_fol
 from utils import generate_mermaid
 from utils import remote_repo_exists, RepoDontExistError, sanitize_repo_url, NoGithubTokenFoundError
 
-setup_logging()
+setup_logging(log_dir=Path("./"))
 logger = logging.getLogger(__name__)
 
 
 # logger.addHandler(AzureLogHandler(connection_string=os.environ["CONNECTION_STRING"]))
 
 def store_token():
-    if os.environ['GITHUB_TOKEN']:
+    if not os.environ.get('GITHUB_TOKEN'):  # Using .get() for safer access
         raise NoGithubTokenFoundError()
     logging.info(f"Setting up credentials with token: {os.environ['GITHUB_TOKEN'][:7]}")  # only first 7 for safety
     cred = (
@@ -96,7 +96,7 @@ def upload_onboarding_materials(project_name, output_dir, repo_dir="/home/ivan/S
 
     for filename in os.listdir(output_dir):
         if filename.endswith('.md') and filename != "README.md":
-            shutil.copy(os.path.join(output_dir,filename), os.path.join(onboarding_repo_location, filename))
+            shutil.copy(os.path.join(output_dir, filename), os.path.join(onboarding_repo_location, filename))
     # Now commit the changes
     repo.git.add(A=True)  # Equivalent to `git add .`
     repo.index.commit(f"Uploading onboarding materials for {project_name}")
@@ -106,42 +106,39 @@ def upload_onboarding_materials(project_name, output_dir, repo_dir="/home/ivan/S
 def generate_docs(repo_name: str, temp_repo_folder: Path):
     clean_files(Path('./'))
     load_dotenv()
-    ROOT = os.getenv("ROOT")
-    ROOT_RESULT = os.getenv("ROOT_RESULT")
-    repo_path = Path(ROOT) / 'repos' / repo_name
+    ROOT = os.getenv("ROOT", "./")  # Default to current directory if ROOT is not set
+    ROOT_RESULT = os.getenv("ROOT_RESULT", "./generated_results")  # Default path if not set
+    
+    # Create directories if they don't exist
+    repo_root = Path(ROOT)
+    repos_dir = repo_root / 'repos'
+    repos_dir.mkdir(parents=True, exist_ok=True)
+    
+    repo_path = repos_dir / repo_name
 
     if caching_enabled() and onboarding_materials_exist(repo_name, ROOT_RESULT):
         logging.info(f"Cache hit for '{repo_name}', skipping documentation generation.")
         return
 
-    structures, packages, call_graph_str = generate_static_analysis(repo_path, temp_repo_folder)
-    abstraction_agent = AbstractionAgent(repo_dir=repo_path, output_dir=temp_repo_folder, project_name=repo_name)
-    abstraction_agent.step_cfg(call_graph_str)
-    abstraction_agent.step_source()
+    generator = DiagramGenerator(repo_location=repo_path, temp_folder=temp_repo_folder, repo_name=repo_name,
+                                 output_dir=temp_repo_folder)
+    analysis_files = generator.generate_analysis()
 
-    final_response = abstraction_agent.generate_markdown()
-    markdown_response = generate_mermaid(final_response, repo_name)
-
-    with open(f"{temp_repo_folder}/on_boarding.md", "w") as f:
-        f.write(markdown_response.strip())
-
-    details_agent = DetailsAgent(repo_dir=repo_path, output_dir=temp_repo_folder, project_name=repo_name)
-    for component in tqdm(final_response.components, desc="Analyzing details"):
-        # Here I want to filter out based on the qualified names:
-        if details_agent.step_subcfg(call_graph_str, component) is None:
-            logging.info(f"[Details Agent - ERROR] Failed to analyze subcfg for {component.name}")
-            continue
-        details_agent.step_cfg(component)
-        details_agent.step_enhance_structure(component)
-        details_results = details_agent.step_markdown(component)
-
-        details_markdown = generate_mermaid(details_results)
-        if "/" in component.name:
-            component.name = component.name.replace("/", "-")
-        with open(f"{temp_repo_folder}/{component.name}.md", "w") as f:
-            f.write(details_markdown)
-
-    upload_onboarding_materials(repo_name, temp_repo_folder, ROOT_RESULT)
+    for file in analysis_files:
+        with open(file, 'r') as f:
+            analysis = AnalysisInsights.model_validate_json(f.read())
+            logging.info(f"Generated analysis file: {file}")
+            markdown_response = generate_mermaid(analysis, repo_name, link_files=("analysis.json" in file))
+            fname = Path(file).name.split(".json")[0]
+            fname = "on_boarding" if fname.endswith("analysis") else fname
+            with open(f"{temp_repo_folder}/{fname}.md", "w") as f:
+                f.write(markdown_response.strip())
+    
+    # Also check if ROOT_RESULT exists before uploading
+    if os.path.exists(ROOT_RESULT):
+        upload_onboarding_materials(repo_name, temp_repo_folder, ROOT_RESULT)
+    else:
+        logging.warning(f"ROOT_RESULT directory '{ROOT_RESULT}' does not exist. Skipping upload of onboarding materials.")
 
 
 def generate_docs_remote(repo_url: str, temp_repo_folder: str, local_dev=False) -> Path:
@@ -180,8 +177,8 @@ def clone_repository(repo_url: str, target_dir: Path = Path("./repos")):
 if __name__ == "__main__":
     setup_logging()
     logging.info("Starting up…")
-    repos = ["https://github.com/browser-use/browser-use"]
+    repos = ["https://github.com/Ekultek/WhatWaf"]
     temp_repo_folder = create_temp_repo_folder()
     for repo in tqdm(repos, desc="Generating docs for repos"):
-        generate_docs_remote(repo,temp_repo_folder,local_dev=True)
+        generate_docs_remote(repo, temp_repo_folder, local_dev=True)
     remove_temp_repo_folder(temp_repo_folder)

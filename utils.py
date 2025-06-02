@@ -1,11 +1,12 @@
 import re
 import os
-from agents.agent import AnalysisInsights
 from pathlib import Path
 import shutil
 import uuid
 from langchain_google_genai import ChatGoogleGenerativeAI
 from git import Git, GitCommandError
+
+from agents.agent_responses import AnalysisInsights
 
 
 class NoGithubTokenFoundError(Exception):
@@ -23,17 +24,20 @@ class RepoDontExistError(Exception):
 class RepoIsNone(Exception):
     pass
 
+
 def create_temp_repo_folder():
     unique_id = uuid.uuid4().hex
     temp_dir = os.path.join('temp', unique_id)
     os.makedirs(temp_dir, exist_ok=False)
     return Path(temp_dir)
 
+
 def remove_temp_repo_folder(temp_path: str):
     p = Path(temp_path)
     if not p.parts or p.parts[0] != "temp":
         raise ValueError(f"Refusing to delete outside of 'temp/': {temp_path!r}")
     shutil.rmtree(temp_path)
+
 
 def init_llm():
     api_key = os.getenv("API_KEY")
@@ -75,7 +79,7 @@ def sanitize_repo_url(repo_url: str) -> str:
     return clean
 
 
-def generate_mermaid(insights: AnalysisInsights, project: str = "") -> str:
+def generate_mermaid(insights: AnalysisInsights, project: str = "", link_files=True) -> str:
     """
     Generate a Mermaid 'graph TD' diagram from an AnalysisInsights object.
     """
@@ -101,11 +105,12 @@ def generate_mermaid(insights: AnalysisInsights, project: str = "") -> str:
         lines.append(f'    {src_id} -- "{rel.relation}" --> {dst_id}')
 
     # 3. Add clickable links to the components
-    if project != "":
+    if link_files:
         for comp in insights.components:
             node_id = sanitize(comp.name)
             # Use the component name as the link text
-            lines.append(f'    click {node_id} href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/{project}/{comp.name}.md" "Details"')
+            lines.append(
+                f'    click {node_id} href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/{project}/{comp.name}.md" "Details"')
 
     lines.append("```")
 
@@ -114,8 +119,8 @@ def generate_mermaid(insights: AnalysisInsights, project: str = "") -> str:
     for comp in insights.components:
         detail_lines.append(f"### {comp.name}")
         detail_lines.append(f"{comp.description}")
-        if comp.source_code_files:
-            qn_list = ", ".join(f"`{qn}`" for qn in comp.source_code_files)
+        if comp.referenced_source_code:
+            qn_list = ", ".join(f"{qn.llm_str()}" for qn in comp.referenced_source_code)
             detail_lines.append(f"- **Related Classes/Methods**: {qn_list}")
         else:
             detail_lines.append(f"- **Related Classes/Methods**: _None_")
