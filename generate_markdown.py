@@ -9,7 +9,6 @@ from git import Repo
 from tqdm import tqdm
 
 from agents.agent_responses import AnalysisInsights
-from agents.tools.utils import clean_dot_file_str
 from diagram_generator import DiagramGenerator
 from logging_config import setup_logging
 from static_analyzer.pylint_analyze.call_graph_builder import CallGraphBuilder
@@ -55,7 +54,6 @@ def generate_static_analysis(repo_location: Path, temp_repo_folder: Path):
     builder.write_dot(f'{temp_repo_folder}/call_graph.dot')
     # Now transform the call_graph
     call_graph_str = DotGraphTransformer(f'{temp_repo_folder}/call_graph.dot', repo_location).transform()
-    call_graph_str = clean_dot_file_str(call_graph_str)
     packages = []
     for path in Path('.').rglob(f'{temp_repo_folder}/packages_*.dot'):
         with open(path, 'r') as f:
@@ -103,17 +101,16 @@ def upload_onboarding_materials(project_name, output_dir, repo_dir="/home/ivan/S
     origin.push()
 
 
-def generate_docs(repo_name: str, temp_repo_folder: Path):
+def generate_docs(repo_name: str, temp_repo_folder: Path, repo_url: str = None):
     clean_files(Path('./'))
     load_dotenv()
-    ROOT = os.getenv("ROOT", "./")  # Default to current directory if ROOT is not set
     ROOT_RESULT = os.getenv("ROOT_RESULT", "./generated_results")  # Default path if not set
-    
+
     # Create directories if they don't exist
-    repo_root = Path(ROOT)
-    repos_dir = repo_root / 'repos'
+    repos_dir = Path(os.getenv("REPO_ROOT"))
+
     repos_dir.mkdir(parents=True, exist_ok=True)
-    
+
     repo_path = repos_dir / repo_name
 
     if caching_enabled() and onboarding_materials_exist(repo_name, ROOT_RESULT):
@@ -128,7 +125,8 @@ def generate_docs(repo_name: str, temp_repo_folder: Path):
         with open(file, 'r') as f:
             analysis = AnalysisInsights.model_validate_json(f.read())
             logging.info(f"Generated analysis file: {file}")
-            markdown_response = generate_mermaid(analysis, repo_name, link_files=("analysis.json" in file))
+            markdown_response = generate_mermaid(analysis, repo_name, link_files=("analysis.json" in file),
+                                                 repo_url=repo_url)
             fname = Path(file).name.split(".json")[0]
             if fname.endswith("analysis"):
                 fname = "on_boarding"
@@ -136,12 +134,13 @@ def generate_docs(repo_name: str, temp_repo_folder: Path):
                 markdown_response =  markdown_response + faq_header
             with open(f"{temp_repo_folder}/{fname}.md", "w") as f:
                 f.write(markdown_response.strip())
-    
+
     # Also check if ROOT_RESULT exists before uploading
     if os.path.exists(ROOT_RESULT):
         upload_onboarding_materials(repo_name, temp_repo_folder, ROOT_RESULT)
     else:
-        logging.warning(f"ROOT_RESULT directory '{ROOT_RESULT}' does not exist. Skipping upload of onboarding materials.")
+        logging.warning(
+            f"ROOT_RESULT directory '{ROOT_RESULT}' does not exist. Skipping upload of onboarding materials.")
 
 
 def generate_docs_remote(repo_url: str, temp_repo_folder: str, local_dev=False) -> Path:
@@ -149,10 +148,11 @@ def generate_docs_remote(repo_url: str, temp_repo_folder: str, local_dev=False) 
     Clone a git repo to target_dir/<repo-name>.
     Returns the Path to the cloned repository.
     """
+    load_dotenv()
     if not local_dev:
         store_token()
-    repo_name = clone_repository(repo_url)
-    generate_docs(repo_name, temp_repo_folder)
+    repo_name = clone_repository(repo_url, Path(os.getenv("REPO_ROOT")))
+    generate_docs(repo_name, temp_repo_folder, repo_url)
     return repo_name
 
 
@@ -180,8 +180,23 @@ def clone_repository(repo_url: str, target_dir: Path = Path("./repos")):
 if __name__ == "__main__":
     setup_logging()
     logging.info("Starting up…")
-    repos = ["https://github.com/Ekultek/WhatWaf"]
-    temp_repo_folder = create_temp_repo_folder()
+    # Load the repos.csv:
+    import csv
+
+    with open("/outreach_utils/unified_repos.csv", "r") as f:
+        csv_reader = csv.reader(f)
+        rows = list(csv_reader)  # Read all rows into a list
+
+        # Skip the header
+    data_rows = rows[1:]
+
+    # Extract the second column (repo URLs)
+    repos = [row[1] for row in data_rows if len(row) > 1]
     for repo in tqdm(repos, desc="Generating docs for repos"):
-        generate_docs_remote(repo, temp_repo_folder, local_dev=True)
-    remove_temp_repo_folder(temp_repo_folder)
+        temp_repo_folder = create_temp_repo_folder()
+        try:
+            generate_docs_remote(repo, temp_repo_folder, local_dev=True)
+        except Exception as e:
+            logging.error(f"Failed to generate docs for {repo}: {e}")
+        finally:
+            remove_temp_repo_folder(temp_repo_folder)
