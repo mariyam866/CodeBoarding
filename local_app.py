@@ -52,6 +52,9 @@ async def generate_markdown(url: str = Query(..., description="The HTTPS URL of 
     Example:
         GET /myroute?url=https://github.com/your/repo
     """
+    # Check if the url starts with https://github.com and if not add it:
+    if not url.startswith("https://github.com"):
+        url = f"https://github.com/{url}"
     logger.info("Received request to generate docs for %s", url)
 
     # Setup a dedicated temp folder for this run
