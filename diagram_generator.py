@@ -1,3 +1,4 @@
+import logging
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -43,12 +44,12 @@ class DiagramGenerator:
         The output is stored in json files in output_dir.
         """
         files = []
-        structures, packages, self.call_graph_str = self.generate_static_analysis()
+        structures, packages, self.call_graph_str, cfg = self.generate_static_analysis()
 
         self.details_agent = DetailsAgent(repo_dir=self.repo_location, output_dir=self.temp_folder,
-                                          project_name=self.repo_name)
+                                          project_name=self.repo_name, cfg=cfg)
         self.abstraction_agent = AbstractionAgent(repo_dir=self.repo_location, output_dir=self.temp_folder,
-                                                  project_name=self.repo_name)
+                                                  project_name=self.repo_name, cfg=cfg)
 
         self.abstraction_agent.step_cfg(self.call_graph_str)
         self.abstraction_agent.step_source()
@@ -59,9 +60,12 @@ class DiagramGenerator:
             futures = [executor.submit(self.process_component, component) for component in
                        analysis_response.components]
             for future in tqdm(as_completed(futures), total=len(futures), desc="Analyzing details"):
-                result = future.result()
-                if result:
-                    files.append(result)
+                try:
+                    result = future.result()
+                    if result:
+                        files.append(result)
+                except Exception as e:
+                    logging.error(f"Error processing component: {e}")
 
         files.append(f"{self.output_dir}/analysis.json")
         print("Generated analysis files: %s", [os.path.abspath(file) for file in files])
@@ -84,11 +88,12 @@ class DiagramGenerator:
         builder.build()
         builder.write_dot(f'{self.temp_folder}/call_graph.dot')
         # Now transform the call_graph
-        call_graph_str = DotGraphTransformer(f'{self.temp_folder}/call_graph.dot', self.repo_location).transform()
+        graph_transformer = DotGraphTransformer(f'{self.temp_folder}/call_graph.dot', self.repo_location)
+        cfg, call_graph_str = graph_transformer.transform()
         packages = []
         for path in Path('.').rglob(f'{self.temp_folder}/packages_*.dot'):
             with open(path, 'r') as f:
                 # The file name is the package name
                 package_name = path.name.split('_')[1].split('.dot')[0]
                 packages.append((package_name, f.read()))
-        return structures, packages, call_graph_str
+        return structures, packages, call_graph_str, cfg
