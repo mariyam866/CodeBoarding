@@ -13,8 +13,6 @@ Use tools when needed. Complete all tasks using available tools."""
 
 CFG_MESSAGE = """Analyze the Control Flow Graph for `{project_name}`.
 
-CFG Format: `"from_method_call": ["invoked_method_1", "invoked_method_2"]`
-
 {cfg_str}
 
 Tasks:
@@ -24,8 +22,8 @@ Tasks:
 4. Identify top components (max 20) with names, descriptions, and source files
 5. Define component relationships and interactions. There should not be more thane 2 relationships between any two components.
 
-Output: Valid JSON only, no explanations.
-{format_instructions}"""
+Please explain why you chose these components and why they are fundamental.
+"""
 
 SOURCE_MESSAGE = """Validate and enhance component analysis using source code.
 
@@ -37,8 +35,8 @@ Tasks:
 2. Refine components to maximum 10 based on source code insights
 3. Define each component: name, documents, relationships, roles, and neighbor interactions
 
-Output: Valid JSON only, no explanations.
-{format_instructions}"""
+Please explain why you chose these components and why they are fundamental.
+"""
 
 CONCLUSIVE_ANALYSIS_MESSAGE = """Final architecture analysis for `{project_name}`.
 
@@ -53,8 +51,21 @@ Tasks:
 2. Confirm component responsibilities and communication patterns from source analysis
 3. Produce final components (max 10 optimally 5) with names, descriptions, source files, and relationships (No more than 2 relationships between any two components)
 
-Output: Valid JSON only, no explanations.
-{format_instructions}"""
+Please explain why you chose these components and why they are fundamental.
+"""
+
+FEEDBACK_MESSAGE = """You are a software architect, and the leading expert on the project has given you the following feedback:
+{feedback}
+
+This feedback is on the following analysis:
+{analysis}
+
+Your task is to update the analysis based on the feedback provided, of course using the tools available to you.
+If the feedback is not relevant, you can ignore it and return the analysis as is.
+You should again follow the steps of the analysis 1-5.
+
+Please give back the updated analysis.
+"""
 
 SYSTEM_DETAILS_MESSAGE = """You are a software architecture expert analyzing a subsystem of `{project_name}`.
 
@@ -72,8 +83,6 @@ Use tools when needed. Complete all tasks using available tools."""
 
 SUBCFG_DETAILS_MESSAGE = """Extract relevant CFG components for {component} from `{project_name}`.
 
-CFG Format: `"from_method_call": ["invoked_method_1", "invoked_method_2"]`
-
 {cfg_str}
 
 Return only the subgraph, no explanations."""
@@ -90,8 +99,8 @@ Tasks:
 3. Define components with names, descriptions, and source files
 4. Map component relationships and interactions (max 10 components and 2 relationships between any two components)
 
-Output: Valid JSON only, no explanations.
-{format_instructions}"""
+Please explain why you chose these components and why they are fundamental.
+"""
 
 ENHANCE_STRUCTURE_MESSAGE = """Validate and refine component analysis for {component} in `{project_name}`.
 
@@ -103,8 +112,8 @@ Tasks:
 2. Refine components based on structure information
 3. Collect components with names, descriptions, source files, and relationships
 
-Output: Valid JSON only, no explanations.
-{format_instructions}"""
+Please explain why you chose these components and why they are fundamental.
+"""
 
 DETAILS_MESSAGE = """Final component overview for {component}.
 
@@ -117,5 +126,45 @@ Tasks:
 3. Provide component names, descriptions, and source files
 4. Map component interactions (max 2 relationships between any two components)
 
-Output: Valid JSON only, no explanations.
-{format_instructions}"""
+Please explain why you chose these components and why they are fundamental.
+"""
+
+PLANNER_SYSTEM_MESSAGE = """You are a software architecture expert of a software project.
+You are evaluating if a component is worth expanding further.
+
+1. Use the file structure, cfg, package and source code structure to check if the component has further logic/structure worth expanding.
+2. Use the cfg, method invocations and source code to check if the component has further logic/structure worth expanding.
+"""
+
+EXPANSION_PROMPT = """
+You are an expert in software architecture and design. You are seeing one component:
+{component}
+
+Your task is to decide if the logic for that component is worth expanding further.
+I.e. is it just few function calls between 1, 2 classes. Or it is a subsystem that is worth expanding further.
+
+Please explain your reasoning.
+"""
+
+VALIDATOR_SYSTEM_MESSAGE = """You are a software architecture expert validating the analysis of a software project.
+Your task is to validate the analysis of the components and their relationships.
+1. Use the file structure, cfg, package structure and source code to validate the components.
+2. Use the cfg, method invocations and source code to validate the relationships between components. 
+"""
+
+COMPONENT_VALIDATION_COMPONENT = """
+You are an expert in software architecture and design. You are seeing one component:
+{analysis}
+
+Your task is to decide if the components are valid, i.e. each of them has a clear purpose, has a clear set of responsibilities and the sources that are related to it are complete.
+
+Please explain your reasoning.
+"""
+
+RELATIONSHIPS_VALIDATION = """
+You are an expert in software architecture and design. You are seeing the following analysis:
+{analysis}
+
+Your task is to validate the relationships between components. Each component should have a clear set of relationships with other components, and there should not be more than 2 relationships between any two components.
+Please explain your reasoning for bad relationships.
+"""
