@@ -17,12 +17,12 @@ CFG_MESSAGE = """Analyze the Control Flow Graph for `{project_name}`.
 
 Tasks:
 1. Identify important modules/functions from CFG
-2. Group classes/functions into high-level abstractions using **read_class_structure**
-3. Use **package_relations** to understand package relationships for meaningful grouping
-4. Identify top components (max 20) with names, descriptions, and source files
+2. Group classes/functions into high-level abstractions using **getClassHierarchy**
+3. Use **getPackageDependencies** to understand package relationships for meaningful grouping
+4. Identify abstract components (max 20) with names, descriptions, and relevant source files
 5. Define component relationships and interactions. There should not be more thane 2 relationships between any two components.
 
-Please explain why you chose these components and why they are fundamental.
+Please keep as simple as possible as this is the highest level of abstraction (logging and error handling are not needed here).
 """
 
 SOURCE_MESSAGE = """Validate and enhance component analysis using source code.
@@ -31,11 +31,11 @@ Current analysis:
 {insight_so_far}
 
 Tasks:
-1. Use **read_source_code** to examine component details
+1. Use **getClassHierarchy** to examine component details
 2. Refine components to maximum 10 based on source code insights
 3. Define each component: name, documents, relationships, roles, and neighbor interactions
 
-Please explain why you chose these components and why they are fundamental.
+Please keep as simple as possible as this is the highest level of abstraction (logging and error handling are not needed here).
 """
 
 CONCLUSIVE_ANALYSIS_MESSAGE = """Final architecture analysis for `{project_name}`.
@@ -51,7 +51,7 @@ Tasks:
 2. Confirm component responsibilities and communication patterns from source analysis
 3. Produce final components (max 10 optimally 5) with names, descriptions, source files, and relationships (No more than 2 relationships between any two components)
 
-Please explain why you chose these components and why they are fundamental.
+Please keep as simple as possible as this is the highest level of abstraction (logging and error handling are not needed here).
 """
 
 FEEDBACK_MESSAGE = """You are a software architect, and the leading expert on the project has given you the following feedback:
@@ -89,13 +89,11 @@ Return only the subgraph, no explanations."""
 
 CFG_DETAILS_MESSAGE = """Analyze CFG interactions for `{project_name}` subsystem.
 
-CFG Format: `"from_method_call": ["invoked_method_1", "invoked_method_2"]`
-
 {cfg_str}
 
 Tasks:
 1. Identify important modules/functions
-2. Use **read_source_code** for interaction details
+2. Use **getClassHierarchy** for interaction details
 3. Define components with names, descriptions, and source files
 4. Map component relationships and interactions (max 10 components and 2 relationships between any two components)
 
@@ -108,7 +106,7 @@ Current insights:
 {insight_so_far}
 
 Tasks:
-1. Validate abstractions using **read_structure** and **package_relations**
+1. Validate abstractions using **getClassHierarchy** and **getPackageDependencies**
 2. Refine components based on structure information
 3. Collect components with names, descriptions, source files, and relationships
 
@@ -121,7 +119,7 @@ Analysis summary:
 {insight_so_far}
 
 Tasks:
-1. Use **read_source_code** for detailed component analysis
+1. Use **getClassHierarchy** for detailed component analysis
 2. Define components and relationships (max 10)
 3. Provide component names, descriptions, and source files
 4. Map component interactions (max 2 relationships between any two components)
