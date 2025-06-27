@@ -58,15 +58,15 @@ jobs:
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "source_branch=${{ github.head_ref }}" >> $GITHUB_OUTPUT
             echo "target_branch=${{ github.base_ref }}" >> $GITHUB_OUTPUT
-            echo "repository_url=${{ github.repository }}" >> $GITHUB_OUTPUT
+            echo "repository_url=https://github.com/${{ github.repository }}" >> $GITHUB_OUTPUT
           elif [ "${{ github.event.inputs.source_branch }}" != "" ] && [ "${{ github.event.inputs.target_branch }}" != "" ]; then
             echo "source_branch=${{ github.event.inputs.source_branch }}" >> $GITHUB_OUTPUT
             echo "target_branch=${{ github.event.inputs.target_branch }}" >> $GITHUB_OUTPUT
-            echo "repository_url=${{ github.event.inputs.repository_url || github.repository }}" >> $GITHUB_OUTPUT
+            echo "repository_url=${{ github.event.inputs.repository_url || format('https://github.com/{0}', github.repository) }}" >> $GITHUB_OUTPUT
           else
             echo "source_branch=master" >> $GITHUB_OUTPUT
             echo "target_branch=master" >> $GITHUB_OUTPUT
-            echo "repository_url=${{ github.repository }}" >> $GITHUB_OUTPUT
+            echo "repository_url=https://github.com/${{ github.repository }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Fetch CodeBoarding Documentation
