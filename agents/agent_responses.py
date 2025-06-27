@@ -119,3 +119,34 @@ class ValidationInsights(BaseModel):
 
     def llm_str(self):
         return f"**Feedback Information:**\n{self.additional_info}"
+
+
+class UpdateAnalysis(BaseModel):
+    update_degree: int = Field(
+        description="Degree to which the diagram needs update. 0 means no update, 10 means complete update."
+    )
+    feedback: str = Field(description="Feedback provided on the analysis.")
+
+    def llm_str(self):
+        return f"**Updated Analysis:**\n{self.analysis.llm_str()}\n\n**Feedback:**\n{self.feedback}"
+
+
+class MetaAnalysisInsights(BaseModel):
+    project_type: str = Field(description="Type/category of the project (e.g., web framework, data processing, ML library, etc.)")
+    domain: str = Field(description="Domain or field the project belongs to (e.g., web development, data science, DevOps, etc.)")
+    architectural_patterns: List[str] = Field(description="Main architectural patterns typically used in such projects")
+    expected_components: List[str] = Field(description="Expected high-level components/modules based on project type")
+    technology_stack: List[str] = Field(description="Main technologies, frameworks, and libraries used")
+    architectural_bias: str = Field(description="Guidance on how to interpret and organize components for this project type")
+    
+    def llm_str(self):
+        title = "# 🎯 Project Metadata Analysis\n"
+        content = f"""
+**Project Type:** {self.project_type}
+**Domain:** {self.domain}
+**Technology Stack:** {', '.join(self.technology_stack)}
+**Architectural Patterns:** {', '.join(self.architectural_patterns)}
+**Expected Components:** {', '.join(self.expected_components)}
+**Architectural Bias:** {self.architectural_bias}
+"""
+        return title + content
