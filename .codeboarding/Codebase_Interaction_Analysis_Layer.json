@@ -1,0 +1,147 @@
+{
+  "description": "The `Codebase Interaction & Analysis Layer` is a crucial component in an AI-powered Software Engineering (AI4SE) tool, as it directly enables AI agents to understand and interact with the underlying codebase. This layer acts as the bridge between the AI's reasoning capabilities and the raw code, providing the necessary context and data for intelligent decision-making and actions. These three components are fundamental because they represent a clear separation of concerns within the `Codebase Interaction & Analysis Layer`. The `Agent Tooling Layer` focuses on providing a unified interface for agents, the `Static Analysis Engine` handles the complex task of code understanding, and the `Repository Interaction Utilities` manage interactions with the version control system. This modular design promotes reusability, testability, and scalability, which are critical for an AI-powered software engineering tool.",
+  "components": [
+    {
+      "name": "Agent Tooling Layer",
+      "description": "This component provides a comprehensive suite of tools that specialized AI agents can utilize to interact with the codebase, retrieve information, and perform specific operations. It acts as the agents' primary interface to the project's source code, file system, and documentation. The tools abstract away the complexities of data retrieval, offering a simplified and consistent API for agents to access various types of code-related information. This component is fundamental because it directly empowers the AI agents to \"see\" and \"understand\" the code, which is essential for any AI4SE application.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "agents/tools/read_file.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/tools/read_file.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "agents/tools/read_source.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/tools/read_source.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "agents/tools/read_packages.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/tools/read_packages.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "agents/tools/read_git_diff.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/tools/read_git_diff.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "agents/tools/read_docs.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/tools/read_docs.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "agents/tools/get_method_invocations.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/tools/get_method_invocations.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "agents/tools/read_cfg.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/tools/read_cfg.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "agents/tools/read_file_structure.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/tools/read_file_structure.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "agents/tools/read_structure.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/tools/read_structure.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "agents/tools/external_deps.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/tools/external_deps.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "agents/tools/utils.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/tools/utils.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ]
+    },
+    {
+      "name": "Static Analysis Engine",
+      "description": "This component is dedicated to performing deep static analysis of the codebase. It is responsible for generating structured analytical data, such as call graphs and structure graphs, primarily using Pylint. It transforms raw source code into actionable, graph-based representations that can be consumed by other components, particularly the `Agent Tooling Layer`, to provide rich context to the AI agents. This component is fundamental because it provides the \"intelligence\" behind the code understanding. Raw code is just text; the static analysis engine transforms it into meaningful data structures that AI agents can reason about.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "static_analyzer/pylint_analyze/call_graph_builder.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/static_analyzer/pylint_analyze/call_graph_builder.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "static_analyzer/pylint_analyze/structure_graph_builder.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/static_analyzer/pylint_analyze/structure_graph_builder.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "static_analyzer/pylint_graph_transform.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/static_analyzer/pylint_graph_transform.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "static_analyzer/reference_lines.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/static_analyzer/reference_lines.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ]
+    },
+    {
+      "name": "Repository Interaction Utilities",
+      "description": "This component provides specialized functionalities for interacting with Git repositories. Its primary role is to abstract away the complexities of Git operations, offering utilities for tasks such as reading diffs between commits, which are essential for agents that need to understand changes in the codebase or access repository-specific metadata. This component is fundamental because modern software development heavily relies on version control systems like Git. For an AI agent to be truly effective in a software engineering context, it needs to be able to interact with and understand the history and changes within a repository.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "repo_utils/git_diff.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/repo_utils/git_diff.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "repo_utils/errors.py",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/repo_utils/errors.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ]
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "invokes tools from",
+      "src_name": "Agent Tooling Layer",
+      "dst_name": "Static Analysis Engine"
+    },
+    {
+      "relation": "utilizes functionalities from",
+      "src_name": "Agent Tooling Layer",
+      "dst_name": "Repository Interaction Utilities"
+    },
+    {
+      "relation": "provides static analysis data to",
+      "src_name": "Static Analysis Engine",
+      "dst_name": "Agent Tooling Layer"
+    },
+    {
+      "relation": "provides Git-specific data to",
+      "src_name": "Repository Interaction Utilities",
+      "dst_name": "Agent Tooling Layer"
+    }
+  ]
+}
