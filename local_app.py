@@ -1,6 +1,6 @@
 import dotenv
 
-from diagram_analysis import DiagramGenerator
+from demo import generate_docs_remote
 
 dotenv.load_dotenv()
 
@@ -21,7 +21,7 @@ from starlette.concurrency import run_in_threadpool
 
 from duckdb_crud import fetch_job, init_db, insert_job, update_job, fetch_all_jobs
 from github_action import generate_analysis
-from repo_utils import RepoDontExistError, clone_repository
+from repo_utils import RepoDontExistError
 from utils import CFGGenerationError, create_temp_repo_folder, remove_temp_repo_folder
 
 logging.basicConfig(level=logging.INFO)
@@ -73,16 +73,6 @@ def extract_repo_name(repo_url: str) -> str:
     raise ValueError(f"Invalid GitHub URL: {repo_url}")
 
 
-def generate_documents(repo_path, temp_repo_folder, repo_name):
-    generator = DiagramGenerator(
-        repo_location=repo_path,
-        temp_folder=temp_repo_folder,
-        repo_name=repo_name,
-        output_dir=temp_repo_folder
-    )
-    return generator.generate_analysis()
-
-
 # -- Job Creation & Processing --
 def make_job(repo_url: str) -> dict:
     job_id = str(uuid.uuid4())
@@ -113,12 +103,10 @@ async def generate_onboarding(job_id: str):
 
                 # run generation
                 repo_name = extract_repo_name(job["repo_url"])
-                repo_path = Path(REPO_ROOT) / repo_name
                 await run_in_threadpool(
-                    generate_documents,
-                    repo_path=repo_path,
+                    generate_docs_remote,
+                    repo_url=job["repo_url"],
                     temp_repo_folder=temp_repo_folder,
-                    repo_name=repo_name,
                 )
 
                 # format result URL
@@ -148,8 +136,8 @@ async def generate_onboarding(job_id: str):
     summary="Create a new onboarding job"
 )
 async def start_generation_job(
-    repo_url: str = Query(..., description="GitHub repo URL"),
-    background_tasks: BackgroundTasks = None
+        repo_url: str = Query(..., description="GitHub repo URL"),
+        background_tasks: BackgroundTasks = None
 ):
     if not repo_url:
         raise HTTPException(400, detail="repo_url is required")
@@ -206,7 +194,7 @@ async def start_docs_generation_job(
     """
     logger.info("Received request to start docs generation job for %s", docs_request.url)
 
-    if docs_request.extension not in [".md", ".rst"]:
+    if docs_request.extension not in [".md", ".rst", ".html", ".mdx"]:
         logger.warning("Unsupported extension provided: %s. Defaulting to markdown", docs_request.extension)
         docs_request.extension = ".md"  # Default to markdown if unsupported extension is provided
 
@@ -259,7 +247,7 @@ async def get_github_action_status(job_id: str):
     if not job:
         logger.warning("Job not found: %s", job_id)
         raise HTTPException(404, detail="Job not found")
-    
+
     response_data = {
         "job_id": job["id"],
         "status": job["status"],
@@ -300,7 +288,7 @@ async def list_jobs():
     """
     jobs_list = []
     all_jobs = fetch_all_jobs()
-    
+
     for job in all_jobs:
         job_summary = {
             "job_id": job["id"],
@@ -353,7 +341,8 @@ async def process_docs_generation_job(job_id: str, url: str, source_branch: str,
 
         if not docs_content:
             logger.warning("No documentation files generated for: %s", url)
-            update_job(job_id, status=JobStatus.FAILED, error="No documentation files were generated", finished_at=datetime.utcnow())
+            update_job(job_id, status=JobStatus.FAILED, error="No documentation files were generated",
+                       finished_at=datetime.utcnow())
             return
 
         # Store result as JSON string in the result field
@@ -364,11 +353,13 @@ async def process_docs_generation_job(job_id: str, url: str, source_branch: str,
 
     except RepoDontExistError as e:
         logger.warning("Repo not found or clone failed: %s (job: %s)", url, job_id)
-        update_job(job_id, status=JobStatus.FAILED, error=f"Repository not found or failed to clone: {url}", finished_at=datetime.utcnow())
+        update_job(job_id, status=JobStatus.FAILED, error=f"Repository not found or failed to clone: {url}",
+                   finished_at=datetime.utcnow())
 
     except CFGGenerationError as e:
         logger.warning("CFG generation error for: %s (job: %s)", url, job_id)
-        update_job(job_id, status=JobStatus.FAILED, error="Failed to generate diagram. We will look into it 🙂", finished_at=datetime.utcnow())
+        update_job(job_id, status=JobStatus.FAILED, error="Failed to generate diagram. We will look into it 🙂",
+                   finished_at=datetime.utcnow())
 
     except Exception as e:
         logger.exception("Unexpected error processing repo %s (job: %s)", url, job_id)

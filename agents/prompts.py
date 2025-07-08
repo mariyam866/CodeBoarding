@@ -63,6 +63,7 @@ Tasks:
 2. Confirm component responsibilities and communication patterns from source analysis
 3. Produce final components (max 10 optimally 5) with names, descriptions, source files, and relationships, following {project_type} architectural patterns
 4. Ensure no more than 2 relationships between any two components
+5. Give a short explanation of the full project in a single paragraph, explaining the main flow of the project.
 
 Please keep as simple as possible as this is the highest level of abstraction (logging and error handling are not needed here).
 """
@@ -173,6 +174,8 @@ VALIDATOR_SYSTEM_MESSAGE = """You are a software architecture expert validating 
 Your task is to validate the analysis of the components and their relationships.
 1. Use the file structure, cfg, package structure and source code to validate the components.
 2. Use the cfg, method invocations and source code to validate the relationships between components. 
+3. Validate that all source references are valid files/method references and are not empty
+4. Component names make sense in general, but also include code reference name i.e. Endpoint API(PPS API) for python module named pps which acts as an API for the system.
 """
 
 COMPONENT_VALIDATION_COMPONENT = """

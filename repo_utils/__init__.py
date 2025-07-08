@@ -1,5 +1,5 @@
-import os
 import logging
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -91,16 +91,26 @@ def upload_onboarding_materials(project_name, output_dir, repo_dir="/home/ivan/S
     origin = repo.remote(name='origin')
     origin.pull()
 
+    no_new_files = True
+    for filename in os.listdir(output_dir):
+        if filename.endswith('.md'):
+            no_new_files = False
+            break
+    if no_new_files:
+        logging.info(f"No new onboarding files to upload for {project_name}.")
+        return
+
     onboarding_repo_location = os.path.join(repo_dir, project_name)
     if os.path.exists(onboarding_repo_location):
         shutil.rmtree(onboarding_repo_location)
     os.makedirs(onboarding_repo_location)
 
     for filename in os.listdir(output_dir):
-        if filename.endswith('.md') or filename.endswith('.svg'):
+        if filename.endswith('.md'):
             shutil.copy(os.path.join(output_dir, filename), os.path.join(onboarding_repo_location, filename))
     # Now commit the changes
-    repo.git.add(A=True)  # Equivalent to `git add .`
+    # Equivalent to `git add onboarding_repo_location .`.git.add(A=True)  # Equivalent to `git add .`
+    repo.git.add(onboarding_repo_location, A=True)
     repo.index.commit(f"Uploading onboarding materials for {project_name}")
     origin.push()
 
@@ -111,3 +121,11 @@ def get_git_commit_hash(repo_dir: str) -> str:
     """
     repo = Repo(repo_dir)
     return repo.head.commit.hexsha
+
+
+def get_branch(repo_dir: Path) -> str:
+    """
+    Get the current branch name of the repository.
+    """
+    repo = Repo(repo_dir)
+    return repo.active_branch.name if repo.active_branch else "main"

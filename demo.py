@@ -10,8 +10,8 @@ from agents.agent_responses import AnalysisInsights
 from diagram_analysis import DiagramGenerator
 from logging_config import setup_logging
 from output_generators.markdown import generate_markdown_file
-from repo_utils import store_token, clone_repository, upload_onboarding_materials
-from utils import create_temp_repo_folder, remove_temp_repo_folder, caching_enabled
+from repo_utils import store_token, clone_repository, upload_onboarding_materials, get_branch
+from utils import create_temp_repo_folder, caching_enabled, remove_temp_repo_folder
 
 
 def onboarding_materials_exist(project_name: str, source_dir: str):
@@ -31,7 +31,6 @@ def generate_docs(repo_name: str, temp_repo_folder: Path, repo_url: str = None):
     repos_dir.mkdir(parents=True, exist_ok=True)
 
     repo_path = repos_dir / repo_name
-
     if caching_enabled() and onboarding_materials_exist(repo_name, ROOT_RESULT):
         logging.info(f"Cache hit for '{repo_name}', skipping documentation generation.")
         return
@@ -47,7 +46,10 @@ def generate_docs(repo_name: str, temp_repo_folder: Path, repo_url: str = None):
             fname = Path(file).name.split(".json")[0]
             if fname.endswith("analysis"):
                 fname = "on_boarding"
-            generate_markdown_file(fname, analysis, repo_name, repo_ref=repo_url, linked_files=analysis_files,
+            target_branch = get_branch(repo_path)
+            generate_markdown_file(fname, analysis, repo_name,
+                                   repo_ref=f"{repo_url}/blob/{target_branch}/{temp_repo_folder}",
+                                   linked_files=analysis_files,
                                    temp_dir=temp_repo_folder, demo=True)
 
 
@@ -74,26 +76,29 @@ if __name__ == "__main__":
     setup_logging()
     logging.info("Starting up…")
     # Load the repos.csv:
+    import csv
 
-    # companies = set()
-    # with open("/home/ivan/StartUp/CodeBoarding/enhanced_python_repositories_with_languages.csv", "r") as f:
-    #     csv_reader = csv.reader(f)
-    #     rows = list(csv_reader)  # Read all rows into a list
-    #
-    #     # Skip the header
-    # data_rows = rows[1:]
-    # repos = [(row[2], row[0], row[3]) for row in data_rows]
+    companies = set()
+    langs = "python"
+    with open("/home/ivan/StartUp/CodeBoarding/enhanced_python_repositories_with_languages.csv", "r") as f:
+        csv_reader = csv.reader(f)
+        rows = list(csv_reader)  # Read all rows into a list
+
+        # Skip the header
+    data_rows = rows[1:]
+    repos = [(row[2], row[0], row[3]) for row in data_rows]
     # Extract the second column (repo URLs)
-    repos = ["https://github.com/microsoft/markitdown"]
-    for repo in tqdm(repos, desc="Generating docs for repos"):
+    # repos = ["https://github.com/pinterest/pinterest-python-sdk",
+    #          "https://github.com/lastmile-ai/mcp-agent"]
+    for repo, company, lang in tqdm(repos, desc="Generating docs for repos"):
         temp_repo_folder = create_temp_repo_folder()
-        # if company in companies:
-        #     continue
-        # if "python" not in langs.lower():
-        #     continue
+        if company in companies:
+            continue
+        if "python" not in langs.lower():
+            continue
         try:
             generate_docs_remote(repo, temp_repo_folder, local_dev=True)
-            # companies.add(company)
+            companies.add(company)
         except Exception as e:
             logging.error(f"Failed to generate docs for {repo}: {e}")
         finally:

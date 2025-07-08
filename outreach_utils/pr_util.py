@@ -6,6 +6,7 @@ import subprocess
 import sys
 import os
 import time
+from git import Repo
 import requests
 from pathlib import Path
 from dotenv import load_dotenv
@@ -99,7 +100,7 @@ def run_command(command, cwd=None):
         sys.exit(1)
 
 
-def update_markdown_links(file_path, original_owner, repo_url, repo_name):
+def update_markdown_links(file_path, original_owner, repo_path, repo_name):
     """
     Update links in markdown files to point to the correct repository
     
@@ -123,7 +124,8 @@ def update_markdown_links(file_path, original_owner, repo_url, repo_name):
         return re.sub(pattern, rf'{replacement_base}/\1', line)
 
     # Extract base URL (remove .git if present and ensure no trailing slash)
-    base_repo_url = f"https://github.com/{original_owner}/{repo_name}/blob/main/.codeboarding/"
+    branch_name = get_branch(repo_path)
+    base_repo_url = f"https://github.com/{original_owner}/{repo_name}/blob/{branch_name}/.codeboarding/"
     final_content = []
     for line in content:
         # Replace links in the line
@@ -136,6 +138,14 @@ def update_markdown_links(file_path, original_owner, repo_url, repo_name):
     content = "\n".join(final_content)
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(content)
+
+
+def get_branch(repo_dir: Path) -> str:
+    """
+    Get the current branch name of the repository.
+    """
+    repo = Repo(repo_dir)
+    return repo.active_branch.name if repo.active_branch else "main"
 
 
 def main():
@@ -208,12 +218,12 @@ def main():
 
     # Update links in on_boarding.md if it exists
     on_boarding_file = target_dir / "on_boarding.md"
-    update_markdown_links(on_boarding_file, original_owner, repo_url, repo_name)
+    update_markdown_links(on_boarding_file, original_owner, repo_path, repo_name)
 
     # Also update links in all other markdown files
     for md_file in target_dir.rglob("*.md"):
         if md_file != on_boarding_file:  # Skip if already processed
-            update_markdown_links(md_file, original_owner, repo_url, repo_name)
+            update_markdown_links(md_file, original_owner, repo_path, repo_name)
 
     # Git operations
     print("Adding files to git...")
