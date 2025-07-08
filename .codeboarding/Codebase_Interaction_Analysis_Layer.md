@@ -13,7 +13,7 @@ graph LR
 
 ## Details
 
-The `Codebase Interaction & Analysis Layer` is a crucial component in an AI-powered Software Engineering (AI4SE) tool, as it directly enables AI agents to understand and interact with the underlying codebase. This layer acts as the bridge between the AI's reasoning capabilities and the raw code, providing the necessary context and data for intelligent decision-making and actions. These three components are fundamental because they represent a clear separation of concerns within the `Codebase Interaction & Analysis Layer`. The `Agent Tooling Layer` focuses on providing a unified interface for agents, the `Static Analysis Engine` handles the complex task of code understanding, and the `Repository Interaction Utilities` manage interactions with the version control system. This modular design promotes reusability, testability, and scalability, which are critical for an AI-powered software engineering tool.
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
 ### Agent Tooling Layer
 This component provides a comprehensive suite of tools that specialized AI agents can utilize to interact with the codebase, retrieve information, and perform specific operations. It acts as the agents' primary interface to the project's source code, file system, and documentation. The tools abstract away the complexities of data retrieval, offering a simplified and consistent API for agents to access various types of code-related information. This component is fundamental because it directly empowers the AI agents to "see" and "understand" the code, which is essential for any AI4SE application.
@@ -21,17 +21,17 @@ This component provides a comprehensive suite of tools that specialized AI agent
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_file.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents/tools/read_file.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_source.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents/tools/read_source.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_packages.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents/tools/read_packages.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_git_diff.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents/tools/read_git_diff.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_docs.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents/tools/read_docs.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/get_method_invocations.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents/tools/get_method_invocations.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_cfg.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents/tools/read_cfg.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_file_structure.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents/tools/read_file_structure.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_structure.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents/tools/read_structure.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/external_deps.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents/tools/external_deps.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/utils.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents/tools/utils.py` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_file.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_file` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_source.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_source` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_packages.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_packages` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_git_diff.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_git_diff` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_docs.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_docs` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/get_method_invocations.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.get_method_invocations` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_cfg.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_cfg` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_file_structure.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_file_structure` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_structure.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_structure` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/external_deps.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.external_deps` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/utils.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.utils` (1:1)</a>
 
 
 ### Static Analysis Engine
@@ -40,10 +40,10 @@ This component is dedicated to performing deep static analysis of the codebase. 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/pylint_analyze/call_graph_builder.py#L1-L1" target="_blank" rel="noopener noreferrer">`static_analyzer/pylint_analyze/call_graph_builder.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/pylint_analyze/structure_graph_builder.py#L1-L1" target="_blank" rel="noopener noreferrer">`static_analyzer/pylint_analyze/structure_graph_builder.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/pylint_graph_transform.py#L1-L1" target="_blank" rel="noopener noreferrer">`static_analyzer/pylint_graph_transform.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/reference_lines.py#L1-L1" target="_blank" rel="noopener noreferrer">`static_analyzer/reference_lines.py` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/pylint_analyze/call_graph_builder.py#L1-L1" target="_blank" rel="noopener noreferrer">`static_analyzer.pylint_analyze.call_graph_builder` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/pylint_analyze/structure_graph_builder.py#L1-L1" target="_blank" rel="noopener noreferrer">`static_analyzer.pylint_analyze.structure_graph_builder` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/pylint_graph_transform.py#L1-L1" target="_blank" rel="noopener noreferrer">`static_analyzer.pylint_graph_transform` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/reference_lines.py#L1-L1" target="_blank" rel="noopener noreferrer">`static_analyzer.reference_lines` (1:1)</a>
 
 
 ### Repository Interaction Utilities
@@ -52,8 +52,8 @@ This component provides specialized functionalities for interacting with Git rep
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/git_diff.py#L1-L1" target="_blank" rel="noopener noreferrer">`repo_utils/git_diff.py` (1:1)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/errors.py#L1-L1" target="_blank" rel="noopener noreferrer">`repo_utils/errors.py` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/git_diff.py#L1-L1" target="_blank" rel="noopener noreferrer">`repo_utils.git_diff` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/errors.py#L1-L1" target="_blank" rel="noopener noreferrer">`repo_utils.errors` (1:1)</a>
 
 
 

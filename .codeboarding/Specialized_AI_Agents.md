@@ -31,7 +31,7 @@ graph LR
 
 ## Details
 
-This document outlines the architecture of an AI-powered Software Engineering (AI4SE) tool, focusing on its core components and their interactions. The system is designed around an intelligent agent system pattern, where specialized AI agents perform distinct code analysis and documentation generation tasks, coordinated by a central orchestration unit. Key components include Specialized AI Agents, Core Agent Framework, Agent Orchestration Unit, Agent Tooling Layer, Static Analysis Engine, Data Management Layer, Output Generation Layer, and Repository Interaction Utilities. These components collectively form a robust, modular, and scalable architecture for complex code analysis and generation tasks.
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
 ### Specialized AI Agents [[Expand]](./Specialized_AI_Agents.md)
 A collection of AI agents, each designed for a specific analysis task within the software engineering workflow. These agents inherit from the Core Agent Framework and leverage the Agent Tooling Layer to perform their specialized functions, such as generating abstractions, extracting details, analyzing diffs, planning, or validating code. They are distinct from the Agent Orchestration Unit, which coordinates their activities.
@@ -41,9 +41,9 @@ A collection of AI agents, each designed for a specific analysis task within the
 
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/abstraction_agent.py#L9-L94" target="_blank" rel="noopener noreferrer">`agents.abstraction_agent.AbstractionAgent` (9:94)</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/details_agent.py#L11-L103" target="_blank" rel="noopener noreferrer">`agents.details_agent.DetailsAgent` (11:103)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/diff_analyzer.py#L16-L130" target="_blank" rel="noopener noreferrer">`agents.diff_analyzer.DiffAnalyzingAgent` (16:130)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/diff_analyzer.py#L16-L132" target="_blank" rel="noopener noreferrer">`agents.diff_analyzer.DiffAnalyzingAgent` (16:132)</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/planner_agent.py#L8-L26" target="_blank" rel="noopener noreferrer">`agents.planner_agent.PlannerAgent` (8:26)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/validator_agent.py#L8-L42" target="_blank" rel="noopener noreferrer">`agents.validator_agent.ValidatorAgent` (8:42)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/validator_agent.py#L10-L64" target="_blank" rel="noopener noreferrer">`agents.validator_agent.ValidatorAgent` (10:64)</a>
 
 
 ### Core Agent Framework
@@ -52,9 +52,9 @@ This component provides the foundational structure and common functionalities fo
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/agent.py" target="_blank" rel="noopener noreferrer">`agents/agent.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/agent_responses.py" target="_blank" rel="noopener noreferrer">`agents/agent_responses.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/prompts.py" target="_blank" rel="noopener noreferrer">`agents/prompts.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/agent.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.agent` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/agent_responses.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.agent_responses` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/prompts.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.prompts` (1:1)</a>
 
 
 ### Agent Orchestration Unit
@@ -63,7 +63,7 @@ As the central brain, this component coordinates the overall workflow, manages t
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/meta_agent.py" target="_blank" rel="noopener noreferrer">`agents/meta_agent.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/meta_agent.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.meta_agent` (1:1)</a>
 
 
 ### Agent Tooling Layer
@@ -72,9 +72,10 @@ This layer provides a suite of tools that agents can utilize to interact with th
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_file.py" target="_blank" rel="noopener noreferrer">`agents/tools/read_file.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_source.py" target="_blank" rel="noopener noreferrer">`agents/tools/read_source.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_git_diff.py" target="_blank" rel="noopener noreferrer">`agents/tools/read_git_diff.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_file.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_file` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_source.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_source` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_git_diff.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_git_diff` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_docs.py#L1-L1" target="_blank" rel="noopener noreferrer">`agents.tools.read_docs` (1:1)</a>
 
 
 ### Static Analysis Engine
@@ -83,9 +84,9 @@ This component is responsible for deep static analysis of the codebase, generati
 
 **Related Classes/Methods**:
 
-- `static_analyzer/pylint_analyze.py`
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/pylint_graph_transform.py" target="_blank" rel="noopener noreferrer">`static_analyzer/pylint_graph_transform.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/reference_lines.py" target="_blank" rel="noopener noreferrer">`static_analyzer/reference_lines.py`</a>
+- `static_analyzer.pylint_analyze` (1:1)
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/pylint_graph_transform.py#L1-L1" target="_blank" rel="noopener noreferrer">`static_analyzer.pylint_graph_transform` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/reference_lines.py#L1-L1" target="_blank" rel="noopener noreferrer">`static_analyzer.reference_lines` (1:1)</a>
 
 
 ### Data Management Layer
@@ -94,7 +95,7 @@ Handles the persistence, retrieval, and management of structured data, such as a
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/duckdb_crud.py" target="_blank" rel="noopener noreferrer">`duckdb_crud.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/duckdb_crud.py#L1-L1" target="_blank" rel="noopener noreferrer">`duckdb_crud` (1:1)</a>
 
 
 ### Output Generation Layer
@@ -103,10 +104,10 @@ Transforms processed information and analysis results into various human-readabl
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/html.py" target="_blank" rel="noopener noreferrer">`output_generators/html.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/markdown.py" target="_blank" rel="noopener noreferrer">`output_generators/markdown.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/sphinx.py" target="_blank" rel="noopener noreferrer">`output_generators/sphinx.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/html_template.py" target="_blank" rel="noopener noreferrer">`output_generators/html_template.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/html.py#L1-L1" target="_blank" rel="noopener noreferrer">`output_generators.html` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/markdown.py#L1-L1" target="_blank" rel="noopener noreferrer">`output_generators.markdown` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/sphinx.py#L1-L1" target="_blank" rel="noopener noreferrer">`output_generators.sphinx` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/html_template.py#L1-L1" target="_blank" rel="noopener noreferrer">`output_generators.html_template` (1:1)</a>
 
 
 ### Repository Interaction Utilities
@@ -115,8 +116,8 @@ Provides functionalities for interacting with Git repositories. This is a founda
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/git_diff.py" target="_blank" rel="noopener noreferrer">`repo_utils/git_diff.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/errors.py" target="_blank" rel="noopener noreferrer">`repo_utils/errors.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/git_diff.py#L1-L1" target="_blank" rel="noopener noreferrer">`repo_utils.git_diff` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/errors.py#L1-L1" target="_blank" rel="noopener noreferrer">`repo_utils.errors` (1:1)</a>
 
 
 

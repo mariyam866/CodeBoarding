@@ -1,92 +1,59 @@
 {
-  "description": "The `Agent Orchestration & Workflow` component serves as the central nervous system of the AI-powered software engineering tool. It is responsible for initiating, managing, and coordinating the entire code analysis and documentation generation pipeline. This component embodies the \"Agent Orchestration Unit\" and \"Pipeline/Workflow Pattern\" by defining the overall flow, from static analysis and initial project abstraction to detailed component analysis and iterative refinement.",
+  "description": "One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.",
   "components": [
     {
       "name": "Agent Orchestration & Workflow",
-      "description": "This is the central control unit responsible for initiating, managing, and coordinating the entire analysis workflow. It orchestrates the execution of various AI agents, processes their outputs, and directs the generation of final documentation. It defines the overall pipeline for code analysis and documentation, including static analysis generation, initial project abstraction, detailed component analysis, and iterative refinement based on validation and diff analysis.",
+      "description": "This component is the core orchestrator of the code understanding and onboarding platform. It manages the end-to-end workflow, from initiating code analysis to coordinating various AI agents and integrating their outputs to generate comprehensive documentation. It acts as the central nervous system, ensuring all sub-components work in harmony to achieve the project's goal.",
       "referenced_source_code": [
         {
-          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator",
+          "qualified_name": "diagram_analysis.diagram_generator",
           "reference_file": "/mnt/e/StartUp/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 22,
-          "reference_end_line": 210
-        },
-        {
-          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator:pre_analysis",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 82,
-          "reference_end_line": 104
-        },
-        {
-          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator:generate_analysis",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 106,
-          "reference_end_line": 184
-        },
-        {
-          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator:process_component",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 38,
-          "reference_end_line": 80
+          "reference_start_line": 1,
+          "reference_end_line": 100
         }
       ]
     },
     {
-      "name": "Specialized Analysis Agents",
-      "description": "A collection of distinct AI agents (e.g., `MetaAgent`, `AbstractionAgent`, `DetailsAgent`, `PlannerAgent`, `ValidatorAgent`, `DiffAnalyzingAgent`) each designed to perform specific, intelligent analysis tasks. These agents are responsible for core AI-driven reasoning, such as initial project abstraction, detailed component analysis, planning the analysis process, validating results, and analyzing code differences.",
+      "name": "Code Understanding Agents",
+      "description": "",
       "referenced_source_code": []
     },
     {
       "name": "Static Analysis Engine",
-      "description": "Provides foundational code analysis capabilities by extracting structural and relational data directly from the codebase. This includes building call graphs (`CallGraphBuilder`) and structure graphs (`StructureGraphBuilder`), which are crucial for providing objective, factual data to the AI agents for their reasoning processes.",
+      "description": "",
       "referenced_source_code": []
     },
     {
-      "name": "Output Generation Layer",
-      "description": "Responsible for transforming the processed analysis results and agent outputs into various human-readable documentation formats (e.g., HTML, Markdown, Sphinx). It takes the structured data produced by the Agent Orchestration & Workflow and renders the final user-facing documentation.",
+      "name": "Repository Utilities",
+      "description": "",
       "referenced_source_code": []
     },
     {
-      "name": "Repository Interaction Utilities",
-      "description": "Handles interactions with the code repository, including fetching code, managing versions, and potentially handling diffs. This component ensures the analysis workflow has access to the necessary source code and can track changes.",
+      "name": "Output Formatter",
+      "description": "",
       "referenced_source_code": []
     }
   ],
   "components_relations": [
     {
-      "relation": "orchestrates/invokes",
+      "relation": "initiates/orchestrates",
       "src_name": "Agent Orchestration & Workflow",
-      "dst_name": "Specialized Analysis Agents"
+      "dst_name": "Code Understanding Agents"
     },
     {
-      "relation": "return results to",
-      "src_name": "Specialized Analysis Agents",
-      "dst_name": "Agent Orchestration & Workflow"
-    },
-    {
-      "relation": "requests data from",
+      "relation": "integrates/uses",
       "src_name": "Agent Orchestration & Workflow",
       "dst_name": "Static Analysis Engine"
     },
     {
-      "relation": "provides data to",
-      "src_name": "Static Analysis Engine",
-      "dst_name": "Agent Orchestration & Workflow"
+      "relation": "utilizes",
+      "src_name": "Agent Orchestration & Workflow",
+      "dst_name": "Repository Utilities"
     },
     {
       "relation": "provides data to",
       "src_name": "Agent Orchestration & Workflow",
-      "dst_name": "Output Generation Layer"
-    },
-    {
-      "relation": "accesses code via",
-      "src_name": "Agent Orchestration & Workflow",
-      "dst_name": "Repository Interaction Utilities"
-    },
-    {
-      "relation": "provides code to",
-      "src_name": "Repository Interaction Utilities",
-      "dst_name": "Agent Orchestration & Workflow"
+      "dst_name": "Output Formatter"
     }
   ]
 }
