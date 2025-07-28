@@ -36,7 +36,7 @@ def generate_docs(repo_name: str, temp_repo_folder: Path, repo_url: str = None):
         return
 
     generator = DiagramGenerator(repo_location=repo_path, temp_folder=temp_repo_folder, repo_name=repo_name,
-                                 output_dir=temp_repo_folder, depth_level=int(os.getenv("DIAGRAM_DEPTH_LEVEL", "2")))
+                                 output_dir=temp_repo_folder, depth_level=int(os.getenv("DIAGRAM_DEPTH_LEVEL", "1")))
     analysis_files = generator.generate_analysis()
 
     for file in analysis_files:

@@ -32,6 +32,9 @@ class ValidatorAgent(CodeBoardingAgent):
     def validate_references(self, analysis: AnalysisInsights):
         info = []
         for component in analysis.components:
+            if not component.referenced_source_code:
+                info.append(f"Component {component.name} has no source code references. "
+                            f"Retry finding the proper source code reference via `getPythonSourceCode` tool. Or at least the correct file path with the `readFile` path.")
             for ref in component.referenced_source_code:
                 if not ref.reference_file:
                     info.append(f"Component {component.name} has incorrect source references: '{ref.llm_str()}'. "
@@ -40,6 +43,23 @@ class ValidatorAgent(CodeBoardingAgent):
             return ValidationInsights(is_valid=False,
                                       additional_info="\n".join(info))
         return ValidationInsights(is_valid=True, additional_info="All references are valid.")
+
+    def validate_component_relations(self, analysis: AnalysisInsights):
+        info = []
+        for relation in analysis.components_relations:
+            src = relation.src_name
+            dst = relation.dst_name
+            if not any(c.name == src for c in analysis.components):
+                info.append(
+                    f"Source component '{src}' in relation {relation.llm_str()} does not exist in the analysis.")
+            if not any(c.name == dst for c in analysis.components):
+                info.append(
+                    f"Destination component '{dst}' in relation {relation.llm_str()} does not exist in the analysis.")
+
+        if info:
+            return ValidationInsights(is_valid=False,
+                                      additional_info="\n".join(info))
+        return ValidationInsights(is_valid=True, additional_info="All component relations are valid.")
 
     def run(self, analysis: AnalysisInsights):
         """
@@ -60,6 +80,11 @@ class ValidatorAgent(CodeBoardingAgent):
         if not reference_validation.is_valid:
             insights += f"{reference_validation.llm_str()}\n\n"
             valid = False
+        component_relations = self.validate_component_relations(analysis)
+        if not component_relations.is_valid:
+            insights += f"{component_relations.llm_str()}\n\n"
+            valid = False
         logging.info(f"[ValidatorAgent] Validation result is {valid} with insights: {insights}")
+
         return ValidationInsights(is_valid=valid,
                                   additional_info=insights)

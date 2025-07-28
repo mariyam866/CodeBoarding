@@ -16,9 +16,10 @@ class ReadFileInput(BaseModel):
 class ReadFileTool(BaseTool):
     name: str = "readFile"
     description: str = (
-        "Reads a specified Python file, returning 200 lines of content centered around the requested line number. "
-        "This tool is useful for examining source code in detail, by focusing on a specific section of a file. "
-        "It only works with Python (.py) files."
+        "Reads specific Python file content around a target line number. "
+        "**PRECISION USE** - Only when specific implementation details are needed that CFG cannot provide. "
+        "Returns 300 lines centered on the requested line. "
+        "**AVOID** exploratory reading - use only when you know exactly what to examine."
     )
     args_schema: Optional[ArgsSchema] = ReadFileInput
     return_direct: bool = False
@@ -54,10 +55,15 @@ class ReadFileTool(BaseTool):
                 read_file = cached_file
                 break
 
-        files_str = '\n'.join([str(f) for f in self.cached_files])
+        common_prefix = str(self.repo_dir)
+        if len(file_path.suffixes) != 1 or file_path.suffix not in ['.py', '.md', '.txt', '.rst', '.yml']:
+            return f"Error: The specified file '{file_path}' is not a supported file type. " \
+                   f"Supported types are: .py, .md, .txt, .rst, .yml.\n"
         if read_file is None:
+            files_str = '\n'.join(
+                [str(f.relative_to(self.repo_dir)) for f in self.cached_files if f.suffix == file_path.suffix])
             return f"Error: The specified file '{file_path}' was not found in the indexed source files. " \
-                   f"Please ensure the path is correct and points to an existing Python file: {files_str}."
+                   f"Please ensure the path is correct and points to an existing Python file: {common_prefix}/\n{files_str}."
 
         # Read the file content
         with open(read_file, 'r', encoding='utf-8') as file:
@@ -69,18 +75,18 @@ class ReadFileTool(BaseTool):
             return f"Error: Line number {line_number} is out of range (0-{total_lines - 1})"
 
         # Calculate start and end line numbers based on the specified requirements
-        if line_number < 100:
+        if line_number < 150:
             start_line = 0
-            end_line = min(total_lines, 200)
+            end_line = min(total_lines, 300)
         else:
-            # Center 200 lines around the specified line number
-            start_line = max(0, line_number - 100)
-            end_line = min(total_lines, start_line + 200)
+            # Center 300 lines around the specified line number
+            start_line = max(0, line_number - 150)
+            end_line = min(total_lines, start_line + 300)
 
-            # If we're close to the end of the file and can't get 200 lines,
-            # adjust the start line to get as many lines as possible (up to 200)
-            if end_line - start_line < 200 and start_line > 0:
-                potential_start = max(0, total_lines - 200)
+            # If we're close to the end of the file and can't get 300 lines,
+            # adjust the start line to get as many lines as possible (up to 300)
+            if end_line - start_line < 300 and start_line > 0:
+                potential_start = max(0, total_lines - 300)
                 if potential_start < start_line:
                     start_line = potential_start
 

@@ -23,8 +23,10 @@ class CodeBoardingAgent:
         self.llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash",
             temperature=0,
-            max_retries=0,
-            google_api_key=self.api_key
+            max_tokens=None,
+            timeout=None,
+            max_retries=2,
+            api_key=self.api_key,
         )
         self.read_source_reference = CodeReferenceReader(repo_dir=repo_dir)
         self.read_packages_tool = PackageRelationsTool(analysis_dir=output_dir)
@@ -47,9 +49,9 @@ class CodeBoardingAgent:
         # As we cannot pass env files to someone's system
         self.api_key = os.getenv("GOOGLE_API_KEY")
 
-    def _invoke(self, prompt):
+    def _invoke(self, prompt) -> str:
         """Unified agent invocation method."""
-        max_retries = 3
+        max_retries = 5
         for attempt in range(max_retries):
             try:
                 response = self.agent.invoke(
@@ -61,20 +63,31 @@ class CodeBoardingAgent:
                     return agent_response.content
                 if type(agent_response.content) == list:
                     return "".join([message for message in agent_response.content])
-            except ResourceExhausted as e:
-                logging.error(f"Resource exhausted, retrying... in 60 seconds {e}")
+            except (ResourceExhausted, Exception) as e:
+                logging.error(f"Resource exhausted, retrying... in 60 seconds: Type({type(e)}) {e}")
                 time.sleep(60)  # Wait before retrying
+        logging.error("Max retries reached. Failed to get response from the agent.")
+        return "Could not get response from the agent."
 
     def _parse_invoke(self, prompt, type):
         response = self._invoke(prompt)
         return self._parse_response(prompt, response, type)
 
-    def _parse_response(self, prompt, response, return_type):
+    def _parse_response(self, prompt, response, return_type, max_retries=5):
+        if max_retries == 0:
+            logging.error(f"Max retries reached for parsing response: {response}")
+            raise Exception(f"Max retries reached for parsing response: {response}")
+
         extractor = create_extractor(self.llm, tools=[return_type], tool_choice=return_type.__name__)
-        if response.strip() == "":
+        if response is None or response.strip() == "":
             logging.error(f"Empty response for prompt: {prompt}")
-        result = extractor.invoke(response)["responses"][0]
-        return return_type.model_validate(result)
+        try:
+            result = extractor.invoke(response)["responses"][0]
+            return return_type.model_validate(result)
+        except (ResourceExhausted, Exception) as e:
+            logging.error(f"Resource exhausted or parsing error, retrying... in 60 seconds: Type({type(e)}) {e}")
+            time.sleep(60)
+            return self._parse_response(prompt, response, return_type, max_retries - 1)
 
     def fix_source_code_reference_lines(self, analysis: AnalysisInsights):
         for component in analysis.components:
@@ -87,14 +100,54 @@ class CodeBoardingAgent:
                 try:
                     qname = reference.qualified_name.replace(":", ".")
                     parts = qname.split(".")
+                    found = False
+
+                    # Try to find as a specific qualified name first
                     for i in range(len(parts)):
                         sub_fqn = ".".join(parts[i:])
                         result = find_fqn_location(file_string, sub_fqn)
                         if result:
                             reference.reference_start_line = result[0]
                             reference.reference_end_line = result[1]
+                            found = True
                             break
+
+                    # If not found as qualified name, try to find as directory/package
+                    if not found:
+                        # Try different combinations as potential directory paths
+                        for i in range(len(parts)):
+                            potential_dir = "/".join(parts[i:])
+                            # Check if this could be a directory reference in imports or path strings
+                            if self._find_directory_reference(file_string, potential_dir, parts[i:]):
+                                # For directory/package references, leave line numbers as None
+                                # since they refer to entire files or directories
+                                reference.reference_start_line = None
+                                reference.reference_end_line = None
+                                break
                 except Exception as e:
                     logging.warning(f"Error finding reference lines for {reference.qualified_name}: {e}")
-
         return analysis
+
+    def _find_directory_reference(self, file_content: str, dir_path: str, parts: list) -> bool:
+        """
+        Check if the directory path or its parts are referenced in the file content.
+        This handles cases where qualified_name refers to a package/directory.
+        """
+        lines = file_content.lower()
+        dir_path_lower = dir_path.lower()
+
+        # Check for direct directory path references
+        if dir_path_lower in lines:
+            return True
+
+        # Check for import statements that might reference the package
+        for part in parts:
+            part_lower = part.lower()
+            # Look for import patterns
+            if f"import {part_lower}" in lines or f"from {part_lower}" in lines:
+                return True
+            # Look for path-like references
+            if f"/{part_lower}/" in lines or f".{part_lower}." in lines:
+                return True
+
+        return False
