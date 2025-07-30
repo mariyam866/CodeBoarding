@@ -17,32 +17,27 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "orchestration_workflow",
       "description": "This component acts as the central coordinator for the code analysis process. It is responsible for receiving raw code or analysis requests, initiating the static analysis process, and managing the flow of data between different analysis stages. It orchestrates the interaction with the `Static Code Analyzer` and potentially other downstream components, ensuring that the analysis pipeline executes correctly.",
-      "referenced_source_code": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "ai_analysis_engine",
       "description": "The `AI Analysis Engine` component is responsible for performing advanced, AI-driven analysis on the structured code data provided by the `Static Code Analyzer`. It leverages machine learning models and algorithms to identify complex patterns, potential vulnerabilities, or areas for optimization that go beyond traditional static analysis.",
-      "referenced_source_code": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "data_persistence",
       "description": "The `Data Persistence` component is responsible for securely storing and retrieving all generated analysis artifacts, including extracted code metadata, Abstract Syntax Trees (ASTs), Call Graphs, and Structure Graphs. It ensures the long-term availability and integrity of the analysis results for historical tracking, reporting, and further processing.",
-      "referenced_source_code": [],
-      "can_expand": false
+      "referenced_source_code": []
     },
     {
       "name": "integrations",
       "description": "The `Integrations` component provides a standardized interface for interacting with external systems, tools, or services. It handles the communication protocols and data formats required to exchange information with external platforms, such as version control systems, CI/CD pipelines, or reporting dashboards, enabling the seamless flow of code and analysis results.",
-      "referenced_source_code": [],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [
