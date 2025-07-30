@@ -75,7 +75,7 @@ LANGCHAIN_API_KEY=                # Optional: LangChain API key
 ### Run it
 
 ```bash
-python demo.py www.github.com/your_username/your_repository --output-dir path/to/output/directory
+python demo.py <github_repo_url> --output-dir <output_path>
 ```
 
 ## 🖥️  Examples:
