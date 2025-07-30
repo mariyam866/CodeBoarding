@@ -1,4 +1,4 @@
-name: Update Documentation
+name: CodeBoarding Documentation update workflow
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ on:
         default: ''
         type: string
       output_directory:
-        description: 'Output directory for documentation'
+        description: 'Output directory for documentation files'
         required: false
         default: '.codeboarding'
         type: string
@@ -27,7 +27,11 @@ on:
         description: 'Output format for documentation'
         required: false
         default: '.md'
-        type: string
+        type: choice
+        options:
+          - '.md'
+          - '.mdx'
+          - '.rst'
   push:
     branches:
       - master
@@ -36,6 +40,7 @@ on:
 jobs:
   update-docs:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     permissions:
       contents: write
       pull-requests: write
@@ -68,7 +73,7 @@ jobs:
       - name: Fetch CodeBoarding Documentation
         timeout-minutes: 30
         id: codeboarding
-        uses: CodeBoarding/CodeBoarding-GHAction@main
+        uses: CodeBoarding/CodeBoarding-GHAction@0.1.2
         with:
           repository_url: ${{ steps.set-branches.outputs.repository_url }}
           source_branch: ${{ steps.set-branches.outputs.source_branch }}
@@ -85,17 +90,71 @@ jobs:
           echo "Has changes: ${{ steps.codeboarding.outputs.has_changes }}"
 
       # Check if we have any changes to commit
-      - name: Check for git changes
+      - name: Check for changes
         id: git-changes
         run: |
-          git add .
-          if git diff --staged --quiet; then
-            echo "has_git_changes=false" >> $GITHUB_OUTPUT
-            echo "No changes detected"
-          else
+          if [ -n "$(git status --porcelain)" ]; then
             echo "has_git_changes=true" >> $GITHUB_OUTPUT
-            echo "Changes detected"
+          else
+            echo "has_git_changes=false" >> $GITHUB_OUTPUT
           fi
+
+      # Generate architecture documentation from CodeBoarding files
+      - name: Generate architecture documentation
+        if: steps.git-changes.outputs.has_git_changes == 'true' && steps.codeboarding.outputs.has_changes == 'true'
+        run: |
+          # Create docs/development directory if it doesn't exist
+          mkdir -p docs/development
+          
+          # Get the output format
+          output_format="${{ github.event.inputs.output_format || '.md' }}"
+          file_extension="${output_format}"
+          
+          # Log the files found in the CodeBoarding directory
+          echo "📁 Scanning CodeBoarding directory for ${file_extension} files..."
+          ls -la .codeboarding/ || echo "⚠️  CodeBoarding directory not found"
+          
+          # Initialize the architecture file
+          echo "" > "docs/development/architecture${file_extension}"
+          
+          # First, add on_boarding file if it exists
+          if [ -f ".codeboarding/on_boarding${file_extension}" ]; then
+            echo "✅ Found and adding: on_boarding${file_extension}"
+            cat ".codeboarding/on_boarding${file_extension}" > "docs/development/architecture${file_extension}"
+            echo "" >> "docs/development/architecture${file_extension}"
+          else
+            echo "ℹ️  on_boarding${file_extension} not found, skipping"
+          fi
+          
+          # Count and log other files
+          other_files_count=0
+          
+          # Then add all other files (excluding on_boarding)
+          for file in .codeboarding/*${file_extension}; do
+            if [ -f "$file" ] && [ "$(basename "$file")" != "on_boarding${file_extension}" ]; then
+              filename=$(basename "$file")
+              echo "✅ Found and adding: $filename"
+              echo "" >> "docs/development/architecture${file_extension}"
+              cat "$file" >> "docs/development/architecture${file_extension}"
+              echo "" >> "docs/development/architecture${file_extension}"
+              other_files_count=$((other_files_count + 1))
+            fi
+          done
+          
+          # Summary logging
+          echo ""
+          echo "📊 Architecture generation summary:"
+          echo "   - on_boarding${file_extension}: $([ -f ".codeboarding/on_boarding${file_extension}" ] && echo "included" || echo "not found")"
+          echo "   - Other ${file_extension} files: $other_files_count files processed"
+          echo "   - Output: docs/development/architecture${file_extension}"
+          
+          # Show final file size
+          if [ -f "docs/development/architecture${file_extension}" ]; then
+            file_size=$(wc -c < "docs/development/architecture${file_extension}")
+            echo "   - Final file size: $file_size bytes"
+          fi
+          
+          echo "Architecture documentation generated at docs/development/architecture${file_extension}"
 
       - name: Commit and push changes
         if: steps.git-changes.outputs.has_git_changes == 'true' && steps.codeboarding.outputs.has_changes == 'true'
@@ -103,9 +162,12 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit -m "docs: update codeboarding documentation
+          git commit -m "docs: update codeboarding documentation and generate architecture
 
-          📚 Documentation Update
+          ## 📚 Documentation Update
+          This commit contains updated documentation files fetched from the CodeBoarding service and automatically generated architecture documentation.
+          
+          ### 📊 Summary
           - Documentation files created/updated: ${{ steps.codeboarding.outputs.markdown_files_created }}
           - JSON files created/updated: ${{ steps.codeboarding.outputs.json_files_created }}
           - Documentation directory: ${{ steps.codeboarding.outputs.output_directory }}/
@@ -114,6 +176,9 @@ jobs:
           - Repository analyzed: ${{ steps.set-branches.outputs.repository_url }}
           - Source branch: ${{ steps.set-branches.outputs.source_branch }}
           - Target branch: ${{ steps.set-branches.outputs.target_branch }}
+          - Architecture documentation: docs/development/architecture${{ github.event.inputs.output_format || '.md' }} (auto-generated)
           
-          🤖 Automatically generated by CodeBoarding documentation workflow"
+          The generated files have been automatically appended to the development documentation, and the architecture file has been generated from the CodeBoarding analysis files.
+          
+          🤖 This commit was automatically generated by the CodeBoarding documentation update workflow."
           git push
