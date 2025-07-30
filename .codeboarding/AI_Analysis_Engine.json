@@ -1,13 +1,13 @@
 {
-  "description": "One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.",
+  "description": "The AI Analysis Engine subsystem is the cognitive core of the system, responsible for interpreting static analysis data through a multi-agent framework. It leverages specialized agents to identify architectural patterns, understand component roles, and build a comprehensive codebase model.",
   "components": [
     {
       "name": "CodeBoardingAgent",
-      "description": "Acts as the abstract base class for all specialized agents. It implements the Template Method pattern by providing a standardized framework that encapsulates common concerns like AI model interaction, environment variable setup, and access to shared tools. This ensures consistency and reusability across the agent system.",
+      "description": "The central orchestrator of the AI analysis workflow. It manages analysis requests, initializes LLMs, invokes them with prompts, and processes their responses. It acts as the primary coordinator for all specialized agents within the engine.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents/agent.py",
-          "reference_file": "/Users/imilev/StartUp/CodeBoarding/repos/CodeBoarding/agents/agent.py",
+          "qualified_name": "agents.agent",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/agent.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
@@ -15,12 +15,25 @@
       "can_expand": true
     },
     {
-      "name": "PlannerAgent",
-      "description": "Serves as the primary entry point and controller for an analysis task. It receives a high-level goal, breaks it down into a concrete, multi-step execution plan, and orchestrates the workflow by delegating specific tasks to the appropriate worker agents (like the AbstractionAgent).",
+      "name": "LLM Provider Interface",
+      "description": "Provides an abstraction layer for interacting with various Large Language Model providers (e.g., OpenAI, Anthropic, Google Gemini, AWS Bedrock). It handles API calls, model selection, and standardizes response retrieval, decoupling the core logic from specific LLM vendor implementations.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents/planner_agent.py",
-          "reference_file": "/Users/imilev/StartUp/CodeBoarding/repos/CodeBoarding/agents/planner_agent.py",
+          "qualified_name": "llm_providers.interface",
+          "reference_file": "llm_providers/interface.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "PlannerAgent",
+      "description": "A specialized AI agent focused on strategic planning within the analysis workflow. It determines the sequence of steps and sub-tasks required to achieve a given analysis objective, guiding the overall process.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "agents.planner_agent",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/planner_agent.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
@@ -29,11 +42,11 @@
     },
     {
       "name": "AbstractionAgent",
-      "description": "The main worker agent responsible for executing the core architectural analysis. Following the plan from the PlannerAgent, it interacts directly with source code and Control Flow Graph (CFG) data to identify patterns, define component responsibilities, and generate the raw insights for the codebase model.",
+      "description": "A specialized AI agent responsible for identifying and generating higher-level abstractions from raw code data. This includes summarizing code sections, identifying design patterns, and distilling complex details into more manageable concepts.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents/abstraction_agent.py",
-          "reference_file": "/Users/imilev/StartUp/CodeBoarding/repos/CodeBoarding/agents/abstraction_agent.py",
+          "qualified_name": "agents.abstraction_agent",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/abstraction_agent.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
@@ -41,44 +54,44 @@
       "can_expand": true
     },
     {
-      "name": "DiffAnalyzingAgent",
-      "description": "A specialized agent that enables efficient incremental updates. It analyzes Git diffs to identify the precise scope of code changes, allowing the system to perform targeted re-analysis instead of processing the entire codebase again. This implements a form of Change Data Capture (CDC).",
+      "name": "DiffAnalyzerAgent",
+      "description": "A specialized AI agent dedicated to analyzing differences between code versions or states. It identifies changes, assesses their impact, and provides insights into how modifications affect architectural patterns or component roles.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents/diff_analyzer.py",
-          "reference_file": "/Users/imilev/StartUp/CodeBoarding/repos/CodeBoarding/agents/diff_analyzer.py",
+          "qualified_name": "agents.diff_analyzer",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/diff_analyzer.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
       ],
-      "can_expand": false
+      "can_expand": true
     }
   ],
   "components_relations": [
     {
-      "relation": "inherits from",
-      "src_name": "PlannerAgent",
-      "dst_name": "CodeBoardingAgent"
-    },
-    {
-      "relation": "inherits from",
-      "src_name": "AbstractionAgent",
-      "dst_name": "CodeBoardingAgent"
-    },
-    {
-      "relation": "inherits from",
-      "src_name": "DiffAnalyzingAgent",
-      "dst_name": "CodeBoardingAgent"
+      "relation": "uses",
+      "src_name": "CodeBoardingAgent",
+      "dst_name": "LLM Provider Interface"
     },
     {
       "relation": "orchestrates",
-      "src_name": "PlannerAgent",
+      "src_name": "CodeBoardingAgent",
+      "dst_name": "PlannerAgent"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "CodeBoardingAgent",
       "dst_name": "AbstractionAgent"
     },
     {
-      "relation": "uses",
-      "src_name": "PlannerAgent",
-      "dst_name": "DiffAnalyzingAgent"
+      "relation": "orchestrates",
+      "src_name": "CodeBoardingAgent",
+      "dst_name": "DiffAnalyzerAgent"
+    },
+    {
+      "relation": "is used by",
+      "src_name": "LLM Provider Interface",
+      "dst_name": "CodeBoardingAgent"
     }
   ]
 }

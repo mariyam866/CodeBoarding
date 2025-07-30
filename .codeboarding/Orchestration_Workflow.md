@@ -1,65 +1,119 @@
 ```mermaid
 graph LR
-    Local_App_Entrypoint["Local App Entrypoint"]
-    GitHub_Action_Entrypoint["GitHub Action Entrypoint"]
-    Analysis_Orchestrator["Analysis Orchestrator"]
-    Planner_Agent["Planner Agent"]
-    Abstraction_Agent["Abstraction Agent"]
-    Local_App_Entrypoint -- "invokes" --> Analysis_Orchestrator
-    GitHub_Action_Entrypoint -- "invokes" --> Analysis_Orchestrator
-    Analysis_Orchestrator -- "Invokes to generate analysis plan" --> Planner_Agent
-    Analysis_Orchestrator -- "Invokes with plan to generate abstractions" --> Abstraction_Agent
+    api_layer["api_layer"]
+    orchestration_workflow["orchestration_workflow"]
+    static_analysis_module["static_analysis_module"]
+    ai_analysis_engine["ai_analysis_engine"]
+    data_persistence["data_persistence"]
+    output_generation["output_generation"]
+    integrations["integrations"]
+    configuration["configuration"]
+    api_layer -- "initiates analysis requests" --> orchestration_workflow
+    orchestration_workflow -- "returns processed results" --> api_layer
+    orchestration_workflow -- "invokes" --> static_analysis_module
+    orchestration_workflow -- "submits static analysis results to" --> ai_analysis_engine
+    orchestration_workflow -- "stores results in" --> data_persistence
+    data_persistence -- "provides cached data to" --> orchestration_workflow
+    orchestration_workflow -- "provides processed data to" --> output_generation
+    integrations -- "provides raw source code to" --> orchestration_workflow
+    configuration -- "provides settings to" --> api_layer
+    configuration -- "provides settings to" --> orchestration_workflow
+    configuration -- "provides settings to" --> static_analysis_module
+    configuration -- "provides settings to" --> ai_analysis_engine
+    configuration -- "provides settings to" --> data_persistence
+    configuration -- "provides settings to" --> output_generation
+    configuration -- "provides settings to" --> integrations
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
+The `Orchestration & Workflow` component is central to the system, coordinating the entire analysis pipeline. Its interactions with other components are crucial for the system's functionality.
 
-### Local App Entrypoint
-Serves as the command-line interface for the application. It parses user arguments, prepares the local environment, and initiates the analysis process.
-
-
-**Related Classes/Methods**:
-
-- `local_app.py`
-
-
-### GitHub Action Entrypoint
-Acts as the entry point when the system is run within a GitHub Actions CI/CD pipeline. It interprets GitHub event data and triggers the analysis, often for pull request checks.
+### api_layer
+The primary interface for external communication, responsible for receiving analysis requests via HTTP and returning the final processed results. It acts as the system's public-facing entry point.
 
 
 **Related Classes/Methods**:
 
-- `github_action.py`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L1-L1" target="_blank" rel="noopener noreferrer">`local_app` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/github_action.py#L1-L1" target="_blank" rel="noopener noreferrer">`github_action` (1:1)</a>
 
 
-### Analysis Orchestrator
-The central coordinator that defines and executes the analysis workflow. It invokes the `Planner Agent` to create an analysis plan, then passes this plan to the `Abstraction Agent` to perform the detailed analysis, managing the state between steps.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py#L23-L211" target="_blank" rel="noopener noreferrer">`CodeBoarding.diagram_analysis.diagram_generator.DiagramGenerator` (23:211)</a>
-
-
-### Planner Agent
-A specialized AI agent responsible for creating a high-level analysis plan. It determines the steps required to analyze the target codebase based on the initial request from the orchestrator.
+### orchestration_workflow
+The central coordinator that manages the end-to-end analysis pipeline. It initiates static analysis, triggers the AI engine, coordinates with the persistence layer for caching and differential checks, and sends the final, validated results to the output generator.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/planner_agent.py#L9-L27" target="_blank" rel="noopener noreferrer">`agents.planner_agent.PlannerAgent` (9:27)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L1-L1" target="_blank" rel="noopener noreferrer">`local_app` (1:1)</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/github_action.py#L1-L1" target="_blank" rel="noopener noreferrer">`github_action` (1:1)</a>
 
 
-### Abstraction Agent
-A specialized AI agent that performs the main code analysis. It executes the step-by-step plan provided to it by the `Analysis Orchestrator` to generate architectural abstractions.
+### static_analysis_module
+Responsible for parsing source code, building abstract syntax trees (ASTs), control flow graphs (CFGs), and extracting raw code metadata. It provides the foundational data for subsequent analysis steps.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/abstraction_agent.py#L9-L95" target="_blank" rel="noopener noreferrer">`agents.abstraction_agent.AbstractionAgent` (9:95)</a>
+- `astroid` (1:1)
+- `python-call-graph` (1:1)
+- `networkx` (1:1)
+
+
+### ai_analysis_engine
+Encapsulates all interactions with Large Language Models (LLMs), including prompt engineering, multi-provider support (OpenAI, Anthropic, Google Gemini, AWS Bedrock), and processing LLM responses to derive high-level insights and recommendations.
+
+
+**Related Classes/Methods**:
+
+- `LangChain` (1:1)
+- `LangGraph` (1:1)
+- `OpenAI` (1:1)
+- `Anthropic` (1:1)
+- `Google Gemini` (1:1)
+- `AWS Bedrock` (1:1)
+
+
+### data_persistence
+Manages data storage and retrieval for analysis results, intermediate data, and caching mechanisms. It abstracts the underlying database (e.g., DuckDB via SQLAlchemy) to provide a consistent data access layer.
+
+
+**Related Classes/Methods**:
+
+- `SQLAlchemy` (1:1)
+- `DuckDB` (1:1)
+
+
+### output_generation
+Transforms processed analysis data into various user-consumable output formats, particularly interactive diagrams (e.g., Mermaid.js, pygraphviz, pydot) and other visualizations.
+
+
+**Related Classes/Methods**:
+
+- `pygraphviz` (1:1)
+- `pydot` (1:1)
+- `Mermaid.js` (1:1)
+
+
+### integrations
+Handles specific logic related to external services, such as cloning repositories from GitHub (using GitPython, Dulwich) and potential integrations with other platforms (VS Code, MCP Server).
+
+
+**Related Classes/Methods**:
+
+- `GitPython` (1:1)
+- `Dulwich` (1:1)
+
+
+### configuration
+Centralizes application settings, environment variable loading, and credential management, ensuring consistent and secure configuration across all components of the system.
+
+
+**Related Classes/Methods**:
+
+- `config_module` (1:1)
 
 
 

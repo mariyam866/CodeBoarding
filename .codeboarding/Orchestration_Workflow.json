@@ -1,92 +1,264 @@
 {
-  "description": "One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.",
+  "description": "The `Orchestration & Workflow` component is central to the system, coordinating the entire analysis pipeline. Its interactions with other components are crucial for the system's functionality.",
   "components": [
     {
-      "name": "Local App Entrypoint",
-      "description": "Serves as the command-line interface for the application. It parses user arguments, prepares the local environment, and initiates the analysis process.",
+      "name": "api_layer",
+      "description": "The primary interface for external communication, responsible for receiving analysis requests via HTTP and returning the final processed results. It acts as the system's public-facing entry point.",
       "referenced_source_code": [
         {
-          "qualified_name": "local_app.py",
-          "reference_file": "/Users/imilev/StartUp/CodeBoarding/repos/CodeBoarding/local_app.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "can_expand": false
-    },
-    {
-      "name": "GitHub Action Entrypoint",
-      "description": "Acts as the entry point when the system is run within a GitHub Actions CI/CD pipeline. It interprets GitHub event data and triggers the analysis, often for pull request checks.",
-      "referenced_source_code": [
+          "qualified_name": "local_app",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/local_app.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
         {
-          "qualified_name": "github_action.py",
-          "reference_file": "/Users/imilev/StartUp/CodeBoarding/repos/CodeBoarding/github_action.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "can_expand": false
-    },
-    {
-      "name": "Analysis Orchestrator",
-      "description": "The central coordinator that defines and executes the analysis workflow. It invokes the `Planner Agent` to create an analysis plan, then passes this plan to the `Abstraction Agent` to perform the detailed analysis, managing the state between steps.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "CodeBoarding.diagram_analysis.diagram_generator.DiagramGenerator",
-          "reference_file": "/Users/imilev/StartUp/CodeBoarding/repos/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 23,
-          "reference_end_line": 211
-        }
-      ],
-      "can_expand": false
-    },
-    {
-      "name": "Planner Agent",
-      "description": "A specialized AI agent responsible for creating a high-level analysis plan. It determines the steps required to analyze the target codebase based on the initial request from the orchestrator.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "agents.planner_agent.PlannerAgent",
-          "reference_file": "/Users/imilev/StartUp/CodeBoarding/repos/CodeBoarding/agents/planner_agent.py",
-          "reference_start_line": 9,
-          "reference_end_line": 27
-        }
-      ],
-      "can_expand": false
-    },
-    {
-      "name": "Abstraction Agent",
-      "description": "A specialized AI agent that performs the main code analysis. It executes the step-by-step plan provided to it by the `Analysis Orchestrator` to generate architectural abstractions.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "agents.abstraction_agent.AbstractionAgent",
-          "reference_file": "/Users/imilev/StartUp/CodeBoarding/repos/CodeBoarding/agents/abstraction_agent.py",
-          "reference_start_line": 9,
-          "reference_end_line": 95
+          "qualified_name": "github_action",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/github_action.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
       ],
       "can_expand": true
+    },
+    {
+      "name": "orchestration_workflow",
+      "description": "The central coordinator that manages the end-to-end analysis pipeline. It initiates static analysis, triggers the AI engine, coordinates with the persistence layer for caching and differential checks, and sends the final, validated results to the output generator.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "local_app",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/local_app.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "github_action",
+          "reference_file": "/mnt/e/StartUp/CodeBoarding/github_action.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "static_analysis_module",
+      "description": "Responsible for parsing source code, building abstract syntax trees (ASTs), control flow graphs (CFGs), and extracting raw code metadata. It provides the foundational data for subsequent analysis steps.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "astroid",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "python-call-graph",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "networkx",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "ai_analysis_engine",
+      "description": "Encapsulates all interactions with Large Language Models (LLMs), including prompt engineering, multi-provider support (OpenAI, Anthropic, Google Gemini, AWS Bedrock), and processing LLM responses to derive high-level insights and recommendations.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "LangChain",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "LangGraph",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "OpenAI",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "Anthropic",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "Google Gemini",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "AWS Bedrock",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "data_persistence",
+      "description": "Manages data storage and retrieval for analysis results, intermediate data, and caching mechanisms. It abstracts the underlying database (e.g., DuckDB via SQLAlchemy) to provide a consistent data access layer.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "SQLAlchemy",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "DuckDB",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "output_generation",
+      "description": "Transforms processed analysis data into various user-consumable output formats, particularly interactive diagrams (e.g., Mermaid.js, pygraphviz, pydot) and other visualizations.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "pygraphviz",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "pydot",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "Mermaid.js",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "integrations",
+      "description": "Handles specific logic related to external services, such as cloning repositories from GitHub (using GitPython, Dulwich) and potential integrations with other platforms (VS Code, MCP Server).",
+      "referenced_source_code": [
+        {
+          "qualified_name": "GitPython",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "Dulwich",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "configuration",
+      "description": "Centralizes application settings, environment variable loading, and credential management, ensuring consistent and secure configuration across all components of the system.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "config_module",
+          "reference_file": "<implied>",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ],
+      "can_expand": false
     }
   ],
   "components_relations": [
     {
-      "relation": "invokes",
-      "src_name": "Local App Entrypoint",
-      "dst_name": "Analysis Orchestrator"
+      "relation": "initiates analysis requests",
+      "src_name": "api_layer",
+      "dst_name": "orchestration_workflow"
+    },
+    {
+      "relation": "returns processed results",
+      "src_name": "orchestration_workflow",
+      "dst_name": "api_layer"
     },
     {
       "relation": "invokes",
-      "src_name": "GitHub Action Entrypoint",
-      "dst_name": "Analysis Orchestrator"
+      "src_name": "orchestration_workflow",
+      "dst_name": "static_analysis_module"
     },
     {
-      "relation": "Invokes to generate analysis plan",
-      "src_name": "Analysis Orchestrator",
-      "dst_name": "Planner Agent"
+      "relation": "submits static analysis results to",
+      "src_name": "orchestration_workflow",
+      "dst_name": "ai_analysis_engine"
     },
     {
-      "relation": "Invokes with plan to generate abstractions",
-      "src_name": "Analysis Orchestrator",
-      "dst_name": "Abstraction Agent"
+      "relation": "stores results in",
+      "src_name": "orchestration_workflow",
+      "dst_name": "data_persistence"
+    },
+    {
+      "relation": "provides cached data to",
+      "src_name": "data_persistence",
+      "dst_name": "orchestration_workflow"
+    },
+    {
+      "relation": "provides processed data to",
+      "src_name": "orchestration_workflow",
+      "dst_name": "output_generation"
+    },
+    {
+      "relation": "provides raw source code to",
+      "src_name": "integrations",
+      "dst_name": "orchestration_workflow"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "configuration",
+      "dst_name": "api_layer"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "configuration",
+      "dst_name": "orchestration_workflow"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "configuration",
+      "dst_name": "static_analysis_module"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "configuration",
+      "dst_name": "ai_analysis_engine"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "configuration",
+      "dst_name": "data_persistence"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "configuration",
+      "dst_name": "output_generation"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "configuration",
+      "dst_name": "integrations"
     }
   ]
 }

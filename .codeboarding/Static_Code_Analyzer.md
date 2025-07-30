@@ -1,76 +1,57 @@
 ```mermaid
 graph LR
-    DiagramGenerator["DiagramGenerator"]
-    CallGraphBuilder["CallGraphBuilder"]
-    StructureGraphBuilder["StructureGraphBuilder"]
-    DotGraphTransformer["DotGraphTransformer"]
-    AI_Agents["AI Agents"]
-    DiagramGenerator -- "Invokes and controls" --> CallGraphBuilder
-    DiagramGenerator -- "Invokes and controls" --> StructureGraphBuilder
-    DiagramGenerator -- "Invokes and controls" --> DotGraphTransformer
-    DiagramGenerator -- "Provides analysis data to" --> AI_Agents
-    CallGraphBuilder -- "Produces .dot graph for" --> DotGraphTransformer
-    StructureGraphBuilder -- "Produces .dot graph for" --> DotGraphTransformer
-    DotGraphTransformer -- "Provides standardized graph to" --> DiagramGenerator
-    AI_Agents -- "Consumes analysis data from" --> DiagramGenerator
+    Static_Code_Analyzer["Static Code Analyzer"]
+    orchestration_workflow["orchestration_workflow"]
+    ai_analysis_engine["ai_analysis_engine"]
+    data_persistence["data_persistence"]
+    integrations["integrations"]
+    orchestration_workflow -- "sends raw code or analysis requests to" --> Static_Code_Analyzer
+    Static_Code_Analyzer -- "provides structured code data and initial analysis results back to" --> orchestration_workflow
+    Static_Code_Analyzer -- "provides structured code data to" --> ai_analysis_engine
+    Static_Code_Analyzer -- "provides extracted code metadata and generated graphs to" --> data_persistence
+    Static_Code_Analyzer -- "utilizes" --> integrations
+    click Static_Code_Analyzer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Code_Analyzer.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-An analysis of the CodeBoarding subsystem reveals a sophisticated architecture orchestrated by a central controller that leverages static analysis tools to feed a suite of AI-driven agents.
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
-### DiagramGenerator
-Acts as the central orchestrator for the entire analysis process. It initiates static analysis, transforms the resulting data, and manages a pool of AI agents to produce a hierarchical, component-based model of the software architecture.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py#L23-L211" target="_blank" rel="noopener noreferrer">`diagram_analysis.diagram_generator.DiagramGenerator` (23:211)</a>
-- `generate_static_analysis`
-- `generate_analysis`
-- `process_component`
-
-
-### CallGraphBuilder
-Parses the source code using AST techniques to construct a directed graph representing the relationships and call sequences between functions and methods.
+### Static Code Analyzer [[Expand]](./Static_Code_Analyzer.md)
+The Static Code Analyzer component is responsible for the initial, non-AI parsing of source code. It leverages Abstract Syntax Tree (AST)-based techniques to build foundational data structures such as ASTs, Call Graphs, and Structure Graphs. Its primary role is to transform raw code into a structured, machine-readable format, extracting essential code metadata that can then be interpreted and further processed by the AI analysis engine. This component is fundamental as it provides the structured input necessary for all subsequent AI-driven analysis.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/pylint_analyze/call_graph_builder.py#L88-L240" target="_blank" rel="noopener noreferrer">`static_analyzer.pylint_analyze.call_graph_builder.CallGraphBuilder` (88:240)</a>
+- `static_analyzer/pylint_analyze/call_graph_builder.py`
+- `static_analyzer/pylint_analyze/structure_graph_builder.py`
 
 
-### StructureGraphBuilder
-Uses `pyreverse` (from the Pylint suite) to analyze the source code and build a high-level graph outlining the code's architectural structure, including class definitions, inheritance, and module relationships.
+### orchestration_workflow
+This component acts as the central coordinator for the code analysis process. It is responsible for receiving raw code or analysis requests, initiating the static analysis process, and managing the flow of data between different analysis stages. It orchestrates the interaction with the `Static Code Analyzer` and potentially other downstream components, ensuring that the analysis pipeline executes correctly.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/pylint_analyze/structure_graph_builder.py#L7-L48" target="_blank" rel="noopener noreferrer">`static_analyzer.pylint_analyze.structure_graph_builder.StructureGraphBuilder` (7:48)</a>
-
-
-### DotGraphTransformer
-Ingests `.dot` file outputs from both the `CallGraphBuilder` and `StructureGraphBuilder`. It transforms these raw graphs into a standardized format suitable for consumption by the AI agents.
+### ai_analysis_engine
+The `AI Analysis Engine` component is responsible for performing advanced, AI-driven analysis on the structured code data provided by the `Static Code Analyzer`. It leverages machine learning models and algorithms to identify complex patterns, potential vulnerabilities, or areas for optimization that go beyond traditional static analysis.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/pylint_graph_transform.py#L10-L75" target="_blank" rel="noopener noreferrer">`static_analyzer.pylint_graph_transform.DotGraphTransformer` (10:75)</a>
-
-
-### AI Agents
-A collection of specialized agents (e.g., `DetailsAgent`, `AbstractionAgent`, `PlannerAgent`) that consume the prepared graph data. Each agent performs a specific task, such as abstracting high-level components, analyzing component details, or planning the next steps of the analysis.
+### data_persistence
+The `Data Persistence` component is responsible for securely storing and retrieving all generated analysis artifacts, including extracted code metadata, Abstract Syntax Trees (ASTs), Call Graphs, and Structure Graphs. It ensures the long-term availability and integrity of the analysis results for historical tracking, reporting, and further processing.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- `agents.agent.Agent`
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/details_agent.py#L11-L103" target="_blank" rel="noopener noreferrer">`agents.details_agent.DetailsAgent` (11:103)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/abstraction_agent.py#L9-L95" target="_blank" rel="noopener noreferrer">`agents.abstraction_agent.AbstractionAgent` (9:95)</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/planner_agent.py#L9-L27" target="_blank" rel="noopener noreferrer">`agents.planner_agent.PlannerAgent` (9:27)</a>
+### integrations
+The `Integrations` component provides a standardized interface for interacting with external systems, tools, or services. It handles the communication protocols and data formats required to exchange information with external platforms, such as version control systems, CI/CD pipelines, or reporting dashboards, enabling the seamless flow of code and analysis results.
 
+
+**Related Classes/Methods**: _None_
 
 
 

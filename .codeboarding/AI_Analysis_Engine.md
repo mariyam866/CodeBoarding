@@ -1,56 +1,66 @@
 ```mermaid
 graph LR
     CodeBoardingAgent["CodeBoardingAgent"]
+    LLM_Provider_Interface["LLM Provider Interface"]
     PlannerAgent["PlannerAgent"]
     AbstractionAgent["AbstractionAgent"]
-    DiffAnalyzingAgent["DiffAnalyzingAgent"]
-    PlannerAgent -- "inherits from" --> CodeBoardingAgent
-    AbstractionAgent -- "inherits from" --> CodeBoardingAgent
-    DiffAnalyzingAgent -- "inherits from" --> CodeBoardingAgent
-    PlannerAgent -- "orchestrates" --> AbstractionAgent
-    PlannerAgent -- "uses" --> DiffAnalyzingAgent
+    DiffAnalyzerAgent["DiffAnalyzerAgent"]
+    CodeBoardingAgent -- "uses" --> LLM_Provider_Interface
+    CodeBoardingAgent -- "orchestrates" --> PlannerAgent
+    CodeBoardingAgent -- "orchestrates" --> AbstractionAgent
+    CodeBoardingAgent -- "orchestrates" --> DiffAnalyzerAgent
+    LLM_Provider_Interface -- "is used by" --> CodeBoardingAgent
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
+The AI Analysis Engine subsystem is the cognitive core of the system, responsible for interpreting static analysis data through a multi-agent framework. It leverages specialized agents to identify architectural patterns, understand component roles, and build a comprehensive codebase model.
 
 ### CodeBoardingAgent
-Acts as the abstract base class for all specialized agents. It implements the Template Method pattern by providing a standardized framework that encapsulates common concerns like AI model interaction, environment variable setup, and access to shared tools. This ensures consistency and reusability across the agent system.
+The central orchestrator of the AI analysis workflow. It manages analysis requests, initializes LLMs, invokes them with prompts, and processes their responses. It acts as the primary coordinator for all specialized agents within the engine.
 
 
 **Related Classes/Methods**:
 
-- `agents/agent.py`
+- `agents.agent`
+
+
+### LLM Provider Interface
+Provides an abstraction layer for interacting with various Large Language Model providers (e.g., OpenAI, Anthropic, Google Gemini, AWS Bedrock). It handles API calls, model selection, and standardizes response retrieval, decoupling the core logic from specific LLM vendor implementations.
+
+
+**Related Classes/Methods**:
+
+- `llm_providers.interface` (1:1)
 
 
 ### PlannerAgent
-Serves as the primary entry point and controller for an analysis task. It receives a high-level goal, breaks it down into a concrete, multi-step execution plan, and orchestrates the workflow by delegating specific tasks to the appropriate worker agents (like the AbstractionAgent).
+A specialized AI agent focused on strategic planning within the analysis workflow. It determines the sequence of steps and sub-tasks required to achieve a given analysis objective, guiding the overall process.
 
 
 **Related Classes/Methods**:
 
-- `agents/planner_agent.py`
+- `agents.planner_agent`
 
 
 ### AbstractionAgent
-The main worker agent responsible for executing the core architectural analysis. Following the plan from the PlannerAgent, it interacts directly with source code and Control Flow Graph (CFG) data to identify patterns, define component responsibilities, and generate the raw insights for the codebase model.
+A specialized AI agent responsible for identifying and generating higher-level abstractions from raw code data. This includes summarizing code sections, identifying design patterns, and distilling complex details into more manageable concepts.
 
 
 **Related Classes/Methods**:
 
-- `agents/abstraction_agent.py`
+- `agents.abstraction_agent`
 
 
-### DiffAnalyzingAgent
-A specialized agent that enables efficient incremental updates. It analyzes Git diffs to identify the precise scope of code changes, allowing the system to perform targeted re-analysis instead of processing the entire codebase again. This implements a form of Change Data Capture (CDC).
+### DiffAnalyzerAgent
+A specialized AI agent dedicated to analyzing differences between code versions or states. It identifies changes, assesses their impact, and provides insights into how modifications affect architectural patterns or component roles.
 
 
 **Related Classes/Methods**:
 
-- `agents/diff_analyzer.py`
+- `agents.diff_analyzer`
 
 
 
