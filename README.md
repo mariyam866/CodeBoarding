@@ -101,10 +101,6 @@ python demo.py <github_repo_url> --output-dir <output_path>
 
 We have visualized **over 300+ popular open-source projects**. See examples:
 
-pip install pygraphviz --global-option=build_ext --global-option="-I/opt/homebrew/include" --global-option="-L/opt/homebrew/lib"
-
-
-
 
 ### ChatTTS:
 ```mermaid
