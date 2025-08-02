@@ -43,7 +43,26 @@ Setup the environment:
 
 ```bash
 uv venv --python 3.11
-uv pip sync
+uv pip sync requirements.txt
+```
+
+
+
+### Installing `pygraphviz` on macOS
+
+If you hit errors installing `pygraphviz`, first install Graphviz and then point the build at Homebrew’s include/lib dirs:
+
+```bash
+brew install graphviz
+
+export CPATH="$(brew --prefix)/include"
+export LIBRARY_PATH="$(brew --prefix)/lib"
+
+pip install pygraphviz \
+  --global-option=build_ext \
+  --global-option="-I$(brew --prefix)/include" \
+  --global-option="-L$(brew --prefix)/lib"
+
 ```
 
 ### Environment Variables
@@ -81,6 +100,10 @@ python demo.py <github_repo_url> --output-dir <output_path>
 ## 🖥️  Examples:
 
 We have visualized **over 300+ popular open-source projects**. See examples:
+
+pip install pygraphviz --global-option=build_ext --global-option="-I/opt/homebrew/include" --global-option="-L/opt/homebrew/lib"
+
+
 
 
 ### ChatTTS:
