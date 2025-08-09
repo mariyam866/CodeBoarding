@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 from langchain_core.prompts import PromptTemplate
 
@@ -7,11 +8,15 @@ from agents.agent_responses import AnalysisInsights, CFGAnalysisInsights, Valida
     MetaAnalysisInsights
 from agents.prompts import SYSTEM_DETAILS_MESSAGE, CFG_DETAILS_MESSAGE, \
     DETAILS_MESSAGE, SUBCFG_DETAILS_MESSAGE, ENHANCE_STRUCTURE_MESSAGE, FEEDBACK_MESSAGE
+from static_analyzer.analysis_result import StaticAnalysisResults
+
+logger = logging.getLogger(__name__)
 
 
 class DetailsAgent(CodeBoardingAgent):
-    def __init__(self, repo_dir, output_dir, cfg, project_name, meta_context):
-        super().__init__(repo_dir, output_dir, cfg, SYSTEM_DETAILS_MESSAGE)
+    def __init__(self, repo_dir: Path, static_analysis: StaticAnalysisResults, project_name: str,
+                 meta_context: MetaAnalysisInsights):
+        super().__init__(repo_dir, static_analysis, SYSTEM_DETAILS_MESSAGE)
         self.project_name = project_name
         self.meta_context = meta_context
 
@@ -31,12 +36,12 @@ class DetailsAgent(CodeBoardingAgent):
 
         self.context = {}
 
-    def step_subcfg(self, cfg_str: str, component: Component):
-        logging.info(f"[DetailsAgent] Analyzing details on subcfg for {component.name}")
+    def step_subcfg(self, component: Component):
+        logger.info(f"[DetailsAgent] Analyzing details on subcfg for {component.name}")
         self.context['subcfg_insight'] = self.read_cfg_tool.component_cfg(component)
 
     def step_cfg(self, component: Component):
-        logging.info(f"[DetailsAgent] Analyzing details on cfg for {component.name}")
+        logger.info(f"[DetailsAgent] Analyzing details on cfg for {component.name}")
         meta_context_str = self.meta_context.llm_str() if self.meta_context else "No project context available."
         project_type = self.meta_context.project_type if self.meta_context else "unknown"
 
@@ -52,7 +57,7 @@ class DetailsAgent(CodeBoardingAgent):
         return parsed
 
     def step_enhance_structure(self, component: Component):
-        logging.info(f"[DetailsAgent] Analyzing details on structure for {component.name}")
+        logger.info(f"[DetailsAgent] Analyzing details on structure for {component.name}")
         meta_context_str = self.meta_context.llm_str() if self.meta_context else "No project context available."
         project_type = self.meta_context.project_type if self.meta_context else "unknown"
 
@@ -68,7 +73,7 @@ class DetailsAgent(CodeBoardingAgent):
         return parsed
 
     def step_analysis(self, component: Component):
-        logging.info(f"[DetailsAgent] Generating details documentation")
+        logger.info(f"[DetailsAgent] Generating details documentation")
         meta_context_str = self.meta_context.llm_str() if self.meta_context else "No project context available."
         project_type = self.meta_context.project_type if self.meta_context else "unknown"
 
@@ -86,7 +91,7 @@ class DetailsAgent(CodeBoardingAgent):
         Apply feedback to the analysis and return the updated analysis.
         This method should modify the analysis based on the feedback provided.
         """
-        logging.info(f"[DetailsAgent] Applying feedback to analysis for project: {self.project_name}")
+        logger.info(f"[DetailsAgent] Applying feedback to analysis for project: {self.project_name}")
         prompt = self.prompts["feedback"].format(analysis=analysis.llm_str(), feedback=feedback.llm_str())
         analysis = self._parse_invoke(prompt, AnalysisInsights)
         return self.fix_source_code_reference_lines(analysis)

@@ -1,15 +1,20 @@
 import logging
+from pathlib import Path
 
 from langchain.prompts import PromptTemplate
 
 from agents.agent import CodeBoardingAgent
-from agents.agent_responses import AnalysisInsights, CFGAnalysisInsights, ValidationInsights
+from agents.agent_responses import AnalysisInsights, CFGAnalysisInsights, ValidationInsights, MetaAnalysisInsights
 from agents.prompts import CFG_MESSAGE, SOURCE_MESSAGE, SYSTEM_MESSAGE, CONCLUSIVE_ANALYSIS_MESSAGE, FEEDBACK_MESSAGE
+from static_analyzer.analysis_result import StaticAnalysisResults
+
+logger = logging.getLogger(__name__)
 
 
 class AbstractionAgent(CodeBoardingAgent):
-    def __init__(self, repo_dir, output_dir, cfg, project_name, meta_context):
-        super().__init__(repo_dir, output_dir, cfg, SYSTEM_MESSAGE)
+    def __init__(self, repo_dir: Path, static_analysis: StaticAnalysisResults, project_name: str,
+                 meta_context: MetaAnalysisInsights):
+        super().__init__(repo_dir, static_analysis, SYSTEM_MESSAGE)
 
         self.project_name = project_name
         self.meta_context = meta_context
@@ -27,24 +32,23 @@ class AbstractionAgent(CodeBoardingAgent):
             "feedback": PromptTemplate(template=FEEDBACK_MESSAGE, input_variables=["analysis", "feedback"])
         }
 
-    def step_cfg(self, cfg_str):
-        logging.info(f"[AbstractionAgent] Analyzing CFG for project: {self.project_name}")
+    def step_cfg(self):
+        logger.info(f"[AbstractionAgent] Analyzing CFG for project: {self.project_name}")
         meta_context_str = self.meta_context.llm_str() if self.meta_context else "No project context available."
         project_type = self.meta_context.project_type if self.meta_context else "unknown"
 
         prompt = self.prompts["cfg"].format(
             project_name=self.project_name,
-            cfg_str=cfg_str,
+            cfg_str=str(self.read_cfg_tool._run()),
             meta_context=meta_context_str,
             project_type=project_type
         )
-        print(prompt)
         parsed_response = self._parse_invoke(prompt, CFGAnalysisInsights)
         self.context['cfg_insight'] = parsed_response
         return parsed_response
 
     def step_source(self):
-        logging.info(f"[AbstractionAgent] Analyzing Source for project: {self.project_name}")
+        logger.info(f"[AbstractionAgent] Analyzing Source for project: {self.project_name}")
         insight_str = ""
         for insight_type, analysis_insight in self.context.items():
             insight_str += f"## {insight_type.capitalize()} Insight\n"
@@ -66,7 +70,7 @@ class AbstractionAgent(CodeBoardingAgent):
         return parsed_response
 
     def generate_analysis(self):
-        logging.info(f"[AbstractionAgent] Generating final analysis for project: {self.project_name}")
+        logger.info(f"[AbstractionAgent] Generating final analysis for project: {self.project_name}")
         meta_context_str = self.meta_context.llm_str() if self.meta_context else "No project context available."
         project_type = self.meta_context.project_type if self.meta_context else "unknown"
 
@@ -85,12 +89,12 @@ class AbstractionAgent(CodeBoardingAgent):
         Apply feedback to the analysis and return the updated analysis.
         This method should modify the analysis based on the feedback provided.
         """
-        logging.info(f"[AbstractionAgent] Applying feedback to analysis for project: {self.project_name}")
+        logger.info(f"[AbstractionAgent] Applying feedback to analysis for project: {self.project_name}")
         prompt = self.prompts["feedback"].format(analysis=analysis.llm_str(), feedback=feedback.llm_str())
         analysis = self._parse_invoke(prompt, AnalysisInsights)
         return self.fix_source_code_reference_lines(analysis)
 
-    def run(self, cfg_str):
-        self.step_cfg(cfg_str)
+    def run(self):
+        self.step_cfg()
         self.step_source()
         return self.generate_analysis()

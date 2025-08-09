@@ -1,5 +1,4 @@
 import os
-import re
 from pathlib import Path
 from typing import List
 
@@ -63,20 +62,19 @@ def generate_markdown(insights: AnalysisInsights, project: str = "", repo_ref=""
             qn_list = []
             for reference in comp.referenced_source_code:
                 print(reference.reference_file, root_dir)
-                if reference.reference_start_line is None or reference.reference_end_line is None:
-                    qn_list.append(f"{reference.llm_str()}")
-                    continue
                 if not reference.reference_file:
                     continue
                 if not reference.reference_file.startswith(root_dir):
-                    qn_list.append(f"{reference.llm_str()}")
+                    qn_list.append(f"{reference}")
                     continue
                 url = "/".join(repo_ref.split("/")[:7])
                 ref_url = url + reference.reference_file.split(root_dir)[1]
-                if not (reference.reference_start_line == 0 and reference.reference_end_line == 0):
+                if reference.reference_start_line is not None and reference.reference_end_line is not None and (
+                not (reference.reference_start_line <= reference.reference_end_line <= 0 or
+                     reference.reference_start_line == reference.reference_end_line)):
                     ref_url += f"#L{reference.reference_start_line}-L{reference.reference_end_line}"
                 qn_list.append(
-                    f'<a href="{ref_url}" target="_blank" rel="noopener noreferrer">{reference.llm_str()}</a>')
+                    f'<a href="{ref_url}" target="_blank" rel="noopener noreferrer">{reference}</a>')
             # Join the list into an unordered markdown list, without the leading dash
             references = ""
             for item in qn_list:

@@ -1,14 +1,15 @@
 import logging
 import os
 import time
+from pathlib import Path
 
 from dotenv import load_dotenv
 from google.api_core.exceptions import ResourceExhausted
+from langchain_anthropic import ChatAnthropic
+from langchain_aws import ChatBedrockConverse
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
-from langchain_anthropic import ChatAnthropic
-from langchain_aws import ChatBedrockConverse
 from langgraph.prebuilt import create_react_agent
 from trustcall import create_extractor
 
@@ -17,26 +18,30 @@ from agents.tools import CodeReferenceReader, CodeStructureTool, PackageRelation
     MethodInvocationsTool, ReadFileTool
 from agents.tools.external_deps import ExternalDepsTool
 from agents.tools.read_docs import ReadDocsTool
-from static_analyzer.reference_lines import find_fqn_location
+from static_analyzer.analysis_result import StaticAnalysisResults
+
+logger = logging.getLogger(__name__)
 
 
 class CodeBoardingAgent:
-    def __init__(self, repo_dir, output_dir, cfg, system_message):
+    def __init__(self, repo_dir: Path, static_analysis: StaticAnalysisResults, system_message: str):
         self._setup_env_vars()
         self.llm = self._initialize_llm()
-        self.read_source_reference = CodeReferenceReader(repo_dir=repo_dir)
-        self.read_packages_tool = PackageRelationsTool(analysis_dir=output_dir)
-        self.read_structure_tool = CodeStructureTool(analysis_dir=output_dir)
+        self.repo_dir = repo_dir
+        self.read_source_reference = CodeReferenceReader(static_analysis=static_analysis)
+        self.read_packages_tool = PackageRelationsTool(static_analysis=static_analysis)
+        self.read_structure_tool = CodeStructureTool(static_analysis=static_analysis)
         self.read_file_structure = FileStructureTool(repo_dir=repo_dir)
-        self.read_cfg_tool = GetCFGTool(cfg=cfg)
-        self.read_method_invocations_tool = MethodInvocationsTool(cfg=cfg)
+        self.read_cfg_tool = GetCFGTool(static_analysis=static_analysis)
+        self.read_method_invocations_tool = MethodInvocationsTool(static_analysis=static_analysis)
         self.read_file_tool = ReadFileTool(repo_dir=repo_dir)
         self.read_docs = ReadDocsTool(repo_dir=repo_dir)
         self.external_deps_tool = ExternalDepsTool(repo_dir=repo_dir)
 
-        self.agent = create_react_agent(model=self.llm, tools=[self.read_source_reference, self.read_packages_tool,
+        self.agent = create_react_agent(model=self.llm, tools=[self.read_source_reference, self.read_file_tool,
                                                                self.read_file_structure, self.read_structure_tool,
-                                                               self.read_file_tool])
+                                                               self.read_packages_tool])
+        self.static_analysis = static_analysis
         self.system_message = SystemMessage(content=system_message)
 
     def _setup_env_vars(self):
@@ -51,7 +56,7 @@ class CodeBoardingAgent:
     def _initialize_llm(self):
         """Initialize LLM based on available API keys with priority order."""
         if self.openai_api_key:
-            logging.info("Using OpenAI LLM")
+            logger.info("Using OpenAI LLM")
             return ChatOpenAI(
                 model="gpt-4o",
                 temperature=0,
@@ -61,7 +66,7 @@ class CodeBoardingAgent:
                 api_key=self.openai_api_key,
             )
         elif self.anthropic_api_key:
-            logging.info("Using Anthropic LLM")
+            logger.info("Using Anthropic LLM")
             return ChatAnthropic(
                 model="claude-3-5-sonnet-20241022",
                 temperature=0,
@@ -71,9 +76,9 @@ class CodeBoardingAgent:
                 api_key=self.anthropic_api_key,
             )
         elif self.google_api_key:
-            logging.info("Using Google Gemini LLM")
+            logger.info("Using Google Gemini LLM")
             return ChatGoogleGenerativeAI(
-                model="gemini-2.5-pro",
+                model="gemini-2.5-flash",
                 temperature=0,
                 max_tokens=None,
                 timeout=None,
@@ -81,7 +86,7 @@ class CodeBoardingAgent:
                 api_key=self.google_api_key,
             )
         elif self.aws_bearer_token:
-            logging.info("Using AWS Bedrock Converse LLM")
+            logger.info("Using AWS Bedrock Converse LLM")
             return ChatBedrockConverse(
                 model="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
                 temperature=0,
@@ -110,9 +115,9 @@ class CodeBoardingAgent:
                 if type(agent_response.content) == list:
                     return "".join([message for message in agent_response.content])
             except (ResourceExhausted, Exception) as e:
-                logging.error(f"Resource exhausted, retrying... in 60 seconds: Type({type(e)}) {e}")
+                logger.error(f"Resource exhausted, retrying... in 60 seconds: Type({type(e)}) {e}")
                 time.sleep(60)  # Wait before retrying
-        logging.error("Max retries reached. Failed to get response from the agent.")
+        logger.error("Max retries reached. Failed to get response from the agent.")
         return "Could not get response from the agent."
 
     def _parse_invoke(self, prompt, type):
@@ -121,39 +126,68 @@ class CodeBoardingAgent:
 
     def _parse_response(self, prompt, response, return_type, max_retries=5):
         if max_retries == 0:
-            logging.error(f"Max retries reached for parsing response: {response}")
+            logger.error(f"Max retries reached for parsing response: {response}")
             raise Exception(f"Max retries reached for parsing response: {response}")
 
         extractor = create_extractor(self.llm, tools=[return_type], tool_choice=return_type.__name__)
         if response is None or response.strip() == "":
-            logging.error(f"Empty response for prompt: {prompt}")
+            logger.error(f"Empty response for prompt: {prompt}")
         try:
             result = extractor.invoke(response)["responses"][0]
             return return_type.model_validate(result)
         except (ResourceExhausted, Exception) as e:
-            logging.error(f"Resource exhausted or parsing error, retrying... in 60 seconds: Type({type(e)}) {e}")
+            logger.error(f"Resource exhausted or parsing error, retrying... in 60 seconds: Type({type(e)}) {e}")
             time.sleep(60)
             return self._parse_response(prompt, response, return_type, max_retries - 1)
 
     def fix_source_code_reference_lines(self, analysis: AnalysisInsights):
         for component in analysis.components:
             for reference in component.referenced_source_code:
-                file_ref, file_string = self.read_source_reference.read_file(reference.qualified_name)
-                if file_ref is None:
-                    continue
-                reference.reference_file = str(file_ref)
-                file_string = "\n".join(file_string.split("\n")[1:])
-                try:
-                    qname = reference.qualified_name.replace(":", ".")
-                    parts = qname.split(".")
-                    for i in range(len(parts)):
-                        sub_fqn = ".".join(parts[i:])
-                        result = find_fqn_location(file_string, sub_fqn)
-                        if result:
-                            reference.reference_start_line = result[0]
-                            reference.reference_end_line = result[1]
+                for lang in self.static_analysis.get_languages():
+                    try:
+                        qname = reference.qualified_name.replace("/", ".")
+                        node = self.static_analysis.get_reference(lang, qname)
+                        reference.reference_file = node.file_path
+                        reference.reference_start_line = node.line_start + 1  # match 1  based indexing
+                        reference.reference_end_line = node.line_end + 1  # match 1  based indexing
+                        reference.qualified_name = qname
+                    except (ValueError, FileExistsError) as e:
+                        # Try resolving with loose matching:
+                        qname = reference.qualified_name.replace("/", ".")
+                        _, node = self.static_analysis.get_loose_reference(lang, qname)
+                        if node is not None:
+                            reference.reference_file = node.file_path
+                            reference.reference_start_line = node.line_start + 1  # match 1  based indexing
+                            reference.reference_end_line = node.line_end + 1  # match 1  based indexing
+                            reference.qualified_name = qname
                             break
-                except Exception as e:
-                    logging.warning(f"Error finding reference lines for {reference.qualified_name}: {e}")
-
+                        # before we give up let's retry with the file:
+                        logger.warning(
+                            f"[Reference Resolution] Reference {reference.qualified_name} not found in {lang}: {e}")
+                        if (reference.reference_file is not None) and (not reference.reference_file.startswith("/")):
+                            joined_path = os.path.join(self.repo_dir, reference.reference_file)
+                            if os.path.exists(joined_path):
+                                reference.reference_file = joined_path
+                                break
+                            else:
+                                logger.warning(
+                                    f"[Reference Resolution] Reference file {reference.reference_file} does not exist for {lang}.")
+                                reference.reference_file = None
+                        # Check if the code reference is a file path:
+                        file_path = reference.qualified_name.replace(".", "/")  # Get file path
+                        full_path = os.path.join(self.repo_dir, file_path)
+                        # This is the case when the reference is a file path but wrong:
+                        file_ref = ".".join(full_path.rsplit("/", 1))
+                        paths = [full_path, f"{file_path}.py", f"{file_path}.ts", f"{file_path}.tsx", file_ref]
+                        found_ref = False
+                        for path in paths:
+                            if os.path.exists(path):
+                                reference.reference_file = str(path)
+                                found_ref = True
+                                break
+                        if found_ref:
+                            break
+                        if reference.reference_file is None:
+                            logger.error(
+                                f"[Reference Resolution] Reference file {reference.qualified_name} not found!")
         return analysis

@@ -1,7 +1,6 @@
 import logging
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
 
 from tqdm import tqdm
 
@@ -16,9 +15,11 @@ from diagram_analysis.analysis_json import from_analysis_to_json
 from diagram_analysis.version import Version
 from output_generators.markdown import sanitize
 from repo_utils import get_git_commit_hash
-from static_analyzer.pylint_analyze.call_graph_builder import CallGraphBuilder
-from static_analyzer.pylint_analyze.structure_graph_builder import StructureGraphBuilder
-from static_analyzer.pylint_graph_transform import DotGraphTransformer
+from static_analyzer import create_clients
+from static_analyzer.analysis_result import StaticAnalysisResults
+from static_analyzer.scanner import ProjectScanner
+
+logger = logging.getLogger(__name__)
 
 
 class DiagramGenerator:
@@ -52,13 +53,13 @@ class DiagramGenerator:
                     f.write(analysis.model_dump_json(indent=2))
                 return self.repo_location / ".codeboarding" / f"{sanitize(component.name)}.json", analysis.components
             elif 4 < update_analysis.update_degree < 8:
-                logging.info(f"Component {component.name} requires partial update, applying feedback.")
+                logger.info(f"Component {component.name} requires partial update, applying feedback.")
                 analysis = self.diff_analyzer_agent.get_component_analysis(component)
                 update_insight = ValidationInsights(is_valid=False, additional_info=update_analysis.feedback)
                 analysis = self.details_agent.apply_feedback(analysis, update_insight)
             else:
-                logging.info(f"Processing component: {component.name}")
-                self.details_agent.step_subcfg(self.call_graph_str, component)
+                logger.info(f"Processing component: {component.name}")
+                self.details_agent.step_subcfg(component)
                 self.details_agent.step_cfg(component)
                 self.details_agent.step_enhance_structure(component)
 
@@ -82,23 +83,19 @@ class DiagramGenerator:
             return None, []
 
     def pre_analysis(self):
-        self.call_graph_str, cfg = self.generate_static_analysis()
+        static_analysis = self.generate_static_analysis()
 
-        self.meta_agent = MetaAgent(repo_dir=self.repo_location, output_dir=self.temp_folder,
-                                    project_name=self.repo_name, cfg=cfg)
+        self.meta_agent = MetaAgent(repo_dir=self.repo_location, project_name=self.repo_name,
+                                    static_analysis=static_analysis)
         meta_context = self.meta_agent.analyze_project_metadata()
-        self.details_agent = DetailsAgent(repo_dir=self.repo_location, output_dir=self.temp_folder,
-                                          project_name=self.repo_name, cfg=cfg, meta_context=meta_context)
-        self.abstraction_agent = AbstractionAgent(repo_dir=self.repo_location, output_dir=self.temp_folder,
-                                                  project_name=self.repo_name, cfg=cfg, meta_context=meta_context)
-        self.planner_agent = PlannerAgent(repo_dir=self.repo_location, output_dir=self.temp_folder, cfg=cfg)
-        self.validator_agent = ValidatorAgent(repo_dir=self.repo_location, output_dir=self.temp_folder, cfg=cfg)
-        self.diff_analyzer_agent = DiffAnalyzingAgent(
-            repo_dir=self.repo_location,
-            output_dir=self.temp_folder,
-            cfg=None,  # Assuming cfg is not needed for this context
-            project_name=self.repo_name
-        )
+        self.details_agent = DetailsAgent(repo_dir=self.repo_location, project_name=self.repo_name,
+                                          static_analysis=static_analysis, meta_context=meta_context)
+        self.abstraction_agent = AbstractionAgent(repo_dir=self.repo_location, project_name=self.repo_name,
+                                                  static_analysis=static_analysis, meta_context=meta_context)
+        self.planner_agent = PlannerAgent(repo_dir=self.repo_location, static_analysis=static_analysis)
+        self.validator_agent = ValidatorAgent(repo_dir=self.repo_location, static_analysis=static_analysis)
+        self.diff_analyzer_agent = DiffAnalyzingAgent(repo_dir=self.repo_location, static_analysis=static_analysis,
+                                                      project_name=self.repo_name)
 
         version_file = os.path.join(self.output_dir, "codeboarding_version.json")
         with open(version_file, "w") as f:
@@ -117,7 +114,7 @@ class DiagramGenerator:
             self.pre_analysis()
 
         # Generate the initial analysis
-        logging.info("Generating initial analysis")
+        logger.info("Generating initial analysis")
 
         update_analysis = self.diff_analyzer_agent.check_for_updates()
 
@@ -126,7 +123,7 @@ class DiagramGenerator:
             update_insight = ValidationInsights(is_valid=False, additional_info=update_analysis.feedback)
             analysis = self.abstraction_agent.apply_feedback(self.diff_analyzer_agent.get_analysis(), update_insight)
         elif update_analysis.update_degree >= 8:
-            analysis = self.abstraction_agent.run(self.call_graph_str)
+            analysis = self.abstraction_agent.run()
             feedback = self.validator_agent.run(analysis)
             if not feedback.is_valid:
                 analysis = self.abstraction_agent.apply_feedback(analysis, feedback)
@@ -137,7 +134,7 @@ class DiagramGenerator:
 
         # Get the initial components to analyze (level 0)
         current_level_components = self.planner_agent.plan_analysis(analysis)
-        logging.info(f"Found {len(current_level_components)} components to analyze at level 0")
+        logger.info(f"Found {len(current_level_components)} components to analyze at level 0")
 
         # Save the root analysis
         analysis_path = os.path.join(self.output_dir, "analysis.json")
@@ -153,7 +150,7 @@ class DiagramGenerator:
             level += 1
             if level == self.depth_level:
                 break
-            logging.info(f"Processing level {level} with {len(current_level_components)} components")
+            logger.info(f"Processing level {level} with {len(current_level_components)} components")
             next_level_components = []
 
             # Process current level components in parallel
@@ -178,35 +175,31 @@ class DiagramGenerator:
                     except Exception as exc:
                         logging.error(f"Component {component.name} generated an exception: {exc}")
 
-            logging.info(f"Completed level {level}. Found {len(next_level_components)} components for next level")
+            logger.info(f"Completed level {level}. Found {len(next_level_components)} components for next level")
             current_level_components = next_level_components
 
-        logging.info(f"Analysis complete. Generated {len(files)} analysis files")
+        logger.info(f"Analysis complete. Generated {len(files)} analysis files")
         print("Generated analysis files: %s", [os.path.abspath(file) for file in files])
         return files
 
     def generate_static_analysis(self):
-        dot_suffix = 'structure.dot'
-        graph_builder = StructureGraphBuilder(self.repo_location, dot_suffix, self.temp_folder, verbose=True)
-        graph_builder.build()
-        # Now I have to find and collect the _structure.dot files
-        # Scan the current directory for files which end on dot_suffix
-        structures = []
-        for path in Path('.').rglob(f'*{dot_suffix}'):
-            with open(path, 'r') as f:
-                structures.append((path.name.split(dot_suffix)[0], f.read()))
+        results = StaticAnalysisResults()
 
-        builder = CallGraphBuilder(self.repo_location, max_depth=15)
-        builder.build()
-        dot_file = f'{self.temp_folder}/call_graph.dot'
-        builder.write_dot(Path(dot_file))
-        # Now transform the call_graph
-        graph_transformer = DotGraphTransformer(dot_file, self.repo_location)
-        cfg, call_graph_str = graph_transformer.transform()
-        packages = []
-        for path in Path('..').rglob(f'{self.temp_folder}/packages_*.dot'):
-            with open(path, 'r') as f:
-                # The file name is the package name
-                package_name = path.name.split('_')[1].split('.dot')[0]
-                packages.append((package_name, f.read()))
-        return call_graph_str, cfg
+        scanner = ProjectScanner(self.repo_location)
+        programming_langs = scanner.scan()
+        clients = create_clients(programming_langs, self.repo_location)
+        for client in clients:
+            logger.info(f"Starting static analysis for {client.language.language} in {self.repo_location}")
+            client.start()
+
+            call_graph = client.build_call_graph()
+            class_hierarchy = client.build_class_hierarchies()
+            package_graph = client.build_package_relations()
+            references = client.build_references()
+
+            results.add_references(client.language.language, references)
+            results.add_cfg(client.language.language, call_graph)
+            results.add_class_hierarchy(client.language.language, class_hierarchy)
+            results.add_package_dependencies(client.language.language, package_graph)
+
+        return results
