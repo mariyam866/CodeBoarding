@@ -1,0 +1,175 @@
+{
+  "description": "The previous analysis lacked specific source code references for several key components, hindering the verification of their implementation boundaries and responsibilities. This revised analysis addresses those gaps by identifying the relevant code artifacts. The `Orchestrator`, embodied by `MetaAgent`, initiates the analysis process, leveraging various tools to gather initial project context. The `Static Code Analyzer`, primarily through the `Scanner` class, performs in-depth code analysis. The `AI Analysis Engine` (likely represented by `AbstractionAgent` and `DetailsAgent`) interprets these results, generating higher-level insights. `Analysis Persistence` (potentially handled by `AnalysisResult` and related mechanisms for storing data in the `.codeboarding` directory) ensures that all analysis data is stored and retrievable. Finally, the `Output Generator` (whose specific implementation needs further investigation but likely interacts with the stored analysis data to produce reports) transforms the processed data into user-friendly formats.",
+  "components": [
+    {
+      "name": "Orchestrator",
+      "description": "Acts as the central coordinator of the analysis pipeline. It manages the sequence of operations, directing the flow of data between the various components to ensure the end-to-end process runs smoothly. The `MetaAgent` within this component is specifically responsible for initial project metadata analysis, establishing architectural context, and guiding subsequent analysis steps.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.agents.meta_agent.MetaAgent",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Static Code Analyzer",
+      "description": "Responsible for performing in-depth static analysis on the codebase. This involves parsing source code, building abstract syntax trees (ASTs), identifying code patterns, and extracting structural information without executing the code.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.static_analyzer.scanner.Scanner",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "AI Analysis Engine",
+      "description": "Integrates AI/LLM capabilities to interpret the results from the Static Code Analyzer and the architectural context provided by the Orchestrator. It generates high-level insights, identifies complex relationships, and provides explanations or suggestions based on the analyzed code.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.agents.abstraction_agent.AbstractionAgent",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        },
+        {
+          "qualified_name": "CodeBoarding.agents.details_agent.DetailsAgent",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Analysis Persistence",
+      "description": "Manages the storage, retrieval, and versioning of all analysis-related data, including raw static analysis outputs, AI-generated insights, project metadata, and configuration settings. This ensures data integrity and enables historical analysis.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.static_analyzer.analysis_result.AnalysisResult",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Output Generator",
+      "description": "Transforms the processed analysis data into various user-friendly formats, including visual representations (e.g., Mermaid.js diagrams for architectural views) and structured reports. It is responsible for rendering the final output for user consumption.",
+      "referenced_source_code": [],
+      "can_expand": false
+    },
+    {
+      "name": "read_docs tool",
+      "description": "Tool to access and process project documentation.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.tools.read_docs.ReadDocsTool",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "external_deps_tool",
+      "description": "Tool to identify and analyze the project's external dependencies.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.tools.external_deps.ExternalDepsTool",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "read_file_structure tool",
+      "description": "Tool to obtain a comprehensive understanding of the project's file and directory organization.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.tools.read_file_structure.ReadFileStructureTool",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": false
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "provides context to",
+      "src_name": "Orchestrator",
+      "dst_name": "Static Code Analyzer"
+    },
+    {
+      "relation": "supplies data to",
+      "src_name": "Orchestrator",
+      "dst_name": "AI Analysis Engine"
+    },
+    {
+      "relation": "returns data to",
+      "src_name": "Static Code Analyzer",
+      "dst_name": "Orchestrator"
+    },
+    {
+      "relation": "stores results in",
+      "src_name": "Static Code Analyzer",
+      "dst_name": "Analysis Persistence"
+    },
+    {
+      "relation": "provides insights to",
+      "src_name": "AI Analysis Engine",
+      "dst_name": "Orchestrator"
+    },
+    {
+      "relation": "stores insights in",
+      "src_name": "AI Analysis Engine",
+      "dst_name": "Analysis Persistence"
+    },
+    {
+      "relation": "writes to",
+      "src_name": "Orchestrator",
+      "dst_name": "Analysis Persistence"
+    },
+    {
+      "relation": "provides data to",
+      "src_name": "Analysis Persistence",
+      "dst_name": "Orchestrator"
+    },
+    {
+      "relation": "provides data to",
+      "src_name": "Analysis Persistence",
+      "dst_name": "Output Generator"
+    },
+    {
+      "relation": "sends instructions to",
+      "src_name": "Orchestrator",
+      "dst_name": "Output Generator"
+    },
+    {
+      "relation": "utilizes",
+      "src_name": "Orchestrator",
+      "dst_name": "read_docs tool"
+    },
+    {
+      "relation": "interacts with",
+      "src_name": "Orchestrator",
+      "dst_name": "external_deps_tool"
+    },
+    {
+      "relation": "employs",
+      "src_name": "Orchestrator",
+      "dst_name": "read_file_structure tool"
+    }
+  ]
+}

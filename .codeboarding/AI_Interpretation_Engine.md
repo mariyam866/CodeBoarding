@@ -28,7 +28,7 @@ An abstract base class that provides a foundational agentic framework. It standa
 
 **Related Classes/Methods**:
 
-- `agents.agent`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/agent.py" target="_blank" rel="noopener noreferrer">`agents.agent`</a>
 
 
 ### PlannerAgent
@@ -37,7 +37,7 @@ The initial stage of the pipeline. It examines the project's overall structure t
 
 **Related Classes/Methods**:
 
-- `agents.planner_agent`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/planner_agent.py" target="_blank" rel="noopener noreferrer">`agents.planner_agent`</a>
 
 
 ### AbstractionAgent
@@ -46,7 +46,7 @@ The central processing unit of the engine. It executes the plan from the Planner
 
 **Related Classes/Methods**:
 
-- `agents.abstraction_agent`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/abstraction_agent.py" target="_blank" rel="noopener noreferrer">`agents.abstraction_agent`</a>
 
 
 ### ValidatorAgent
@@ -55,7 +55,7 @@ The final quality assurance stage. It systematically reviews the output from the
 
 **Related Classes/Methods**:
 
-- `agents.validator_agent`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/validator_agent.py" target="_blank" rel="noopener noreferrer">`agents.validator_agent`</a>
 
 
 ### ToolingAgent
@@ -64,7 +64,6 @@ A collection of specialized agents that perform fine-grained analysis tasks (e.g
 
 **Related Classes/Methods**:
 
-- `agents.tools.*`
 
 
 

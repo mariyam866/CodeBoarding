@@ -11,8 +11,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "PlannerAgent",
@@ -24,8 +23,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "AbstractionAgent",
@@ -37,8 +35,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "ValidatorAgent",
@@ -50,8 +47,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "ToolingAgent",
@@ -63,8 +59,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "can_expand": false
+      ]
     }
   ],
   "components_relations": [

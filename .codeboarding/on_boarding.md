@@ -11,8 +11,11 @@ graph LR
     Orchestrator -- "Invokes" --> Output_Generator
     Output_Generator -- "Returns final report to" --> Orchestrator
     Orchestrator -- "Returns final report to" --> API_Service
+    click API_Service href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/API_Service.md" "Details"
+    click Orchestrator href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestrator.md" "Details"
     click Static_Analyzer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analyzer.md" "Details"
     click AI_Interpretation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Engine.md" "Details"
+    click Output_Generator href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generator.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
@@ -21,23 +24,23 @@ graph LR
 
 An analysis of the project's file structure and the initial abstract components reveals a clear mapping between the conceptual architecture and the source code. The feedback provided was valid and has been integrated by grounding the abstract components in specific source files and correcting the data flow between them.
 
-### API Service
+### API Service [[Expand]](./API_Service.md)
 Serves as the primary entry point for all external interactions. It exposes the system's capabilities, handling incoming requests and returning the final generated analysis.
 
 
 **Related Classes/Methods**:
 
-- `local_app.py`
-- `github_action.py`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py" target="_blank" rel="noopener noreferrer">`local_app.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/github_action.py" target="_blank" rel="noopener noreferrer">`github_action.py`</a>
 
 
-### Orchestrator
+### Orchestrator [[Expand]](./Orchestrator.md)
 Acts as the central coordinator of the analysis pipeline. It manages the sequence of operations, directing the flow of data between the various components to ensure the end-to-end process runs smoothly.
 
 
 **Related Classes/Methods**:
 
-- `agents/meta_agent.py`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/meta_agent.py" target="_blank" rel="noopener noreferrer">`agents/meta_agent.py`</a>
 
 
 ### Static Analyzer [[Expand]](./Static_Analyzer.md)
@@ -46,7 +49,7 @@ Performs language-aware static analysis of the source code. It builds foundation
 
 **Related Classes/Methods**:
 
-- `static_analyzer/scanner.py`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer/scanner.py`</a>
 - `static_analyzer/lsp_client/`
 
 
@@ -56,21 +59,21 @@ A suite of specialized AI agents responsible for interpreting the static analysi
 
 **Related Classes/Methods**:
 
-- `agents/planner_agent.py`
-- `agents/abstraction_agent.py`
-- `agents/validator_agent.py`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/planner_agent.py" target="_blank" rel="noopener noreferrer">`agents/planner_agent.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/abstraction_agent.py" target="_blank" rel="noopener noreferrer">`agents/abstraction_agent.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/validator_agent.py" target="_blank" rel="noopener noreferrer">`agents/validator_agent.py`</a>
 - `agents/tools/`
 
 
-### Output Generator
+### Output Generator [[Expand]](./Output_Generator.md)
 Responsible for converting the final, validated analysis from the AI engine into human-readable formats. It serializes the analysis data and renders it as diagrams and text.
 
 
 **Related Classes/Methods**:
 
-- `output_generators/html.py`
-- `output_generators/markdown.py`
-- `diagram_analysis/diagram_generator.py`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/html.py" target="_blank" rel="noopener noreferrer">`output_generators/html.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/markdown.py" target="_blank" rel="noopener noreferrer">`output_generators/markdown.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_analysis/diagram_generator.py`</a>
 
 
 

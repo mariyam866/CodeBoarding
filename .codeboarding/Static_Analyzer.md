@@ -27,7 +27,7 @@ The primary orchestrator and entry point of the subsystem. It traverses the targ
 
 **Related Classes/Methods**:
 
-- `static_analyzer/scanner.py`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer/scanner.py`</a>
 
 
 ### Programming Language
@@ -36,7 +36,7 @@ A factory component responsible for identifying the programming language of the 
 
 **Related Classes/Methods**:
 
-- `static_analyzer/programming_language.py`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/programming_language.py" target="_blank" rel="noopener noreferrer">`static_analyzer/programming_language.py`</a>
 
 
 ### LSP Client
@@ -45,7 +45,7 @@ An abstract base class defining a standardized interface for communication with 
 
 **Related Classes/Methods**:
 
-- `static_analyzer/lsp_client/client.py`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/client.py" target="_blank" rel="noopener noreferrer">`static_analyzer/lsp_client/client.py`</a>
 
 
 ### TypeScript Client
@@ -54,7 +54,7 @@ A concrete implementation of the `LSP Client` interface, specifically designed t
 
 **Related Classes/Methods**:
 
-- `static_analyzer/lsp_client/typescript_client.py`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/typescript_client.py" target="_blank" rel="noopener noreferrer">`static_analyzer/lsp_client/typescript_client.py`</a>
 
 
 ### Call Graph

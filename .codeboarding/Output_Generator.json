@@ -1,0 +1,104 @@
+{
+  "description": "The `Output Generator` subsystem is responsible for transforming processed analysis data into various user-consumable formats. It orchestrates the generation of HTML, Markdown, and diagrams, acting as the final presentation layer for the `CodeBoarding` project's analysis results. The core flow involves the `Output Generator` delegating specific formatting tasks to specialized components like `HTMLOutputGenerator`, `MarkdownOutputGenerator`, and `DiagramGenerator`, ensuring a modular and extensible output pipeline.",
+  "components": [
+    {
+      "name": "Output Generator",
+      "description": "This is the core component responsible for taking the processed analysis data and rendering it into various output formats. It acts as the orchestrator for the final presentation layer.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding/output_generators/html.py",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        },
+        {
+          "qualified_name": "CodeBoarding/output_generators/markdown.py",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        },
+        {
+          "qualified_name": "CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "HTMLOutputGenerator",
+      "description": "Specifically handles the conversion of analysis data into HTML format.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.output_generators.html.HTMLOutputGenerator",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        },
+        {
+          "qualified_name": "CodeBoarding/output_generators/html.py",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "MarkdownOutputGenerator",
+      "description": "Specifically handles the conversion of analysis data into Markdown format.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.output_generators.markdown.MarkdownOutputGenerator",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        },
+        {
+          "qualified_name": "CodeBoarding/output_generators/markdown.py",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "DiagramGenerator",
+      "description": "Focuses on generating diagrams (e.g., using Mermaid.js) based on the analysis data.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.diagram_analysis.diagram_generator.DiagramGenerator",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        },
+        {
+          "qualified_name": "CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_file": null,
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": false
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "orchestrates",
+      "src_name": "Output Generator",
+      "dst_name": "HTMLOutputGenerator"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "Output Generator",
+      "dst_name": "MarkdownOutputGenerator"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "Output Generator",
+      "dst_name": "DiagramGenerator"
+    }
+  ]
+}
