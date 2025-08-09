@@ -1,79 +1,61 @@
 ```mermaid
 graph LR
-    Scanner["Scanner"]
-    Programming_Language["Programming Language"]
-    LSP_Client["LSP Client"]
-    TypeScript_Client["TypeScript Client"]
-    Call_Graph["Call Graph"]
-    Graph_Data_Structures["Graph Data Structures"]
-    Scanner -- "uses" --> Programming_Language
-    Scanner -- "interacts with" --> LSP_Client
-    Scanner -- "delegates to" --> Call_Graph
-    Programming_Language -- "creates instance of" --> TypeScript_Client
-    TypeScript_Client -- "implements" --> LSP_Client
-    Call_Graph -- "consumes from" --> LSP_Client
-    Call_Graph -- "uses" --> Graph_Data_Structures
+    Agent["Agent"]
+    Static_Analyzer["Static Analyzer"]
+    Large_Language_Model_LLM_["Large Language Model (LLM)"]
+    Agent_Tools["Agent Tools"]
+    Agent -- "uses" --> Large_Language_Model_LLM_
+    Agent -- "orchestrates" --> Agent_Tools
+    Agent -- "consumes" --> Static_Analyzer
+    Agent_Tools -- "queries" --> Static_Analyzer
+    click Static_Analyzer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analyzer.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
+The CodeBoarding system is designed to provide comprehensive code analysis and insights, primarily driven by an AI Agent. At its core, the system leverages a Static Analyzer subsystem to generate detailed structural and relational data about the codebase, including call graphs and package dependencies. This rich static analysis data is then consumed by the Agent component, which acts as an intelligent orchestrator. The Agent utilizes a Large Language Model (LLM) for reasoning and decision-making, and interacts with the codebase through a suite of Agent Tools. These tools allow the Agent to dynamically query source code, file structures, and the static analysis results, enabling it to answer complex questions, identify architectural patterns, and provide actionable insights.
 
-### Scanner
-The primary orchestrator and entry point of the subsystem. It traverses the target project's file system, determines the language, and coordinates the analysis process by delegating to the appropriate LSP client and graph-building components.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer/scanner.py`</a>
-
-
-### Programming Language
-A factory component responsible for identifying the programming language of the source code and providing the corresponding language-specific LSP client instance. This isolates language-specific logic and simplifies the `Scanner`'s responsibilities.
+### Agent
+The central orchestrator of the AI-driven analysis. It interprets user prompts, leverages a Large Language Model for reasoning, and coordinates the use of various specialized tools to interact with the codebase and static analysis data.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/programming_language.py" target="_blank" rel="noopener noreferrer">`static_analyzer/programming_language.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/agent.py#L27-L207" target="_blank" rel="noopener noreferrer">`agents.agent.CodeBoardingAgent`:27-207</a>
 
 
-### LSP Client
-An abstract base class defining a standardized interface for communication with any Language Server Protocol server. It decouples the `Scanner` and `Call Graph` from the concrete implementation details of specific language servers.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/client.py" target="_blank" rel="noopener noreferrer">`static_analyzer/lsp_client/client.py`</a>
-
-
-### TypeScript Client
-A concrete implementation of the `LSP Client` interface, specifically designed to manage and communicate with the TypeScript language server. It demonstrates the system's extensibility for different languages.
+### Static Analyzer [[Expand]](./Static_Analyzer.md)
+A foundational subsystem responsible for performing deep static analysis of the codebase. It generates comprehensive structural and relational data, including call graphs, package dependencies, and code references, which serve as critical input for the Agent. This component encapsulates the functionalities of the Scanner, Programming Language identification, LSP Client interactions, Call Graph construction, and Graph Data Structures.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/typescript_client.py" target="_blank" rel="noopener noreferrer">`static_analyzer/lsp_client/typescript_client.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer.scanner`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/programming_language.py" target="_blank" rel="noopener noreferrer">`static_analyzer.programming_language`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/client.py" target="_blank" rel="noopener noreferrer">`static_analyzer.lsp_client.client`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/graph.py" target="_blank" rel="noopener noreferrer">`static_analyzer.graph.node`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/graph.py" target="_blank" rel="noopener noreferrer">`static_analyzer.graph.edge`</a>
 
 
-### Call Graph
-Responsible for constructing the call graph data structure. It consumes information retrieved from an `LSP Client` and uses it to build a graph of nodes and edges representing the code's relationships.
-
-
-**Related Classes/Methods**:
-
-- `static_analyzer/graph/call_graph.py`
-
-
-### Graph Data Structures
-A set of data models (`Node`, `Edge`) that represent the fundamental elements of the call graph. These structures provide a clean, language-agnostic representation of code entities and their interactions.
+### Large Language Model (LLM)
+An external or integrated AI model that provides the reasoning capabilities for the Agent. It processes prompts, generates responses, and assists the Agent in making decisions and formulating queries to the Agent Tools.
 
 
 **Related Classes/Methods**:
 
-- `static_analyzer/graph/node.py`
-- `static_analyzer/graph/edge.py`
+
+
+### Agent Tools
+A collection of specialized functionalities that enable the Agent to interact with the codebase and the results of the Static Analyzer. These tools abstract various data retrieval and analysis operations, allowing the Agent to focus on high-level reasoning.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_file.py" target="_blank" rel="noopener noreferrer">`agents.tools.ReadFileTool`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_docs.py#L19-L147" target="_blank" rel="noopener noreferrer">`agents.tools.read_docs.ReadDocsTool`:19-147</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/external_deps.py#L17-L95" target="_blank" rel="noopener noreferrer">`agents.tools.external_deps.ExternalDepsTool`:17-95</a>
 
 
 

@@ -1,65 +1,70 @@
 {
-  "description": "One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.",
+  "description": "The CodeBoarding system operates as a multi-stage agentic pipeline designed to analyze project codebases. The process begins with the `PlannerAgent`, which establishes an initial analysis plan. This plan is then executed by the `AbstractionAgent`, responsible for synthesizing architectural components and their relationships. The `ValidatorAgent` subsequently ensures the correctness and integrity of the generated architectural insights. Throughout these stages, various `ToolingAgent` instances are leveraged to perform granular analysis tasks, providing essential data. The entire agentic framework is built upon the `CodeBoardingAgent`, an abstract base class that provides core functionalities and a standardized approach for LLM interactions, state management, and initialization. Recent significant updates to `CodeBoardingAgent` indicate an evolution of this foundational framework, impacting the interfaces and expected behaviors of all specialized agents.",
   "components": [
     {
       "name": "CodeBoardingAgent",
-      "description": "An abstract base class that provides a foundational agentic framework. It standardizes LLM interactions, state management, and initialization for all specialized agents, ensuring consistent behavior and integration.",
+      "description": "An abstract base class that provides a foundational agentic framework. It standardizes LLM interactions, state management, and initialization for all specialized agents, ensuring consistent behavior and integration. Recent significant updates to this class suggest an evolution of its core functionalities, potentially altering the contract and common behavior expected from all agents in the system.",
       "referenced_source_code": [
         {
           "qualified_name": "agents.agent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
-          "reference_start_line": null,
-          "reference_end_line": null
+          "reference_file": "agents/agent.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
         }
-      ]
+      ],
+      "can_expand": true
     },
     {
       "name": "PlannerAgent",
-      "description": "The initial stage of the pipeline. It examines the project's overall structure to create a high-level analysis plan, guiding the subsequent abstraction phase. It inherits its core capabilities from the CodeBoardingAgent.",
+      "description": "The initial stage of the pipeline. It examines the project's overall structure to create a high-level analysis plan, guiding the subsequent abstraction phase. It inherits its core capabilities from the `CodeBoardingAgent`, and its implementation may have been updated to align with recent changes in the foundational agent framework.",
       "referenced_source_code": [
         {
           "qualified_name": "agents.planner_agent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/planner_agent.py",
-          "reference_start_line": null,
-          "reference_end_line": null
+          "reference_file": "agents/planner_agent.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
         }
-      ]
+      ],
+      "can_expand": true
     },
     {
       "name": "AbstractionAgent",
-      "description": "The central processing unit of the engine. It executes the plan from the PlannerAgent, synthesizing architectural components and relationships from the codebase by delegating to various ToolingAgents.",
+      "description": "The central processing unit of the engine. It executes the plan from the `PlannerAgent`, synthesizing architectural components and relationships from the codebase by delegating to various `ToolingAgents`. Its behavior and interactions with the base class may have been modified due to recent updates in the `CodeBoardingAgent`.",
       "referenced_source_code": [
         {
           "qualified_name": "agents.abstraction_agent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/abstraction_agent.py",
-          "reference_start_line": null,
-          "reference_end_line": null
+          "reference_file": "agents/abstraction_agent.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
         }
-      ]
+      ],
+      "can_expand": true
     },
     {
       "name": "ValidatorAgent",
-      "description": "The final quality assurance stage. It systematically reviews the output from the AbstractionAgent, verifying the correctness of identified components and their relationships, often by delegating checks to ToolingAgents.",
+      "description": "The final quality assurance stage. It systematically reviews the output from the `AbstractionAgent`, verifying the correctness of identified components and their relationships, often by delegating checks to `ToolingAgents`. Its responsibilities and internal logic may have been adjusted in response to the evolving `CodeBoardingAgent` framework.",
       "referenced_source_code": [
         {
           "qualified_name": "agents.validator_agent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/validator_agent.py",
-          "reference_start_line": null,
-          "reference_end_line": null
+          "reference_file": "agents/validator_agent.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
         }
-      ]
+      ],
+      "can_expand": true
     },
     {
       "name": "ToolingAgent",
-      "description": "A collection of specialized agents that perform fine-grained analysis tasks (e.g., reading files, parsing class structures, analyzing dependencies). They inherit from CodeBoardingAgent and are invoked by other agents to provide specific data points about the codebase.",
+      "description": "A collection of specialized agents that perform fine-grained analysis tasks (e.g., reading files, parsing class structures, analyzing dependencies). They inherit from `CodeBoardingAgent` and are invoked by other agents to provide specific data points about the codebase. Their functionalities may have been refined to integrate with the updated foundational agent framework.",
       "referenced_source_code": [
         {
           "qualified_name": "agents.tools.*",
-          "reference_file": null,
-          "reference_start_line": null,
-          "reference_end_line": null
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/",
+          "reference_start_line": 0,
+          "reference_end_line": 0
         }
-      ]
+      ],
+      "can_expand": true
     }
   ],
   "components_relations": [

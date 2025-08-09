@@ -4,20 +4,17 @@
     {
       "name": "Analysis Orchestrator",
       "description": "Orchestrates the analysis process, coordinating between different components.",
-      "referenced_source_code": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "Local Application",
       "description": "Manages local application interactions.",
-      "referenced_source_code": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "GitHub Action",
       "description": "Handles GitHub Actions workflows.",
-      "referenced_source_code": [],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [

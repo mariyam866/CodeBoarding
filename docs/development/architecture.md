@@ -22,7 +22,7 @@ graph LR
 
 ## Details
 
-An analysis of the project's file structure and the initial abstract components reveals a clear mapping between the conceptual architecture and the source code. The feedback provided was valid and has been integrated by grounding the abstract components in specific source files and correcting the data flow between them.
+The system's main flow begins with the `API Service` receiving external requests, which then invokes the `Orchestrator`. The `Orchestrator` acts as the central coordinator, first initiating the `Static Analyzer` to perform code analysis and build foundational data structures. Subsequently, it passes this data to the `AI Interpretation Engine`, a suite of specialized AI agents that interpret the analysis and generate architectural insights. Finally, the `Orchestrator` directs the `Output Generator` to convert these insights into human-readable formats, with the final report being returned back through the `Orchestrator` to the `API Service`.
 
 ### API Service [[Expand]](./API_Service.md)
 Serves as the primary entry point for all external interactions. It exposes the system's capabilities, handling incoming requests and returning the final generated analysis.
@@ -50,11 +50,11 @@ Performs language-aware static analysis of the source code. It builds foundation
 **Related Classes/Methods**:
 
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer/scanner.py`</a>
-- `static_analyzer/lsp_client/`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/" target="_blank" rel="noopener noreferrer">`static_analyzer/lsp_client/`</a>
 
 
 ### AI Interpretation Engine [[Expand]](./AI_Interpretation_Engine.md)
-A suite of specialized AI agents responsible for interpreting the static analysis data. It uses a planner, abstraction, and validator agents, along with a toolkit for reading code artifacts, to generate high-level architectural insights.
+A suite of specialized AI agents responsible for interpreting the static analysis data. It uses a planner, abstraction, and validator agents, along with a toolkit for reading code artifacts, to generate high-level architectural insights. The core agent functionality, likely defined in `agents/agent.py`, has been updated to enhance or refine the capabilities shared by the specialized agents.
 
 
 **Related Classes/Methods**:
@@ -62,7 +62,8 @@ A suite of specialized AI agents responsible for interpreting the static analysi
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/planner_agent.py" target="_blank" rel="noopener noreferrer">`agents/planner_agent.py`</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/abstraction_agent.py" target="_blank" rel="noopener noreferrer">`agents/abstraction_agent.py`</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/validator_agent.py" target="_blank" rel="noopener noreferrer">`agents/validator_agent.py`</a>
-- `agents/tools/`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/" target="_blank" rel="noopener noreferrer">`agents/tools/`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/agent.py" target="_blank" rel="noopener noreferrer">`agents/agent.py`</a>
 
 
 ### Output Generator [[Expand]](./Output_Generator.md)
@@ -103,50 +104,51 @@ graph LR
 
 ## Details
 
-One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
+The CodeBoarding system operates as a multi-stage agentic pipeline designed to analyze project codebases. The process begins with the `PlannerAgent`, which establishes an initial analysis plan. This plan is then executed by the `AbstractionAgent`, responsible for synthesizing architectural components and their relationships. The `ValidatorAgent` subsequently ensures the correctness and integrity of the generated architectural insights. Throughout these stages, various `ToolingAgent` instances are leveraged to perform granular analysis tasks, providing essential data. The entire agentic framework is built upon the `CodeBoardingAgent`, an abstract base class that provides core functionalities and a standardized approach for LLM interactions, state management, and initialization. Recent significant updates to `CodeBoardingAgent` indicate an evolution of this foundational framework, impacting the interfaces and expected behaviors of all specialized agents.
 
 ### CodeBoardingAgent
-An abstract base class that provides a foundational agentic framework. It standardizes LLM interactions, state management, and initialization for all specialized agents, ensuring consistent behavior and integration.
+An abstract base class that provides a foundational agentic framework. It standardizes LLM interactions, state management, and initialization for all specialized agents, ensuring consistent behavior and integration. Recent significant updates to this class suggest an evolution of its core functionalities, potentially altering the contract and common behavior expected from all agents in the system.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/agent.py" target="_blank" rel="noopener noreferrer">`agents.agent`</a>
+- `agents.agent`
 
 
 ### PlannerAgent
-The initial stage of the pipeline. It examines the project's overall structure to create a high-level analysis plan, guiding the subsequent abstraction phase. It inherits its core capabilities from the CodeBoardingAgent.
+The initial stage of the pipeline. It examines the project's overall structure to create a high-level analysis plan, guiding the subsequent abstraction phase. It inherits its core capabilities from the `CodeBoardingAgent`, and its implementation may have been updated to align with recent changes in the foundational agent framework.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/planner_agent.py" target="_blank" rel="noopener noreferrer">`agents.planner_agent`</a>
+- `agents.planner_agent`
 
 
 ### AbstractionAgent
-The central processing unit of the engine. It executes the plan from the PlannerAgent, synthesizing architectural components and relationships from the codebase by delegating to various ToolingAgents.
+The central processing unit of the engine. It executes the plan from the `PlannerAgent`, synthesizing architectural components and relationships from the codebase by delegating to various `ToolingAgents`. Its behavior and interactions with the base class may have been modified due to recent updates in the `CodeBoardingAgent`.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/abstraction_agent.py" target="_blank" rel="noopener noreferrer">`agents.abstraction_agent`</a>
+- `agents.abstraction_agent`
 
 
 ### ValidatorAgent
-The final quality assurance stage. It systematically reviews the output from the AbstractionAgent, verifying the correctness of identified components and their relationships, often by delegating checks to ToolingAgents.
+The final quality assurance stage. It systematically reviews the output from the `AbstractionAgent`, verifying the correctness of identified components and their relationships, often by delegating checks to `ToolingAgents`. Its responsibilities and internal logic may have been adjusted in response to the evolving `CodeBoardingAgent` framework.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/validator_agent.py" target="_blank" rel="noopener noreferrer">`agents.validator_agent`</a>
+- `agents.validator_agent`
 
 
 ### ToolingAgent
-A collection of specialized agents that perform fine-grained analysis tasks (e.g., reading files, parsing class structures, analyzing dependencies). They inherit from CodeBoardingAgent and are invoked by other agents to provide specific data points about the codebase.
+A collection of specialized agents that perform fine-grained analysis tasks (e.g., reading files, parsing class structures, analyzing dependencies). They inherit from `CodeBoardingAgent` and are invoked by other agents to provide specific data points about the codebase. Their functionalities may have been refined to integrate with the updated foundational agent framework.
 
 
 **Related Classes/Methods**:
 
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/" target="_blank" rel="noopener noreferrer">`agents.tools.*`</a>
 
 
 
@@ -349,80 +351,62 @@ Focuses on generating diagrams (e.g., using Mermaid.js) based on the analysis da
 
 ```mermaid
 graph LR
-    Scanner["Scanner"]
-    Programming_Language["Programming Language"]
-    LSP_Client["LSP Client"]
-    TypeScript_Client["TypeScript Client"]
-    Call_Graph["Call Graph"]
-    Graph_Data_Structures["Graph Data Structures"]
-    Scanner -- "uses" --> Programming_Language
-    Scanner -- "interacts with" --> LSP_Client
-    Scanner -- "delegates to" --> Call_Graph
-    Programming_Language -- "creates instance of" --> TypeScript_Client
-    TypeScript_Client -- "implements" --> LSP_Client
-    Call_Graph -- "consumes from" --> LSP_Client
-    Call_Graph -- "uses" --> Graph_Data_Structures
+    Agent["Agent"]
+    Static_Analyzer["Static Analyzer"]
+    Large_Language_Model_LLM_["Large Language Model (LLM)"]
+    Agent_Tools["Agent Tools"]
+    Agent -- "uses" --> Large_Language_Model_LLM_
+    Agent -- "orchestrates" --> Agent_Tools
+    Agent -- "consumes" --> Static_Analyzer
+    Agent_Tools -- "queries" --> Static_Analyzer
+    click Static_Analyzer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analyzer.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
+The CodeBoarding system is designed to provide comprehensive code analysis and insights, primarily driven by an AI Agent. At its core, the system leverages a Static Analyzer subsystem to generate detailed structural and relational data about the codebase, including call graphs and package dependencies. This rich static analysis data is then consumed by the Agent component, which acts as an intelligent orchestrator. The Agent utilizes a Large Language Model (LLM) for reasoning and decision-making, and interacts with the codebase through a suite of Agent Tools. These tools allow the Agent to dynamically query source code, file structures, and the static analysis results, enabling it to answer complex questions, identify architectural patterns, and provide actionable insights.
 
-### Scanner
-The primary orchestrator and entry point of the subsystem. It traverses the target project's file system, determines the language, and coordinates the analysis process by delegating to the appropriate LSP client and graph-building components.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer/scanner.py`</a>
-
-
-### Programming Language
-A factory component responsible for identifying the programming language of the source code and providing the corresponding language-specific LSP client instance. This isolates language-specific logic and simplifies the `Scanner`'s responsibilities.
+### Agent
+The central orchestrator of the AI-driven analysis. It interprets user prompts, leverages a Large Language Model for reasoning, and coordinates the use of various specialized tools to interact with the codebase and static analysis data.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/programming_language.py" target="_blank" rel="noopener noreferrer">`static_analyzer/programming_language.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/agent.py#L27-L207" target="_blank" rel="noopener noreferrer">`agents.agent.CodeBoardingAgent`:27-207</a>
 
 
-### LSP Client
-An abstract base class defining a standardized interface for communication with any Language Server Protocol server. It decouples the `Scanner` and `Call Graph` from the concrete implementation details of specific language servers.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/client.py" target="_blank" rel="noopener noreferrer">`static_analyzer/lsp_client/client.py`</a>
-
-
-### TypeScript Client
-A concrete implementation of the `LSP Client` interface, specifically designed to manage and communicate with the TypeScript language server. It demonstrates the system's extensibility for different languages.
+### Static Analyzer [[Expand]](./Static_Analyzer.md)
+A foundational subsystem responsible for performing deep static analysis of the codebase. It generates comprehensive structural and relational data, including call graphs, package dependencies, and code references, which serve as critical input for the Agent. This component encapsulates the functionalities of the Scanner, Programming Language identification, LSP Client interactions, Call Graph construction, and Graph Data Structures.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/typescript_client.py" target="_blank" rel="noopener noreferrer">`static_analyzer/lsp_client/typescript_client.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer.scanner`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/programming_language.py" target="_blank" rel="noopener noreferrer">`static_analyzer.programming_language`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/client.py" target="_blank" rel="noopener noreferrer">`static_analyzer.lsp_client.client`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/graph.py" target="_blank" rel="noopener noreferrer">`static_analyzer.graph.node`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/graph.py" target="_blank" rel="noopener noreferrer">`static_analyzer.graph.edge`</a>
 
 
-### Call Graph
-Responsible for constructing the call graph data structure. It consumes information retrieved from an `LSP Client` and uses it to build a graph of nodes and edges representing the code's relationships.
-
-
-**Related Classes/Methods**:
-
-- `static_analyzer/graph/call_graph.py`
-
-
-### Graph Data Structures
-A set of data models (`Node`, `Edge`) that represent the fundamental elements of the call graph. These structures provide a clean, language-agnostic representation of code entities and their interactions.
+### Large Language Model (LLM)
+An external or integrated AI model that provides the reasoning capabilities for the Agent. It processes prompts, generates responses, and assists the Agent in making decisions and formulating queries to the Agent Tools.
 
 
 **Related Classes/Methods**:
 
-- `static_analyzer/graph/node.py`
-- `static_analyzer/graph/edge.py`
+
+
+### Agent Tools
+A collection of specialized functionalities that enable the Agent to interact with the codebase and the results of the Static Analyzer. These tools abstract various data retrieval and analysis operations, allowing the Agent to focus on high-level reasoning.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_file.py" target="_blank" rel="noopener noreferrer">`agents.tools.ReadFileTool`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/read_docs.py#L19-L147" target="_blank" rel="noopener noreferrer">`agents.tools.read_docs.ReadDocsTool`:19-147</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/tools/external_deps.py#L17-L95" target="_blank" rel="noopener noreferrer">`agents.tools.external_deps.ExternalDepsTool`:17-95</a>
 
 
 

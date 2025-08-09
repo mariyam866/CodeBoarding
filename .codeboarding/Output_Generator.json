@@ -23,8 +23,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "HTMLOutputGenerator",
@@ -42,8 +41,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "MarkdownOutputGenerator",
@@ -61,8 +59,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "DiagramGenerator",
@@ -80,8 +77,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "can_expand": false
+      ]
     }
   ],
   "components_relations": [
