@@ -1,0 +1,126 @@
+{
+  "description": "One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.",
+  "components": [
+    {
+      "name": "Scanner",
+      "description": "The primary orchestrator and entry point of the subsystem. It traverses the target project's file system, determines the language, and coordinates the analysis process by delegating to the appropriate LSP client and graph-building components.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "static_analyzer/scanner.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Programming Language",
+      "description": "A factory component responsible for identifying the programming language of the source code and providing the corresponding language-specific LSP client instance. This isolates language-specific logic and simplifies the `Scanner`'s responsibilities.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "static_analyzer/programming_language.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/programming_language.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "LSP Client",
+      "description": "An abstract base class defining a standardized interface for communication with any Language Server Protocol server. It decouples the `Scanner` and `Call Graph` from the concrete implementation details of specific language servers.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "static_analyzer/lsp_client/client.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "TypeScript Client",
+      "description": "A concrete implementation of the `LSP Client` interface, specifically designed to manage and communicate with the TypeScript language server. It demonstrates the system's extensibility for different languages.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "static_analyzer/lsp_client/typescript_client.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/typescript_client.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "Call Graph",
+      "description": "Responsible for constructing the call graph data structure. It consumes information retrieved from an `LSP Client` and uses it to build a graph of nodes and edges representing the code's relationships.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "static_analyzer/graph/call_graph.py",
+          "reference_file": "static_analyzer/graph/call_graph.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "Graph Data Structures",
+      "description": "A set of data models (`Node`, `Edge`) that represent the fundamental elements of the call graph. These structures provide a clean, language-agnostic representation of code entities and their interactions.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "static_analyzer/graph/node.py",
+          "reference_file": "static_analyzer/graph/node.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "static_analyzer/graph/edge.py",
+          "reference_file": "static_analyzer/graph/edge.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "can_expand": false
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "uses",
+      "src_name": "Scanner",
+      "dst_name": "Programming Language"
+    },
+    {
+      "relation": "interacts with",
+      "src_name": "Scanner",
+      "dst_name": "LSP Client"
+    },
+    {
+      "relation": "delegates to",
+      "src_name": "Scanner",
+      "dst_name": "Call Graph"
+    },
+    {
+      "relation": "creates instance of",
+      "src_name": "Programming Language",
+      "dst_name": "TypeScript Client"
+    },
+    {
+      "relation": "implements",
+      "src_name": "TypeScript Client",
+      "dst_name": "LSP Client"
+    },
+    {
+      "relation": "consumes from",
+      "src_name": "Call Graph",
+      "dst_name": "LSP Client"
+    },
+    {
+      "relation": "uses",
+      "src_name": "Call Graph",
+      "dst_name": "Graph Data Structures"
+    }
+  ]
+}

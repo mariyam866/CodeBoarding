@@ -1,88 +1,19 @@
 {
-  "description": "Abstract Components Overview",
+  "description": "An analysis of the project's file structure and the initial abstract components reveals a clear mapping between the conceptual architecture and the source code. The feedback provided was valid and has been integrated by grounding the abstract components in specific source files and correcting the data flow between them.",
   "components": [
     {
-      "name": "Orchestration & Workflow",
-      "description": "The central coordinator that manages the end-to-end analysis pipeline. It initiates static analysis, triggers the AI engine, coordinates with the persistence layer for caching and differential checks, and sends the final, validated results to the output generator.",
+      "name": "API Service",
+      "description": "Serves as the primary entry point for all external interactions. It exposes the system's capabilities, handling incoming requests and returning the final generated analysis.",
       "referenced_source_code": [
         {
           "qualified_name": "local_app.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/local_app.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
           "qualified_name": "github_action.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/github_action.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        }
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "Static Code Analyzer",
-      "description": "Responsible for the initial, non-AI parsing of the source code. It uses AST-based techniques to build foundational data structures like call graphs and structure graphs, transforming raw code into a structured format that the AI engine can interpret.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "static_analyzer/pylint_analyze/call_graph_builder.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/static_analyzer/pylint_analyze/call_graph_builder.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        },
-        {
-          "qualified_name": "static_analyzer/pylint_analyze/structure_graph_builder.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/static_analyzer/pylint_analyze/structure_graph_builder.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        },
-        {
-          "qualified_name": "static_analyzer/pylint_graph_transform.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/static_analyzer/pylint_graph_transform.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "AI Analysis Engine",
-      "description": "The cognitive core of the system. It is a multi-agent framework that interprets the data from the static analyzer. It uses a collection of specialized agents (e.g., Planner, Abstraction, Diff Analyzer) to collaboratively identify architectural patterns, understand component roles, and build a comprehensive model of the codebase.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "agents/agent.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "agents/planner_agent.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/planner_agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "agents/abstraction_agent.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/abstraction_agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "agents/diff_analyzer.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/agents/diff_analyzer.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "Analysis Persistence",
-      "description": "Handles the serialization and deserialization of the analysis model to a storable format (JSON). This enables the caching of results, which is critical for performance and for supporting efficient incremental analysis by providing a baseline for comparison.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "diagram_analysis/analysis_json.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/diagram_analysis/analysis_json.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
@@ -90,32 +21,89 @@
       "can_expand": false
     },
     {
-      "name": "Output Generator",
-      "description": "The final stage in the pipeline. It consumes the rich, structured analysis model produced by the AI Engine and renders it into various human-readable formats, such as Markdown, HTML, and Sphinx documentation. Recent changes indicate a streamlining or simplification of its output capabilities.",
+      "name": "Orchestrator",
+      "description": "Acts as the central coordinator of the analysis pipeline. It manages the sequence of operations, directing the flow of data between the various components to ensure the end-to-end process runs smoothly.",
       "referenced_source_code": [
         {
-          "qualified_name": "output_generators/markdown.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/output_generators/markdown.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "qualified_name": "agents/meta_agent.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/meta_agent.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "Static Analyzer",
+      "description": "Performs language-aware static analysis of the source code. It builds foundational data structures, including call graphs and package dependencies, which form the basis for the AI interpretation.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "static_analyzer/scanner.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         },
+        {
+          "qualified_name": "static_analyzer/lsp_client/",
+          "reference_file": "static_analyzer/lsp_client/",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "AI Interpretation Engine",
+      "description": "A suite of specialized AI agents responsible for interpreting the static analysis data. It uses a planner, abstraction, and validator agents, along with a toolkit for reading code artifacts, to generate high-level architectural insights.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "agents/planner_agent.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/planner_agent.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "agents/abstraction_agent.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/abstraction_agent.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "agents/validator_agent.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/validator_agent.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "agents/tools/",
+          "reference_file": "agents/tools/",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Output Generator",
+      "description": "Responsible for converting the final, validated analysis from the AI engine into human-readable formats. It serializes the analysis data and renders it as diagrams and text.",
+      "referenced_source_code": [
         {
           "qualified_name": "output_generators/html.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/output_generators/html.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/html.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         },
         {
-          "qualified_name": "output_generators/sphinx.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/output_generators/sphinx.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "qualified_name": "output_generators/markdown.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/markdown.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         },
         {
-          "qualified_name": "output_generators/mdx.py",
-          "reference_file": "/mnt/e/StartUp/CodeBoarding/output_generators/mdx.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "qualified_name": "diagram_analysis/diagram_generator.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
       "can_expand": false
@@ -123,39 +111,34 @@
   ],
   "components_relations": [
     {
-      "relation": "invokes analysis on",
-      "src_name": "Orchestration & Workflow",
-      "dst_name": "Static Code Analyzer"
+      "relation": "Invokes",
+      "src_name": "API Service",
+      "dst_name": "Orchestrator"
     },
     {
-      "relation": "returns raw graph data to",
-      "src_name": "Static Code Analyzer",
-      "dst_name": "Orchestration & Workflow"
+      "relation": "Invokes",
+      "src_name": "Orchestrator",
+      "dst_name": "Static Analyzer"
     },
     {
-      "relation": "consults and saves analysis to",
-      "src_name": "Orchestration & Workflow",
-      "dst_name": "Analysis Persistence"
+      "relation": "Invokes",
+      "src_name": "Orchestrator",
+      "dst_name": "AI Interpretation Engine"
     },
     {
-      "relation": "provides cached analysis to",
-      "src_name": "Analysis Persistence",
-      "dst_name": "Orchestration & Workflow"
-    },
-    {
-      "relation": "invokes with graph data",
-      "src_name": "Orchestration & Workflow",
-      "dst_name": "AI Analysis Engine"
-    },
-    {
-      "relation": "returns high-level model to",
-      "src_name": "AI Analysis Engine",
-      "dst_name": "Orchestration & Workflow"
-    },
-    {
-      "relation": "sends model for rendering to",
-      "src_name": "Orchestration & Workflow",
+      "relation": "Invokes",
+      "src_name": "Orchestrator",
       "dst_name": "Output Generator"
+    },
+    {
+      "relation": "Returns final report to",
+      "src_name": "Output Generator",
+      "dst_name": "Orchestrator"
+    },
+    {
+      "relation": "Returns final report to",
+      "src_name": "Orchestrator",
+      "dst_name": "API Service"
     }
   ]
 }

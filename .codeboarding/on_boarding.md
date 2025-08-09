@@ -1,30 +1,28 @@
 ```mermaid
 graph LR
-    Orchestration_Workflow["Orchestration & Workflow"]
-    Static_Code_Analyzer["Static Code Analyzer"]
-    AI_Analysis_Engine["AI Analysis Engine"]
-    Analysis_Persistence["Analysis Persistence"]
+    API_Service["API Service"]
+    Orchestrator["Orchestrator"]
+    Static_Analyzer["Static Analyzer"]
+    AI_Interpretation_Engine["AI Interpretation Engine"]
     Output_Generator["Output Generator"]
-    Orchestration_Workflow -- "invokes analysis on" --> Static_Code_Analyzer
-    Static_Code_Analyzer -- "returns raw graph data to" --> Orchestration_Workflow
-    Orchestration_Workflow -- "consults and saves analysis to" --> Analysis_Persistence
-    Analysis_Persistence -- "provides cached analysis to" --> Orchestration_Workflow
-    Orchestration_Workflow -- "invokes with graph data" --> AI_Analysis_Engine
-    AI_Analysis_Engine -- "returns high-level model to" --> Orchestration_Workflow
-    Orchestration_Workflow -- "sends model for rendering to" --> Output_Generator
-    click Orchestration_Workflow href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Workflow.md" "Details"
-    click Static_Code_Analyzer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Code_Analyzer.md" "Details"
-    click AI_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Analysis_Engine.md" "Details"
+    API_Service -- "Invokes" --> Orchestrator
+    Orchestrator -- "Invokes" --> Static_Analyzer
+    Orchestrator -- "Invokes" --> AI_Interpretation_Engine
+    Orchestrator -- "Invokes" --> Output_Generator
+    Output_Generator -- "Returns final report to" --> Orchestrator
+    Orchestrator -- "Returns final report to" --> API_Service
+    click Static_Analyzer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analyzer.md" "Details"
+    click AI_Interpretation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Engine.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-Abstract Components Overview
+An analysis of the project's file structure and the initial abstract components reveals a clear mapping between the conceptual architecture and the source code. The feedback provided was valid and has been integrated by grounding the abstract components in specific source files and correcting the data flow between them.
 
-### Orchestration & Workflow [[Expand]](./Orchestration_Workflow.md)
-The central coordinator that manages the end-to-end analysis pipeline. It initiates static analysis, triggers the AI engine, coordinates with the persistence layer for caching and differential checks, and sends the final, validated results to the output generator.
+### API Service
+Serves as the primary entry point for all external interactions. It exposes the system's capabilities, handling incoming requests and returning the final generated analysis.
 
 
 **Related Classes/Methods**:
@@ -33,48 +31,46 @@ The central coordinator that manages the end-to-end analysis pipeline. It initia
 - `github_action.py`
 
 
-### Static Code Analyzer [[Expand]](./Static_Code_Analyzer.md)
-Responsible for the initial, non-AI parsing of the source code. It uses AST-based techniques to build foundational data structures like call graphs and structure graphs, transforming raw code into a structured format that the AI engine can interpret.
+### Orchestrator
+Acts as the central coordinator of the analysis pipeline. It manages the sequence of operations, directing the flow of data between the various components to ensure the end-to-end process runs smoothly.
 
 
 **Related Classes/Methods**:
 
-- `static_analyzer/pylint_analyze/call_graph_builder.py`
-- `static_analyzer/pylint_analyze/structure_graph_builder.py`
-- `static_analyzer/pylint_graph_transform.py`
+- `agents/meta_agent.py`
 
 
-### AI Analysis Engine [[Expand]](./AI_Analysis_Engine.md)
-The cognitive core of the system. It is a multi-agent framework that interprets the data from the static analyzer. It uses a collection of specialized agents (e.g., Planner, Abstraction, Diff Analyzer) to collaboratively identify architectural patterns, understand component roles, and build a comprehensive model of the codebase.
+### Static Analyzer [[Expand]](./Static_Analyzer.md)
+Performs language-aware static analysis of the source code. It builds foundational data structures, including call graphs and package dependencies, which form the basis for the AI interpretation.
 
 
 **Related Classes/Methods**:
 
-- `agents/agent.py`
+- `static_analyzer/scanner.py`
+- `static_analyzer/lsp_client/`
+
+
+### AI Interpretation Engine [[Expand]](./AI_Interpretation_Engine.md)
+A suite of specialized AI agents responsible for interpreting the static analysis data. It uses a planner, abstraction, and validator agents, along with a toolkit for reading code artifacts, to generate high-level architectural insights.
+
+
+**Related Classes/Methods**:
+
 - `agents/planner_agent.py`
 - `agents/abstraction_agent.py`
-- `agents/diff_analyzer.py`
-
-
-### Analysis Persistence
-Handles the serialization and deserialization of the analysis model to a storable format (JSON). This enables the caching of results, which is critical for performance and for supporting efficient incremental analysis by providing a baseline for comparison.
-
-
-**Related Classes/Methods**:
-
-- `diagram_analysis/analysis_json.py`
+- `agents/validator_agent.py`
+- `agents/tools/`
 
 
 ### Output Generator
-The final stage in the pipeline. It consumes the rich, structured analysis model produced by the AI Engine and renders it into various human-readable formats, such as Markdown, HTML, and Sphinx documentation. Recent changes indicate a streamlining or simplification of its output capabilities.
+Responsible for converting the final, validated analysis from the AI engine into human-readable formats. It serializes the analysis data and renders it as diagrams and text.
 
 
 **Related Classes/Methods**:
 
-- `output_generators/markdown.py`
 - `output_generators/html.py`
-- `output_generators/sphinx.py`
-- `output_generators/mdx.py`
+- `output_generators/markdown.py`
+- `diagram_analysis/diagram_generator.py`
 
 
 
