@@ -22,22 +22,24 @@ For detailed architecture information, see our [diagram documentation](.codeboar
 
 ```mermaid
 graph LR
-    Orchestration_Workflow["Orchestration & Workflow"]
-    Static_Code_Analyzer["Static Code Analyzer"]
-    AI_Analysis_Engine["AI Analysis Engine"]
-    Analysis_Persistence["Analysis Persistence"]
+    API_Service["API Service"]
+    Orchestrator["Orchestrator"]
+    Static_Analyzer["Static Analyzer"]
+    AI_Interpretation_Engine["AI Interpretation Engine"]
     Output_Generator["Output Generator"]
-    Orchestration_Workflow -- " invokes analysis on " --> Static_Code_Analyzer
-    Static_Code_Analyzer -- " returns raw graph data to " --> Orchestration_Workflow
-    Orchestration_Workflow -- " consults and saves analysis to " --> Analysis_Persistence
-    Analysis_Persistence -- " provides cached analysis to " --> Orchestration_Workflow
-    Orchestration_Workflow -- " invokes with graph data " --> AI_Analysis_Engine
-    AI_Analysis_Engine -- " returns high-level model to " --> Orchestration_Workflow
-    Orchestration_Workflow -- " sends model for rendering to " --> Output_Generator
-    click Orchestration_Workflow href "https://github.com/CodeBoarding/CodeBoarding/tree/main/.codeboarding/Orchestration_Workflow.md" "Details"
-    click Static_Code_Analyzer href "https://github.com/CodeBoarding/CodeBoarding/tree/main/.codeboarding/Static_Code_Analyzer.md" "Details"
-    click AI_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/tree/main/.codeboarding/AI_Analysis_Engine.md" "Details"
+    API_Service -- "Invokes" --> Orchestrator
+    Orchestrator -- "Invokes" --> Static_Analyzer
+    Orchestrator -- "Invokes" --> AI_Interpretation_Engine
+    Orchestrator -- "Invokes" --> Output_Generator
+    Output_Generator -- "Returns final report to" --> Orchestrator
+    Orchestrator -- "Returns final report to" --> API_Service
+    click API_Service href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/API_Service.md" "Details"
+    click Orchestrator href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestrator.md" "Details"
+    click Static_Analyzer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analyzer.md" "Details"
+    click AI_Interpretation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Engine.md" "Details"
+    click Output_Generator href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generator.md" "Details"
 ```
+
 
 ## 📌 Setup
 
