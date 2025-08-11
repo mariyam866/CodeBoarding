@@ -59,7 +59,7 @@ brew install cmake pkg-config icu4c
 gem install github-linguist
 ```
 
-Download `xcode` in the Appstore to compile in C++
+- Download `xcode` in the Appstore to compile in C++
 
 Linux:
 
