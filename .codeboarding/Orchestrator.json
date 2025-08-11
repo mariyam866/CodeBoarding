@@ -11,8 +11,7 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Static Code Analyzer",
@@ -24,8 +23,7 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "AI Analysis Engine",
@@ -43,8 +41,7 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "Analysis Persistence",
@@ -56,14 +53,12 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Output Generator",
       "description": "Transforms the processed analysis data into various user-friendly formats, including visual representations (e.g., Mermaid.js diagrams for architectural views) and structured reports. It is responsible for rendering the final output for user consumption.",
-      "referenced_source_code": [],
-      "can_expand": true
+      "referenced_source_code": []
     }
   ],
   "components_relations": [

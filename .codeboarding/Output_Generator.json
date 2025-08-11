@@ -11,8 +11,7 @@
           "reference_start_line": 19,
           "reference_end_line": 900
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Agents",
@@ -24,32 +23,27 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Output Generator",
       "description": "Orchestrates the generation of various output formats from processed analysis data.",
-      "referenced_source_code": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "HTMLOutputGenerator",
       "description": "Generates HTML output.",
-      "referenced_source_code": [],
-      "can_expand": false
+      "referenced_source_code": []
     },
     {
       "name": "MarkdownOutputGenerator",
       "description": "Generates Markdown output.",
-      "referenced_source_code": [],
-      "can_expand": false
+      "referenced_source_code": []
     },
     {
       "name": "DiagramGenerator",
       "description": "Generates diagrams.",
-      "referenced_source_code": [],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [
