@@ -1,156 +1,41 @@
 {
-  "description": "The CodeBoarding system is designed to provide comprehensive code analysis and insights, primarily driven by an AI Agent. At its core, the system leverages a Static Analyzer subsystem to generate detailed structural and relational data about the codebase, including call graphs and package dependencies. This rich static analysis data is then consumed by the Agent component, which acts as an intelligent orchestrator. The Agent utilizes a Large Language Model (LLM) for reasoning and decision-making, and interacts with the codebase through a suite of Agent Tools. These tools allow the Agent to dynamically query source code, file structures, and the static analysis results, enabling it to answer complex questions, identify architectural patterns, and provide actionable insights.",
+  "description": "The `Static Analyzer` subsystem is primarily defined by the `static_analyzer/scanner.py` module and the `static_analyzer/lsp_client/` package. This encompasses the core logic for language-aware static analysis, including the Language Server Protocol (LSP) client implementations and the orchestration of the scanning process.",
   "components": [
     {
-      "name": "Agent",
-      "description": "The central orchestrator of the AI-driven analysis. It interprets user prompts, leverages a Large Language Model for reasoning, and coordinates the use of various specialized tools to interact with the codebase and static analysis data.",
+      "name": "LSPClient",
+      "description": "This is the abstract foundation for all language-specific static analysis. It encapsulates the generic Language Server Protocol (LSP) communication, managing the lifecycle of an LSP connection (initialization, request/response handling, shutdown). It provides methods for sending various LSP requests (e.g., for document symbols, call hierarchies, class hierarchies, references, definitions) and processing the server's responses to extract raw code insights. It also handles file filtering and directory exclusion.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents.agent.CodeBoardingAgent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
-          "reference_start_line": 27,
-          "reference_end_line": 207
-        }
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "Static Analyzer",
-      "description": "A foundational subsystem responsible for performing deep static analysis of the codebase. It generates comprehensive structural and relational data, including call graphs, package dependencies, and code references, which serve as critical input for the Agent. This component encapsulates the functionalities of the Scanner, Programming Language identification, LSP Client interactions, Call Graph construction, and Graph Data Structures.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "static_analyzer.scanner",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "static_analyzer.programming_language",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/programming_language.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "static_analyzer.lsp_client.client",
+          "qualified_name": "LSPClient",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "static_analyzer.graph.call_graph",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "static_analyzer.graph.node",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/graph.py",
-          "reference_start_line": 9,
-          "reference_end_line": 9
-        },
-        {
-          "qualified_name": "static_analyzer.graph.edge",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/graph.py",
-          "reference_start_line": 57,
-          "reference_end_line": 57
+          "reference_start_line": 19,
+          "reference_end_line": 900
         }
       ],
       "can_expand": true
     },
     {
-      "name": "Large Language Model (LLM)",
-      "description": "An external or integrated AI model that provides the reasoning capabilities for the Agent. It processes prompts, generates responses, and assists the Agent in making decisions and formulating queries to the Agent Tools.",
+      "name": "TypeScriptClient",
+      "description": "A concrete implementation extending `LSPClient`, specifically tailored for TypeScript projects. It inherits the core LSP communication capabilities and adds TypeScript-specific logic for project initialization, configuration, and bootstrapping the TypeScript Language Server. This specialization ensures accurate and efficient analysis of TypeScript codebases by correctly setting up the language server environment.",
       "referenced_source_code": [
         {
-          "qualified_name": "langchain_anthropic.ChatAnthropic",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "langchain_aws.ChatBedrockConverse",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "langchain_google_genai.ChatGoogleGenerativeAI",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "langchain_openai.ChatOpenAI",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "langchain_ollama.ChatOllama",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "qualified_name": "TypeScriptClient",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/typescript_client.py",
+          "reference_start_line": 10,
+          "reference_end_line": 214
         }
       ],
-      "can_expand": false
+      "can_expand": true
     },
     {
-      "name": "Agent Tools",
-      "description": "A collection of specialized functionalities that enable the Agent to interact with the codebase and the results of the Static Analyzer. These tools abstract various data retrieval and analysis operations, allowing the Agent to focus on high-level reasoning.",
+      "name": "Scanner",
+      "description": "This component acts as the orchestrator and entry point for initiating the static analysis process within the subsystem. It is responsible for selecting the appropriate `LSPClient` implementation (e.g., `TypeScriptClient` for TypeScript projects), configuring it with project-specific details, and invoking its methods to perform the actual code scanning, data collection, and potentially initial processing of the raw analysis results.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents.tools.CodeReferenceReader",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "agents.tools.PackageRelationsTool",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "agents.tools.CodeStructureTool",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "agents.tools.FileStructureTool",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "agents.tools.GetCFGTool",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "agents.tools.MethodInvocationsTool",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "agents.tools.ReadFileTool",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "agents.tools.read_docs.ReadDocsTool",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_docs.py",
-          "reference_start_line": 19,
-          "reference_end_line": 147
-        },
-        {
-          "qualified_name": "agents.tools.external_deps.ExternalDepsTool",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/external_deps.py",
-          "reference_start_line": 17,
-          "reference_end_line": 95
+          "qualified_name": "Scanner",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
+          "reference_start_line": 13,
+          "reference_end_line": 66
         }
       ],
       "can_expand": false
@@ -158,24 +43,19 @@
   ],
   "components_relations": [
     {
+      "relation": "inherits from",
+      "src_name": "TypeScriptClient",
+      "dst_name": "LSPClient"
+    },
+    {
       "relation": "uses",
-      "src_name": "Agent",
-      "dst_name": "Large Language Model (LLM)"
+      "src_name": "Scanner",
+      "dst_name": "TypeScriptClient"
     },
     {
-      "relation": "orchestrates",
-      "src_name": "Agent",
-      "dst_name": "Agent Tools"
-    },
-    {
-      "relation": "consumes",
-      "src_name": "Agent",
-      "dst_name": "Static Analyzer"
-    },
-    {
-      "relation": "queries",
-      "src_name": "Agent Tools",
-      "dst_name": "Static Analyzer"
+      "relation": "uses",
+      "src_name": "Scanner",
+      "dst_name": "LSPClient"
     }
   ]
 }

@@ -1,9 +1,13 @@
 ```mermaid
 graph LR
+    LSPClient["LSPClient"]
+    Agents["Agents"]
     Output_Generator["Output Generator"]
     HTMLOutputGenerator["HTMLOutputGenerator"]
     MarkdownOutputGenerator["MarkdownOutputGenerator"]
     DiagramGenerator["DiagramGenerator"]
+    LSPClient -- "provides raw analysis data to" --> Agents
+    Agents -- "provides processed analysis data to" --> Output_Generator
     Output_Generator -- "orchestrates" --> HTMLOutputGenerator
     Output_Generator -- "orchestrates" --> MarkdownOutputGenerator
     Output_Generator -- "orchestrates" --> DiagramGenerator
@@ -14,39 +18,49 @@ graph LR
 
 ## Details
 
-The `Output Generator` subsystem is responsible for transforming processed analysis data into various user-consumable formats. It orchestrates the generation of HTML, Markdown, and diagrams, acting as the final presentation layer for the `CodeBoarding` project's analysis results. The core flow involves the `Output Generator` delegating specific formatting tasks to specialized components like `HTMLOutputGenerator`, `MarkdownOutputGenerator`, and `DiagramGenerator`, ensuring a modular and extensible output pipeline.
+The system's architecture is centered around a data processing pipeline that transforms raw code information into various human-readable outputs. The LSPClient initiates this process by acquiring raw static analysis data from language servers. This raw data is then fed to the Agents component, which, guided by dynamic prompts defined in agents/prompts.py, performs intelligent analysis and transforms the raw data into structured, processed analysis results. Finally, the Output Generator acts as the presentation layer orchestrator, taking these processed analysis results and delegating their rendering to specialized sub-components: HTMLOutputGenerator for web-based views, MarkdownOutputGenerator for text-based documentation, and DiagramGenerator for visual representations like Mermaid diagrams. This modular design allows for flexible data acquisition, intelligent processing, and diverse output generation, adapting to changes in upstream data sources and downstream presentation requirements.
+
+### LSPClient
+Responsible for acquiring raw code data from Language Servers.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/client.py#L19-L900" target="_blank" rel="noopener noreferrer">`LSPClient`:19-900</a>
+
+
+### Agents
+Processes raw analysis data into structured analysis results, guided by prompts.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/prompts.py" target="_blank" rel="noopener noreferrer">`agents/prompts.py`</a>
+
 
 ### Output Generator [[Expand]](./Output_Generator.md)
-This is the core component responsible for taking the processed analysis data and rendering it into various output formats. It acts as the orchestrator for the final presentation layer.
+Orchestrates the generation of various output formats from processed analysis data.
 
 
-**Related Classes/Methods**:
-
-
+**Related Classes/Methods**: _None_
 
 ### HTMLOutputGenerator
-Specifically handles the conversion of analysis data into HTML format.
+Generates HTML output.
 
 
-**Related Classes/Methods**:
-
-
+**Related Classes/Methods**: _None_
 
 ### MarkdownOutputGenerator
-Specifically handles the conversion of analysis data into Markdown format.
+Generates Markdown output.
 
 
-**Related Classes/Methods**:
-
-
+**Related Classes/Methods**: _None_
 
 ### DiagramGenerator
-Focuses on generating diagrams (e.g., using Mermaid.js) based on the analysis data.
+Generates diagrams.
 
 
-**Related Classes/Methods**:
-
-
+**Related Classes/Methods**: _None_
 
 
 

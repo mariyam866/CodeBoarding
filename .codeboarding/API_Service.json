@@ -1,32 +1,19 @@
 {
-  "description": "Initial analysis of the project components and their relations, with a focus on identifying the 'Analysis Orchestrator' and its interactions. Further refinement is needed to include specific code references for the 'Analysis Orchestrator' by examining 'github_action.py' and 'local_app.py'.",
+  "description": "One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.",
   "components": [
     {
-      "name": "Analysis Orchestrator",
-      "description": "Orchestrates the analysis process, coordinating between different components.",
-      "referenced_source_code": []
-    },
-    {
-      "name": "Local Application",
-      "description": "Manages local application interactions.",
-      "referenced_source_code": []
-    },
-    {
-      "name": "GitHub Action",
-      "description": "Handles GitHub Actions workflows.",
-      "referenced_source_code": []
+      "name": "Repo Utils",
+      "description": "Manages temporary repositories for code analysis.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "repo_utils.create_temp_repo",
+          "reference_file": null,
+          "reference_start_line": 50,
+          "reference_end_line": 100
+        }
+      ],
+      "can_expand": false
     }
   ],
-  "components_relations": [
-    {
-      "relation": "orchestrates",
-      "src_name": "Local Application",
-      "dst_name": "Analysis Orchestrator"
-    },
-    {
-      "relation": "orchestrates",
-      "src_name": "GitHub Action",
-      "dst_name": "Analysis Orchestrator"
-    }
-  ]
+  "components_relations": []
 }

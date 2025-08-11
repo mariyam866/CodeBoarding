@@ -1,67 +1,127 @@
 {
-  "description": "The CodeBoarding system operates as a multi-stage agentic pipeline designed to analyze project codebases. The process begins with the `PlannerAgent`, which establishes an initial analysis plan. This plan is then executed by the `AbstractionAgent`, responsible for synthesizing architectural components and their relationships. The `ValidatorAgent` subsequently ensures the correctness and integrity of the generated architectural insights. Throughout these stages, various `ToolingAgent` instances are leveraged to perform granular analysis tasks, providing essential data. The entire agentic framework is built upon the `CodeBoardingAgent`, an abstract base class that provides core functionalities and a standardized approach for LLM interactions, state management, and initialization. Recent significant updates to `CodeBoardingAgent` indicate an evolution of this foundational framework, impacting the interfaces and expected behaviors of all specialized agents.",
+  "description": "The system operates with a clear division of labor among its core AI agents. The `Planner Agent` initiates the process, strategically determining the necessary steps and information required for architectural interpretation. It orchestrates the activities of the `Abstraction Agent`, which is responsible for transforming raw code data into high-level architectural insights, and the `Validator Agent`, which ensures the accuracy and consistency of these insights. All agents leverage the `Agent Base/Core` component for fundamental functionalities and shared utilities, promoting a cohesive and extensible design. The `Toolkit` serves as the agents' primary interface to the codebase, providing a comprehensive set of specialized tools for data retrieval, including source code, file structures, and control flow graphs, enabling informed decision-making and analysis throughout the architectural interpretation workflow.",
   "components": [
     {
-      "name": "CodeBoardingAgent",
-      "description": "An abstract base class that provides a foundational agentic framework. It standardizes LLM interactions, state management, and initialization for all specialized agents, ensuring consistent behavior and integration. Recent significant updates to this class suggest an evolution of its core functionalities, potentially altering the contract and common behavior expected from all agents in the system.",
+      "name": "Planner Agent",
+      "description": "This component acts as the strategic orchestrator of the entire architectural interpretation process. It determines the sequence of operations, decides which information to gather using the Toolkit, and coordinates the activities of the Abstraction and Validator Agents. Its centrality lies in guiding the overall strategy for generating architectural insights, making it the control hub of the AI interpretation workflow.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents.agent",
-          "reference_file": "agents/agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "qualified_name": "planner_agent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_start_line": 34,
+          "reference_end_line": 34
         }
       ],
       "can_expand": true
     },
     {
-      "name": "PlannerAgent",
-      "description": "The initial stage of the pipeline. It examines the project's overall structure to create a high-level analysis plan, guiding the subsequent abstraction phase. It inherits its core capabilities from the `CodeBoardingAgent`, and its implementation may have been updated to align with recent changes in the foundational agent framework.",
+      "name": "Abstraction Agent",
+      "description": "The Abstraction Agent is responsible for synthesizing raw static analysis data and other code artifacts into high-level architectural abstractions, patterns, and insights. This component is crucial for transforming granular code details into meaningful architectural representations, embodying the core \"interpretation\" aspect of the engine. Its importance stems from its role in generating the primary architectural output.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents.planner_agent",
-          "reference_file": "agents/planner_agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "qualified_name": "abstraction_agent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_start_line": 33,
+          "reference_end_line": 33
         }
       ],
       "can_expand": true
     },
     {
-      "name": "AbstractionAgent",
-      "description": "The central processing unit of the engine. It executes the plan from the `PlannerAgent`, synthesizing architectural components and relationships from the codebase by delegating to various `ToolingAgents`. Its behavior and interactions with the base class may have been modified due to recent updates in the `CodeBoardingAgent`.",
+      "name": "Validator Agent",
+      "description": "This component ensures the quality, accuracy, and consistency of the architectural insights produced by the Abstraction Agent. It performs checks and validations against the original code context and established architectural principles to refine and confirm the generated output. The Validator Agent is central for maintaining the integrity and reliability of the system's output, crucial for a developer tool where accuracy is paramount.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents.abstraction_agent",
-          "reference_file": "agents/abstraction_agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "qualified_name": "validator_agent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_start_line": 35,
+          "reference_end_line": 35
         }
       ],
       "can_expand": true
     },
     {
-      "name": "ValidatorAgent",
-      "description": "The final quality assurance stage. It systematically reviews the output from the `AbstractionAgent`, verifying the correctness of identified components and their relationships, often by delegating checks to `ToolingAgents`. Its responsibilities and internal logic may have been adjusted in response to the evolving `CodeBoardingAgent` framework.",
+      "name": "Agent Base/Core",
+      "description": "The Agent Base/Core provides foundational functionalities, common interfaces, and shared utilities that are leveraged by all specialized agents (Planner, Abstraction, Validator). This component promotes code reusability, consistency, and simplifies the development of new agents. It is central as it establishes the common architectural pattern and infrastructure for all AI agents within the subsystem, ensuring a cohesive and extensible design.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents.validator_agent",
-          "reference_file": "agents/validator_agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "qualified_name": "agent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
+          "reference_start_line": 20,
+          "reference_end_line": 136
         }
       ],
       "can_expand": true
     },
     {
-      "name": "ToolingAgent",
-      "description": "A collection of specialized agents that perform fine-grained analysis tasks (e.g., reading files, parsing class structures, analyzing dependencies). They inherit from `CodeBoardingAgent` and are invoked by other agents to provide specific data points about the codebase. Their functionalities may have been refined to integrate with the updated foundational agent framework.",
+      "name": "Toolkit",
+      "description": "The Toolkit is a comprehensive suite of specialized tools that enable the AI agents to interact with the codebase and retrieve specific types of information. This includes reading source code, file structures, external dependencies, package relationships, Control Flow Graphs (CFG), method invocations, Git diffs, raw file content, code structure (class hierarchies), and documentation. The Toolkit is central because it acts as the agents' \"eyes and ears\" into the project, providing all the necessary data access for informed decision-making and analysis.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents.tools.*",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "qualified_name": "__init__",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
+          "reference_start_line": 21,
+          "reference_end_line": 32
+        },
+        {
+          "qualified_name": "code_reference_reader",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_source.py",
+          "reference_start_line": 23,
+          "reference_end_line": 97
+        },
+        {
+          "qualified_name": "file_structure_tool",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file_structure.py",
+          "reference_start_line": 22,
+          "reference_end_line": 175
+        },
+        {
+          "qualified_name": "external_deps_tool",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
+          "reference_start_line": 40,
+          "reference_end_line": 40
+        },
+        {
+          "qualified_name": "package_relations_tool",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_packages.py",
+          "reference_start_line": 29,
+          "reference_end_line": 65
+        },
+        {
+          "qualified_name": "get_cfg_tool",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_cfg.py",
+          "reference_start_line": 12,
+          "reference_end_line": 67
+        },
+        {
+          "qualified_name": "method_invocations_tool",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
+          "reference_start_line": 37,
+          "reference_end_line": 37
+        },
+        {
+          "qualified_name": "read_diff_tool",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
+          "reference_start_line": 29,
+          "reference_end_line": 29
+        },
+        {
+          "qualified_name": "read_file_tool",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
+          "reference_start_line": 38,
+          "reference_end_line": 38
+        },
+        {
+          "qualified_name": "code_structure_tool",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_structure.py",
+          "reference_start_line": 19,
+          "reference_end_line": 54
+        },
+        {
+          "qualified_name": "read_docs_tool",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_docs.py",
+          "reference_start_line": 19,
+          "reference_end_line": 145
         }
       ],
       "can_expand": true
@@ -69,49 +129,54 @@
   ],
   "components_relations": [
     {
-      "relation": "Inherits From",
-      "src_name": "PlannerAgent",
-      "dst_name": "CodeBoardingAgent"
+      "relation": "orchestrates",
+      "src_name": "Planner Agent",
+      "dst_name": "Abstraction Agent"
     },
     {
-      "relation": "Passes Data To",
-      "src_name": "PlannerAgent",
-      "dst_name": "AbstractionAgent"
+      "relation": "orchestrates",
+      "src_name": "Planner Agent",
+      "dst_name": "Validator Agent"
     },
     {
-      "relation": "Inherits From",
-      "src_name": "AbstractionAgent",
-      "dst_name": "CodeBoardingAgent"
+      "relation": "uses",
+      "src_name": "Planner Agent",
+      "dst_name": "Toolkit"
     },
     {
-      "relation": "Passes Data To",
-      "src_name": "AbstractionAgent",
-      "dst_name": "ValidatorAgent"
+      "relation": "depends on",
+      "src_name": "Planner Agent",
+      "dst_name": "Agent Base/Core"
     },
     {
-      "relation": "Inherits From",
-      "src_name": "ValidatorAgent",
-      "dst_name": "CodeBoardingAgent"
+      "relation": "uses",
+      "src_name": "Abstraction Agent",
+      "dst_name": "Toolkit"
     },
     {
-      "relation": "Inherits From",
-      "src_name": "ToolingAgent",
-      "dst_name": "CodeBoardingAgent"
+      "relation": "depends on",
+      "src_name": "Abstraction Agent",
+      "dst_name": "Agent Base/Core"
     },
     {
-      "relation": "Delegates To",
-      "src_name": "PlannerAgent",
-      "dst_name": "ToolingAgent"
+      "relation": "validates insights from",
+      "src_name": "Validator Agent",
+      "dst_name": "Abstraction Agent"
     },
     {
-      "relation": "Delegates To",
-      "src_name": "AbstractionAgent",
-      "dst_name": "ToolingAgent"
+      "relation": "uses",
+      "src_name": "Validator Agent",
+      "dst_name": "Toolkit"
     },
     {
-      "relation": "Delegates To",
-      "src_name": "ValidatorAgent",
-      "dst_name": "ToolingAgent"
+      "relation": "provides feedback to",
+      "src_name": "Validator Agent",
+      "dst_name": "Planner Agent"
+    },
+    {
+      "relation": "depends on",
+      "src_name": "Validator Agent",
+      "dst_name": "Agent Base/Core"
     }
   ]
 }

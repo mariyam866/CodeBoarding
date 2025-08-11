@@ -1,35 +1,21 @@
 ```mermaid
 graph LR
-    Analysis_Orchestrator["Analysis Orchestrator"]
-    Local_Application["Local Application"]
-    GitHub_Action["GitHub Action"]
-    Local_Application -- "orchestrates" --> Analysis_Orchestrator
-    GitHub_Action -- "orchestrates" --> Analysis_Orchestrator
+    Repo_Utils["Repo Utils"]
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-Initial analysis of the project components and their relations, with a focus on identifying the 'Analysis Orchestrator' and its interactions. Further refinement is needed to include specific code references for the 'Analysis Orchestrator' by examining 'github_action.py' and 'local_app.py'.
+One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.
 
-### Analysis Orchestrator
-Orchestrates the analysis process, coordinating between different components.
-
-
-**Related Classes/Methods**: _None_
-
-### Local Application
-Manages local application interactions.
+### Repo Utils
+Manages temporary repositories for code analysis.
 
 
-**Related Classes/Methods**: _None_
-
-### GitHub Action
-Handles GitHub Actions workflows.
+**Related Classes/Methods**:
 
 
-**Related Classes/Methods**: _None_
 
 
 

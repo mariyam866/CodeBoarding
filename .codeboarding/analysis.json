@@ -1,5 +1,5 @@
 {
-  "description": "The system's main flow begins with the `API Service` receiving external requests, which then invokes the `Orchestrator`. The `Orchestrator` acts as the central coordinator, first initiating the `Static Analyzer` to perform code analysis and build foundational data structures. Subsequently, it passes this data to the `AI Interpretation Engine`, a suite of specialized AI agents that interpret the analysis and generate architectural insights. Finally, the `Orchestrator` directs the `Output Generator` to convert these insights into human-readable formats, with the final report being returned back through the `Orchestrator` to the `API Service`.",
+  "description": "The system operates by receiving requests through its API Service, which then delegates the analysis process to the Orchestrator. The Orchestrator coordinates the entire workflow, first invoking the Static Analyzer to gather foundational code data through language-aware static analysis. This data is then passed to the AI Interpretation Engine, where specialized AI agents process and interpret it to generate high-level architectural insights. Finally, the Output Generator transforms these insights into human-readable reports, which then returned through the Orchestrator back to the API Service.",
   "components": [
     {
       "name": "API Service",
@@ -8,14 +8,14 @@
         {
           "qualified_name": "local_app.py",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "github_action.py",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
       ],
       "can_expand": true
@@ -27,64 +27,64 @@
         {
           "qualified_name": "agents/meta_agent.py",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/meta_agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
       ],
       "can_expand": true
     },
     {
       "name": "Static Analyzer",
-      "description": "Performs language-aware static analysis of the source code. It builds foundational data structures, including call graphs and package dependencies, which form the basis for the AI interpretation.",
+      "description": "Performs language-aware static analysis of the source code. It builds foundational data structures, including call graphs and package dependencies, which form the basis for the AI interpretation. Significant internal refactoring of its Language Server Protocol (LSP) client has likely led to improved efficiency, stability, or expanded capabilities in how static analysis data is collected.",
       "referenced_source_code": [
         {
           "qualified_name": "static_analyzer/scanner.py",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "static_analyzer/lsp_client/",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
       ],
       "can_expand": true
     },
     {
       "name": "AI Interpretation Engine",
-      "description": "A suite of specialized AI agents responsible for interpreting the static analysis data. It uses a planner, abstraction, and validator agents, along with a toolkit for reading code artifacts, to generate high-level architectural insights. The core agent functionality, likely defined in `agents/agent.py`, has been updated to enhance or refine the capabilities shared by the specialized agents.",
+      "description": "A suite of specialized AI agents responsible for interpreting the static analysis data. It uses a planner, abstraction, and validator agents, along with a toolkit for reading code artifacts, to generate high-level architectural insights. Recent updates to the prompts used by these AI agents suggest a refinement, expansion, or introduction of new instructions and contexts, potentially leading to more nuanced, accurate, or comprehensive architectural insights.",
       "referenced_source_code": [
         {
           "qualified_name": "agents/planner_agent.py",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/planner_agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "agents/abstraction_agent.py",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/abstraction_agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "agents/validator_agent.py",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/validator_agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "agents/tools/",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "agents/agent.py",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
       ],
       "can_expand": true
@@ -96,20 +96,20 @@
         {
           "qualified_name": "output_generators/html.py",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/html.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "output_generators/markdown.py",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/markdown.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "diagram_analysis/diagram_generator.py",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
       ],
       "can_expand": true

@@ -1,47 +1,50 @@
 {
-  "description": "The previous analysis lacked specific source code references for several key components, hindering the verification of their implementation boundaries and responsibilities. This revised analysis addresses those gaps by identifying the relevant code artifacts. The `Orchestrator`, embodied by `MetaAgent`, initiates the analysis process, leveraging various tools to gather initial project context. The `Static Code Analyzer`, primarily through the `Scanner` class, performs in-depth code analysis. The `AI Analysis Engine` (likely represented by `AbstractionAgent` and `DetailsAgent`) interprets these results, generating higher-level insights. `Analysis Persistence` (potentially handled by `AnalysisResult` and related mechanisms for storing data in the `.codeboarding` directory) ensures that all analysis data is stored and retrievable. Finally, the `Output Generator` (whose specific implementation needs further investigation but likely interacts with the stored analysis data to produce reports) transforms the processed data into user-friendly formats.",
+  "description": "The `CodeBoarding` project operates as an automated software architecture analysis system. The `Orchestrator` serves as the central control unit, initiating the analysis process by leveraging its `MetaAgent` to gather initial project metadata and establish architectural context. This context, along with raw code, is then fed to the `Static Code Analyzer`, which performs in-depth code analysis, extracting structural information and building essential data structures like call graphs. The results from the static analysis are then passed to the `AI Analysis Engine`, which, powered by sophisticated prompt engineering, interprets these findings and generates high-level architectural insights. All intermediate and final analysis data are diligently stored and managed by the `Analysis Persistence` component, ensuring data integrity and historical traceability. Finally, the `Output Generator` takes the processed analysis data and renders it into various user-friendly formats, including visual diagrams and comprehensive reports, making the complex architectural insights accessible to users. The `Orchestrator` also integrates with various tools like `read_docs`, `external_deps_tool`, and `read_file_structure` to enrich the analysis with external information.",
   "components": [
     {
       "name": "Orchestrator",
-      "description": "Acts as the central coordinator of the analysis pipeline. It manages the sequence of operations, directing the flow of data between the various components to ensure the end-to-end process runs smoothly. The `MetaAgent` within this component is specifically responsible for initial project metadata analysis, establishing architectural context, and guiding subsequent analysis steps.",
+      "description": "Acts as the central coordinator of the analysis pipeline. It manages the sequence of operations, directing the flow of data between the various components to ensure the end-to-end process runs smoothly. The `MetaAgent` within this component has a streamlined role in initial project metadata analysis, establishing architectural context, and guiding subsequent analysis steps.",
       "referenced_source_code": [
         {
           "qualified_name": "CodeBoarding.agents.meta_agent.MetaAgent",
           "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
-      ]
+      ],
+      "can_expand": true
     },
     {
       "name": "Static Code Analyzer",
-      "description": "Responsible for performing in-depth static analysis on the codebase. This involves parsing source code, building abstract syntax trees (ASTs), identifying code patterns, and extracting structural information without executing the code.",
+      "description": "Responsible for performing in-depth static analysis on the codebase. This involves efficiently parsing source code, building abstract syntax trees (ASTs), identifying code patterns, and extracting structural information without executing the code, leveraging its refactored LSP client for enhanced capabilities.",
       "referenced_source_code": [
         {
           "qualified_name": "CodeBoarding.static_analyzer.scanner.Scanner",
           "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
-      ]
+      ],
+      "can_expand": true
     },
     {
       "name": "AI Analysis Engine",
-      "description": "Integrates AI/LLM capabilities to interpret the results from the Static Code Analyzer and the architectural context provided by the Orchestrator. It generates high-level insights, identifies complex relationships, and provides explanations or suggestions based on the analyzed code.",
+      "description": "Integrates AI/LLM capabilities to interpret the results from the Static Code Analyzer and the architectural context provided by the Orchestrator. It generates high-level insights, identifies complex relationships, and provides explanations or suggestions based on the analyzed code, with its refined prompt system enabling more nuanced interpretations.",
       "referenced_source_code": [
         {
           "qualified_name": "CodeBoarding.agents.abstraction_agent.AbstractionAgent",
           "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "CodeBoarding.agents.details_agent.DetailsAgent",
           "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
-      ]
+      ],
+      "can_expand": false
     },
     {
       "name": "Analysis Persistence",
@@ -50,51 +53,17 @@
         {
           "qualified_name": "CodeBoarding.static_analyzer.analysis_result.AnalysisResult",
           "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
-      ]
+      ],
+      "can_expand": true
     },
     {
       "name": "Output Generator",
       "description": "Transforms the processed analysis data into various user-friendly formats, including visual representations (e.g., Mermaid.js diagrams for architectural views) and structured reports. It is responsible for rendering the final output for user consumption.",
-      "referenced_source_code": []
-    },
-    {
-      "name": "read_docs tool",
-      "description": "Tool to access and process project documentation.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "CodeBoarding.tools.read_docs.ReadDocsTool",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        }
-      ]
-    },
-    {
-      "name": "external_deps_tool",
-      "description": "Tool to identify and analyze the project's external dependencies.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "CodeBoarding.tools.external_deps.ExternalDepsTool",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        }
-      ]
-    },
-    {
-      "name": "read_file_structure tool",
-      "description": "Tool to obtain a comprehensive understanding of the project's file and directory organization.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "CodeBoarding.tools.read_file_structure.ReadFileStructureTool",
-          "reference_file": null,
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        }
-      ]
+      "referenced_source_code": [],
+      "can_expand": true
     }
   ],
   "components_relations": [

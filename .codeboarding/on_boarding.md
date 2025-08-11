@@ -22,7 +22,7 @@ graph LR
 
 ## Details
 
-The system's main flow begins with the `API Service` receiving external requests, which then invokes the `Orchestrator`. The `Orchestrator` acts as the central coordinator, first initiating the `Static Analyzer` to perform code analysis and build foundational data structures. Subsequently, it passes this data to the `AI Interpretation Engine`, a suite of specialized AI agents that interpret the analysis and generate architectural insights. Finally, the `Orchestrator` directs the `Output Generator` to convert these insights into human-readable formats, with the final report being returned back through the `Orchestrator` to the `API Service`.
+The system operates by receiving requests through its API Service, which then delegates the analysis process to the Orchestrator. The Orchestrator coordinates the entire workflow, first invoking the Static Analyzer to gather foundational code data through language-aware static analysis. This data is then passed to the AI Interpretation Engine, where specialized AI agents process and interpret it to generate high-level architectural insights. Finally, the Output Generator transforms these insights into human-readable reports, which then returned through the Orchestrator back to the API Service.
 
 ### API Service [[Expand]](./API_Service.md)
 Serves as the primary entry point for all external interactions. It exposes the system's capabilities, handling incoming requests and returning the final generated analysis.
@@ -44,7 +44,7 @@ Acts as the central coordinator of the analysis pipeline. It manages the sequenc
 
 
 ### Static Analyzer [[Expand]](./Static_Analyzer.md)
-Performs language-aware static analysis of the source code. It builds foundational data structures, including call graphs and package dependencies, which form the basis for the AI interpretation.
+Performs language-aware static analysis of the source code. It builds foundational data structures, including call graphs and package dependencies, which form the basis for the AI interpretation. Significant internal refactoring of its Language Server Protocol (LSP) client has likely led to improved efficiency, stability, or expanded capabilities in how static analysis data is collected.
 
 
 **Related Classes/Methods**:
@@ -54,7 +54,7 @@ Performs language-aware static analysis of the source code. It builds foundation
 
 
 ### AI Interpretation Engine [[Expand]](./AI_Interpretation_Engine.md)
-A suite of specialized AI agents responsible for interpreting the static analysis data. It uses a planner, abstraction, and validator agents, along with a toolkit for reading code artifacts, to generate high-level architectural insights. The core agent functionality, likely defined in `agents/agent.py`, has been updated to enhance or refine the capabilities shared by the specialized agents.
+A suite of specialized AI agents responsible for interpreting the static analysis data. It uses a planner, abstraction, and validator agents, along with a toolkit for reading code artifacts, to generate high-level architectural insights. Recent updates to the prompts used by these AI agents suggest a refinement, expansion, or introduction of new instructions and contexts, potentially leading to more nuanced, accurate, or comprehensive architectural insights.
 
 
 **Related Classes/Methods**:
