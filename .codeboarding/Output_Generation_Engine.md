@@ -11,6 +11,8 @@ graph LR
     Output_Generation_Engine -- "orchestrates" --> MDX_Generator
     Output_Generation_Engine -- "orchestrates" --> Sphinx_Generator
     HTML_Generator -- "provides data to" --> HTML_Template_Populator
+    Output_Generation_Engine -- "clones repository" --> Repository_Utilities
+    Output_Generation_Engine -- "generates analysis with" --> Diagram_Generator
     click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
 ```
 
@@ -18,15 +20,16 @@ graph LR
 
 ## Details
 
-Updated component analysis with corrected source code references for generator components to ensure accurate documentation and diagram generation.
+The documentation generation process is orchestrated by the `Output Generation Engine`, primarily implemented in `demo.py`. This engine is responsible for cloning the target Git repository using `Repository Utilities` and then initiating the architectural analysis through the `Diagram Generator`. Once the analysis is complete, the `Output Generation Engine` dispatches the generation of documentation to various specialized generators, including the `Markdown Generator`, `HTML Generator`, `MDX Generator`, and `Sphinx Generator`, based on the desired output format. The `HTML Generator` further interacts with the `HTML Template Populator` to produce interactive HTML documentation. This modular design allows for flexible and extensible documentation generation across different formats.
 
 ### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
-The primary component responsible for orchestrating the overall process of generating documentation in various formats. It acts as a dispatcher, delegating the actual generation to specific format generators based on the desired output.
+The primary component responsible for orchestrating the overall process of generating documentation in various formats. It handles repository cloning, initiates the analysis generation, and dispatches the actual documentation generation to specific format generators based on the desired output.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/github_action.py#L19-L67" target="_blank" rel="noopener noreferrer">`github_action.py`:19-67</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/demo.py#L57-L80" target="_blank" rel="noopener noreferrer">`demo.py`:57-80</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/demo.py#L82-L101" target="_blank" rel="noopener noreferrer">`demo.py`:82-101</a>
 
 
 ### Markdown Generator

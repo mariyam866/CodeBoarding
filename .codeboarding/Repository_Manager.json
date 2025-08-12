@@ -17,8 +17,7 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Repository Operations Handler",
@@ -66,8 +65,7 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "Git Diff Extractor",
@@ -85,8 +83,7 @@
           "reference_start_line": 9,
           "reference_end_line": 24
         }
-      ],
-      "can_expand": true
+      ]
     }
   ],
   "components_relations": [

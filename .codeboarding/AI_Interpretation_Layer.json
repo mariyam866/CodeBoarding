@@ -11,8 +11,7 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Analysis Planner",
@@ -24,8 +23,7 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "Diff Analyzer",
@@ -37,8 +35,7 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Detailed Code Analyzer",
@@ -50,8 +47,7 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Abstraction Engine",
@@ -63,8 +59,7 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Validation Engine",
@@ -76,8 +71,7 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Orchestrator",
@@ -89,8 +83,7 @@
           "reference_start_line": 27,
           "reference_end_line": 207
         }
-      ],
-      "can_expand": true
+      ]
     }
   ],
   "components_relations": [

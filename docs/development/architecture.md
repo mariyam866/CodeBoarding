@@ -211,37 +211,25 @@ Central coordinator, managing the flow of data and control between AI agents.
 
 ```mermaid
 graph LR
-    API_Service["API Service"]
-    FastAPI_Application_Instance["FastAPI Application Instance"]
-    Job_Management_Service["Job Management Service"]
-    Job_Store["Job Store"]
-    Analysis_and_Generation_Engine["Analysis and Generation Engine"]
-    Health_Check_Endpoint["Health Check Endpoint"]
-    FastAPI_Application_Instance -- "directs requests to" --> Job_Management_Service
-    FastAPI_Application_Instance -- "directs requests to" --> Health_Check_Endpoint
-    Job_Management_Service -- "manages" --> Job_Store
-    Job_Management_Service -- "initiates" --> Analysis_and_Generation_Engine
-    Analysis_and_Generation_Engine -- "updates status in" --> Job_Store
-    click API_Service href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/API_Service.md" "Details"
+    API_Gateway_Main_Application_Instance_["API Gateway (Main Application Instance)"]
+    Job_Initiation_Endpoint_Code_Analysis_["Job Initiation Endpoint (Code Analysis)"]
+    Job_Initiation_Endpoint_Documentation_Only_["Job Initiation Endpoint (Documentation Only)"]
+    Job_Status_Retrieval_Endpoint_Single_Job_["Job Status Retrieval Endpoint (Single Job)"]
+    Job_Status_Retrieval_Endpoint_List_All_Jobs_["Job Status Retrieval Endpoint (List All Jobs)"]
+    API_Gateway_Main_Application_Instance_ -- "contains" --> Job_Initiation_Endpoint_Code_Analysis_
+    API_Gateway_Main_Application_Instance_ -- "contains" --> Job_Initiation_Endpoint_Documentation_Only_
+    API_Gateway_Main_Application_Instance_ -- "contains" --> Job_Status_Retrieval_Endpoint_Single_Job_
+    API_Gateway_Main_Application_Instance_ -- "contains" --> Job_Status_Retrieval_Endpoint_List_All_Jobs_
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The CodeBoarding API Service is built around a FastAPI application instance that serves as the central dispatcher for all incoming requests. This instance routes requests to the Job Management Service, which orchestrates the lifecycle of code analysis and documentation generation jobs. The Job Management Service interacts with a Job Store for persistent storage of job data and delegates the intensive processing tasks to the Analysis and Generation Engine. This engine is responsible for performing the actual code analysis and generating the required outputs. A dedicated Health Check Endpoint is also exposed to monitor the API Service's operational status. This architecture ensures a clear separation of concerns, allowing for scalable job processing and robust API management.
+The API Service (referred to as API Gateway in the analysis summary) forms the external interface of CodeBoarding. Its boundaries are defined by the local_app.py file, specifically the FastAPI application instance (local_app.app) and its exposed RESTful endpoints. This subsystem is responsible for handling all incoming user requests, initiating analysis jobs, and providing job status updates.
 
-### API Service [[Expand]](./API_Service.md)
-The overarching component responsible for exposing CodeBoarding's functionality to external clients. It handles all incoming HTTP requests and routes them to the appropriate internal handlers.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py" target="_blank" rel="noopener noreferrer">`local_app`</a>
-
-
-### FastAPI Application Instance
-The core of the API Service, this instance (`app` in `local_app.py`) manages the routing of incoming requests to specific endpoint functions and handles HTTP protocol details. It is the central dispatcher for all API calls.
+### API Gateway (Main Application Instance)
+The core FastAPI application instance that defines and serves all external API endpoints for CodeBoarding. It acts as the central dispatcher for incoming HTTP requests, routing them to the appropriate handlers.
 
 
 **Related Classes/Methods**:
@@ -249,52 +237,40 @@ The core of the API Service, this instance (`app` in `local_app.py`) manages the
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py" target="_blank" rel="noopener noreferrer">`local_app.app`</a>
 
 
-### Job Management Service
-Manages the lifecycle of all analysis and documentation generation jobs, including creation, status tracking, and retrieval. It interacts with the Job Store for persistence and delegates the actual processing to the Analysis and Generation Engine.
+### Job Initiation Endpoint (Code Analysis)
+Handles requests to initiate a comprehensive code analysis and documentation generation job. It validates input parameters and triggers the subsequent orchestration process.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L133-L150" target="_blank" rel="noopener noreferrer">`local_app.start_generation_job`:133-150</a>
+
+
+### Job Initiation Endpoint (Documentation Only)
+Manages requests specifically for generating documentation, potentially for pre-analyzed code or a subset of the full analysis, providing a more focused entry point.
+
+
+**Related Classes/Methods**:
+
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L181-L231" target="_blank" rel="noopener noreferrer">`local_app.start_docs_generation_job`:181-231</a>
+
+
+### Job Status Retrieval Endpoint (Single Job)
+Provides an interface for clients to query the real-time status and detailed results of a specific, identified job using its unique ID.
+
+
+**Related Classes/Methods**:
+
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L161-L170" target="_blank" rel="noopener noreferrer">`local_app.get_job`:161-170</a>
+
+
+### Job Status Retrieval Endpoint (List All Jobs)
+Allows clients to retrieve a list of all ongoing or completed jobs, offering an overview of system activity and job history.
+
+
+**Related Classes/Methods**:
+
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L282-L311" target="_blank" rel="noopener noreferrer">`local_app.list_jobs`:282-311</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L234-L279" target="_blank" rel="noopener noreferrer">`local_app.get_github_action_status`:234-279</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L77-L89" target="_blank" rel="noopener noreferrer">`local_app.make_job`:77-89</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L92-L129" target="_blank" rel="noopener noreferrer">`local_app.generate_onboarding`:92-129</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L314-L378" target="_blank" rel="noopener noreferrer">`local_app.process_docs_generation_job`:314-378</a>
-
-
-### Job Store
-Provides persistent storage and retrieval mechanisms for job-related data, including job status, results, and metadata. It abstracts the underlying database operations.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/duckdb_crud.py#L73-L93" target="_blank" rel="noopener noreferrer">`duckdb_crud.fetch_job`:73-93</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/duckdb_crud.py#L15-L44" target="_blank" rel="noopener noreferrer">`duckdb_crud.init_db`:15-44</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/duckdb_crud.py#L48-L58" target="_blank" rel="noopener noreferrer">`duckdb_crud.insert_job`:48-58</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/duckdb_crud.py#L61-L70" target="_blank" rel="noopener noreferrer">`duckdb_crud.update_job`:61-70</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/duckdb_crud.py#L96-L117" target="_blank" rel="noopener noreferrer">`duckdb_crud.fetch_all_jobs`:96-117</a>
-
-
-### Analysis and Generation Engine
-Executes the actual code analysis, diagram generation, and documentation creation processes. It interacts with external repositories and internal static analysis tools to produce the final output.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/demo.py#L86-L101" target="_blank" rel="noopener noreferrer">`demo.generate_docs_remote`:86-101</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/github_action.py#L70-L100" target="_blank" rel="noopener noreferrer">`github_action.generate_analysis`:70-100</a>
-
-
-### Health Check Endpoint
-A health check endpoint used to verify the availability and responsiveness of the API Service. It provides a simple status response to indicate the service is operational.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L153-L159" target="_blank" rel="noopener noreferrer">`local_app.get_heart_beat`:153-159</a>
 
 
 
@@ -352,77 +328,74 @@ The external interface of the tool.
 ```mermaid
 graph LR
     Orchestration_Engine["Orchestration Engine"]
-    Static_Analysis_Module["Static Analysis Module"]
+    Static_Analysis_Engine["Static Analysis Engine"]
     AI_Interpretation_Engine["AI Interpretation Engine"]
-    Repository_Management_Module["Repository Management Module"]
-    Output_Management_Module["Output Management Module"]
-    Orchestration_Engine -- "initiates and coordinates" --> Static_Analysis_Module
-    Orchestration_Engine -- "manages and dispatches" --> AI_Interpretation_Engine
-    Orchestration_Engine -- "utilizes" --> Repository_Management_Module
-    Orchestration_Engine -- "directs" --> Output_Management_Module
-    Static_Analysis_Module -- "provides data to" --> Orchestration_Engine
+    Output_Generation_Engine["Output Generation Engine"]
+    Repository_Manager["Repository Manager"]
+    Configuration_Management["Configuration Management"]
+    API_Service["API Service"]
+    Orchestration_Engine -- "configures via" --> Configuration_Management
+    Orchestration_Engine -- "retrieves code from" --> Repository_Manager
+    Orchestration_Engine -- "initiates" --> Static_Analysis_Engine
+    Orchestration_Engine -- "delegates to" --> AI_Interpretation_Engine
+    Orchestration_Engine -- "directs" --> Output_Generation_Engine
+    Static_Analysis_Engine -- "provides data to" --> Orchestration_Engine
     AI_Interpretation_Engine -- "returns insights to" --> Orchestration_Engine
-    Repository_Management_Module -- "supplies info to" --> Orchestration_Engine
+    API_Service -- "initiates" --> Orchestration_Engine
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
+    click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
+    click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
+    click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
+    click API_Service href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/API_Service.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The CodeBoarding system operates as a sophisticated documentation generation pipeline, orchestrated by a central `Orchestration Engine`. This engine initiates and coordinates the entire process, starting with the `Static Analysis Module` which performs foundational code data extraction. The gathered static analysis data is then fed into the `AI Interpretation Engine`, a collection of specialized AI agents that delve into deep code understanding, generate architectural insights, and validate results. Throughout this process, the `Repository Management Module` provides crucial version control context. Finally, the `Output Management Module` takes the processed insights and generates structured documentation outputs. This modular design ensures a clear separation of concerns, enabling efficient and scalable code analysis and documentation.
+The system is designed around a central Orchestration Engine that manages the entire documentation generation workflow. This engine initiates tasks, coordinates data flow, and delegates specialized operations to other core components. The API Service acts as the external interface, allowing users to trigger documentation generation. Once a request is received, the Orchestration Engine interacts with the Repository Manager to access the source code. The code is then passed to the Static Analysis Engine for initial parsing and data extraction. The extracted data is subsequently processed by the AI Interpretation Engine, which leverages AI models to generate high-level insights and summaries. Finally, the Output Generation Engine transforms the processed information into various documentation formats, including diagrams and reports. The Configuration Management component provides system-wide settings and parameters, ensuring the Orchestration Engine operates with the correct configurations.
 
 ### Orchestration Engine [[Expand]](./Orchestration_Engine.md)
-The central control unit that manages the entire documentation generation pipeline. It coordinates all analysis and generation stages, handles project configuration, manages concurrency for component processing, and ensures the integrity and validity of the generated analysis.
+The core component responsible for managing the entire documentation generation pipeline. It handles configuration, initiates static analysis, coordinates AI interpretation, and directs the final output generation. It acts as the central hub, directing the flow of operations.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`CodeBoarding.diagram_analysis.diagram_generator.DiagramGenerator`</a>
-
-
-### Static Analysis Module
-Responsible for performing the initial static analysis of the codebase, gathering foundational code data such as project structure, file contents, and basic code metrics. It also handles the creation and management of Language Server Protocol (LSP) clients for detailed code introspection.
+### Static Analysis Engine [[Expand]](./Static_Analysis_Engine.md)
+Performs initial code scanning, parsing, and data extraction from the source repository. It provides the raw structural and semantic information of the codebase to the Orchestration Engine.
 
 
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py#L13-L66" target="_blank" rel="noopener noreferrer">`static_analyzer.scanner.ProjectScanner`:13-66</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client" target="_blank" rel="noopener noreferrer">`CodeBoarding.static_analyzer.lsp_client`</a>
-
+**Related Classes/Methods**: _None_
 
 ### AI Interpretation Engine
-A collective component comprising various specialized AI agents (e.g., DetailsAgent, AbstractionAgent, PlannerAgent, ValidatorAgent, DiffAnalyzingAgent, MetaAgent). This engine performs in-depth code understanding, generates architectural insights, plans analysis steps, validates results, and conducts meta-level analysis based on the static analysis output.
+Processes the data extracted by the Static Analysis Engine, leveraging various AI agents (LLMs) for detailed analysis, abstraction, and interpretation of code components, generating insights and high-level summaries.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/details_agent.py#L16-L113" target="_blank" rel="noopener noreferrer">`agents.details_agent.DetailsAgent`:16-113</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/abstraction_agent.py#L14-L100" target="_blank" rel="noopener noreferrer">`agents.abstraction_agent.AbstractionAgent`:14-100</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/planner_agent.py#L13-L31" target="_blank" rel="noopener noreferrer">`agents.planner_agent.PlannerAgent`:13-31</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/validator_agent.py#L15-L143" target="_blank" rel="noopener noreferrer">`agents.validator_agent.ValidatorAgent`:15-143</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/diff_analyzer.py#L20-L136" target="_blank" rel="noopener noreferrer">`agents.diff_analyzer.DiffAnalyzingAgent`:20-136</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/meta_agent.py#L15-L37" target="_blank" rel="noopener noreferrer">`agents.meta_agent.MetaAgent`:15-37</a>
+### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
+Responsible for transforming the processed and interpreted data into various documentation formats, including diagrams, textual summaries, and reports.
 
 
-### Repository Management Module
-Provides utilities for integrating with version control systems (e.g., Git) to retrieve repository context, commit hashes, and other versioning information crucial for analysis and documentation.
+**Related Classes/Methods**: _None_
+
+### Repository Manager [[Expand]](./Repository_Manager.md)
+Manages access to the source code repositories, handling cloning, updating, and providing the necessary file paths for the Static Analysis Engine to operate on.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils" target="_blank" rel="noopener noreferrer">`CodeBoarding.repo_utils`</a>
-
-
-### Output Management Module
-Manages the final stages of the pipeline, including the serialization of analysis results into structured formats (e.g., JSON) and the sanitization and generation of final documentation outputs (e.g., Markdown).
+### Configuration Management
+Provides a centralized mechanism for managing system-wide settings, pipeline parameters, and tool configurations, which the Orchestration Engine utilizes to tailor its operations.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/analysis_json.py#L25-L32" target="_blank" rel="noopener noreferrer">`diagram_analysis.analysis_json.from_analysis_to_json`:25-32</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/markdown.py" target="_blank" rel="noopener noreferrer">`output_generators.markdown.sanitize`</a>
+### API Service [[Expand]](./API_Service.md)
+Exposes the system's functionality to external clients or user interfaces, allowing for initiation of documentation generation tasks and retrieval of results. It serves as the entry point for triggering the Orchestration Engine.
 
+
+**Related Classes/Methods**: _None_
 
 
 
@@ -442,6 +415,8 @@ graph LR
     Output_Generation_Engine -- "orchestrates" --> MDX_Generator
     Output_Generation_Engine -- "orchestrates" --> Sphinx_Generator
     HTML_Generator -- "provides data to" --> HTML_Template_Populator
+    Output_Generation_Engine -- "clones repository" --> Repository_Utilities
+    Output_Generation_Engine -- "generates analysis with" --> Diagram_Generator
     click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
 ```
 
@@ -449,15 +424,16 @@ graph LR
 
 ## Details
 
-Updated component analysis with corrected source code references for generator components to ensure accurate documentation and diagram generation.
+The documentation generation process is orchestrated by the `Output Generation Engine`, primarily implemented in `demo.py`. This engine is responsible for cloning the target Git repository using `Repository Utilities` and then initiating the architectural analysis through the `Diagram Generator`. Once the analysis is complete, the `Output Generation Engine` dispatches the generation of documentation to various specialized generators, including the `Markdown Generator`, `HTML Generator`, `MDX Generator`, and `Sphinx Generator`, based on the desired output format. The `HTML Generator` further interacts with the `HTML Template Populator` to produce interactive HTML documentation. This modular design allows for flexible and extensible documentation generation across different formats.
 
 ### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
-The primary component responsible for orchestrating the overall process of generating documentation in various formats. It acts as a dispatcher, delegating the actual generation to specific format generators based on the desired output.
+The primary component responsible for orchestrating the overall process of generating documentation in various formats. It handles repository cloning, initiates the analysis generation, and dispatches the actual documentation generation to specific format generators based on the desired output.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/github_action.py#L19-L67" target="_blank" rel="noopener noreferrer">`github_action.py`:19-67</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/demo.py#L57-L80" target="_blank" rel="noopener noreferrer">`demo.py`:57-80</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/demo.py#L82-L101" target="_blank" rel="noopener noreferrer">`demo.py`:82-101</a>
 
 
 ### Markdown Generator

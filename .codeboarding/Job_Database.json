@@ -41,20 +41,17 @@
           "reference_start_line": 11,
           "reference_end_line": 12
         }
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "Orchestrator",
       "description": "The central coordinator of the documentation generation pipeline.",
-      "referenced_source_code": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "API Service",
       "description": "The external interface of the tool.",
-      "referenced_source_code": [],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [

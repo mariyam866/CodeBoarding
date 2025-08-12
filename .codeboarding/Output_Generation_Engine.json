@@ -1,15 +1,21 @@
 {
-  "description": "Updated component analysis with corrected source code references for generator components to ensure accurate documentation and diagram generation.",
+  "description": "The documentation generation process is orchestrated by the `Output Generation Engine`, primarily implemented in `demo.py`. This engine is responsible for cloning the target Git repository using `Repository Utilities` and then initiating the architectural analysis through the `Diagram Generator`. Once the analysis is complete, the `Output Generation Engine` dispatches the generation of documentation to various specialized generators, including the `Markdown Generator`, `HTML Generator`, `MDX Generator`, and `Sphinx Generator`, based on the desired output format. The `HTML Generator` further interacts with the `HTML Template Populator` to produce interactive HTML documentation. This modular design allows for flexible and extensible documentation generation across different formats.",
   "components": [
     {
       "name": "Output Generation Engine",
-      "description": "The primary component responsible for orchestrating the overall process of generating documentation in various formats. It acts as a dispatcher, delegating the actual generation to specific format generators based on the desired output.",
+      "description": "The primary component responsible for orchestrating the overall process of generating documentation in various formats. It handles repository cloning, initiates the analysis generation, and dispatches the actual documentation generation to specific format generators based on the desired output.",
       "referenced_source_code": [
         {
-          "qualified_name": "github_action.py",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
-          "reference_start_line": 19,
-          "reference_end_line": 67
+          "qualified_name": "demo.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
+          "reference_start_line": 57,
+          "reference_end_line": 80
+        },
+        {
+          "qualified_name": "demo.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
+          "reference_start_line": 82,
+          "reference_end_line": 101
         }
       ],
       "can_expand": true
@@ -25,7 +31,7 @@
           "reference_end_line": 9999
         }
       ],
-      "can_expand": false
+      "can_expand": true
     },
     {
       "name": "HTML Generator",
@@ -64,7 +70,7 @@
           "reference_end_line": 9999
         }
       ],
-      "can_expand": false
+      "can_expand": true
     },
     {
       "name": "HTML Template Populator",
@@ -105,6 +111,16 @@
       "relation": "provides data to",
       "src_name": "HTML Generator",
       "dst_name": "HTML Template Populator"
+    },
+    {
+      "relation": "clones repository",
+      "src_name": "Output Generation Engine",
+      "dst_name": "Repository Utilities"
+    },
+    {
+      "relation": "generates analysis with",
+      "src_name": "Output Generation Engine",
+      "dst_name": "Diagram Generator"
     }
   ]
 }

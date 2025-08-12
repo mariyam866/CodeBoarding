@@ -11,8 +11,7 @@
           "reference_start_line": 13,
           "reference_end_line": 66
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "LSPClient",
@@ -24,8 +23,7 @@
           "reference_start_line": 37,
           "reference_end_line": 923
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "TypeScriptClient",
@@ -37,8 +35,7 @@
           "reference_start_line": 10,
           "reference_end_line": 214
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "FileAnalysisResult",
@@ -50,8 +47,7 @@
           "reference_start_line": 22,
           "reference_end_line": 34
         }
-      ],
-      "can_expand": false
+      ]
     }
   ],
   "components_relations": [
