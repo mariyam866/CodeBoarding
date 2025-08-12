@@ -43,15 +43,19 @@ def remote_repo_exists(repo_url: str) -> bool:
         # something else went wrong (auth, network); re-raise so caller can decide
         raise
 
+def get_repo_name(repo_url: str):
+    repo_url = sanitize_repo_url(repo_url)
+    base = repo_url.rstrip("/").split("/")[-1]
+    repo_name, _ = os.path.splitext(base)
+    return repo_name
+
 
 def clone_repository(repo_url: str, target_dir: Path = Path("./repos")) -> str:
     repo_url = sanitize_repo_url(repo_url)
     if not remote_repo_exists(repo_url):
         raise RepoDontExistError()
 
-    base = repo_url.rstrip("/").split("/")[-1]
-    name, ext = os.path.splitext(base)
-    repo_name = name
+    repo_name = get_repo_name(repo_url)
 
     dest = target_dir / repo_name
     if dest.exists():

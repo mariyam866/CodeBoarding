@@ -5,7 +5,7 @@ import shutil
 from pathlib import Path
 
 from dotenv import load_dotenv
-from git import Repo
+import requests
 from tqdm import tqdm
 
 from agents.agent_responses import AnalysisInsights
@@ -15,6 +15,7 @@ from output_generators.markdown import generate_markdown_file
 from repo_utils import (
     clone_repository,
     get_branch,
+    get_repo_name,
     store_token,
     upload_onboarding_materials,
 )
@@ -24,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 def validate_env_vars():
-    api_provider_keys = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GOOGLE_API_KEY", "AWS_BEARER_TOKEN_BEDROCK"]
+    api_provider_keys = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GOOGLE_API_KEY", "AWS_BEARER_TOKEN_BEDROCK", "OLLAMA_BASE_URL"]
     api_env_keys = [(key, os.getenv(key)) for key in api_provider_keys if os.getenv(key) is not None]
 
     if len(api_env_keys) == 0:
@@ -45,25 +46,20 @@ def validate_env_vars():
 
 
 def onboarding_materials_exist(project_name: str, source_dir: str):
-    repo = Repo(source_dir)
-    origin = repo.remote(name='origin')
-    origin.pull()
-
-    onboarding_repo_path = os.path.join(source_dir, project_name)
-    return os.path.isdir(onboarding_repo_path) and len(os.listdir(onboarding_repo_path))
-
+    generated_repo_url = f"https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main/{project_name}"
+    response = requests.get(generated_repo_url)
+    if response.status_code == 200:
+        logger.info(f"Repostiory has already been generated, please check {generated_repo_url}")
+        return True
+    else:
+        return False
 
 def generate_docs(repo_name: str, temp_repo_folder: Path, repo_url: str = None):
     # Create directories if they don't exist
     repos_dir = Path(os.getenv("REPO_ROOT"))
-    ROOT_RESULT = os.getenv("ROOT_RESULT")  # Default path if not set
-
     repos_dir.mkdir(parents=True, exist_ok=True)
 
     repo_path = repos_dir / repo_name
-    if caching_enabled() and onboarding_materials_exist(repo_name, ROOT_RESULT):
-        logger.info(f"Cache hit for '{repo_name}', skipping documentation generation.")
-        return
 
     generator = DiagramGenerator(repo_location=repo_path, temp_folder=temp_repo_folder, repo_name=repo_name,
                                  output_dir=temp_repo_folder, depth_level=int(os.getenv("DIAGRAM_DEPTH_LEVEL", "1")))
@@ -88,11 +84,15 @@ def generate_docs_remote(repo_url: str, temp_repo_folder: Path, local_dev=False)
     Clone a git repo to target_dir/<repo-name>.
     Returns the Path to the cloned repository.
     """
+    ROOT_RESULT = os.getenv("ROOT_RESULT")  # Default path if not set
+    repo_name = get_repo_name(repo_url)
     if not local_dev:
         store_token()
+    if caching_enabled() and onboarding_materials_exist(repo_name, ROOT_RESULT):
+        logger.info(f"Cache hit for '{repo_name}', skipping documentation generation.")
+        return
     repo_name = clone_repository(repo_url, Path(os.getenv("REPO_ROOT")))
     generate_docs(repo_name, temp_repo_folder, repo_url)
-    ROOT_RESULT = os.getenv("ROOT_RESULT")  # Default path if not set
     if os.path.exists(ROOT_RESULT):
         upload_onboarding_materials(repo_name, temp_repo_folder, ROOT_RESULT)
     else:
@@ -162,7 +162,5 @@ Examples:
             # Copy markdown files to output directory if specified
             if args.output_dir:
                 copy_files(temp_repo_folder, args.output_dir)
-        except Exception as e:
-            logger.error(f"Failed to generate docs for {repo}: {e}")
         finally:
             remove_temp_repo_folder(temp_repo_folder)
