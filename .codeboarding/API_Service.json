@@ -11,8 +11,7 @@
           "reference_start_line": 44,
           "reference_end_line": 44
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Job Initiation Endpoint (Code Analysis)",
@@ -24,8 +23,7 @@
           "reference_start_line": 133,
           "reference_end_line": 150
         }
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "Job Initiation Endpoint (Documentation Only)",
@@ -37,8 +35,7 @@
           "reference_start_line": 181,
           "reference_end_line": 231
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Job Status Retrieval Endpoint (Single Job)",
@@ -50,8 +47,7 @@
           "reference_start_line": 161,
           "reference_end_line": 170
         }
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "Job Status Retrieval Endpoint (List All Jobs)",
@@ -63,8 +59,7 @@
           "reference_start_line": 282,
           "reference_end_line": 311
         }
-      ],
-      "can_expand": false
+      ]
     }
   ],
   "components_relations": [
