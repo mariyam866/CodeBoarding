@@ -1,0 +1,110 @@
+{
+  "description": "Updated component analysis with corrected source code references for generator components to ensure accurate documentation and diagram generation.",
+  "components": [
+    {
+      "name": "Output Generation Engine",
+      "description": "The primary component responsible for orchestrating the overall process of generating documentation in various formats. It acts as a dispatcher, delegating the actual generation to specific format generators based on the desired output.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "github_action.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
+          "reference_start_line": 19,
+          "reference_end_line": 67
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Markdown Generator",
+      "description": "Generates standard Markdown documentation, including embedded Mermaid diagrams and basic component details, making the architectural insights easily readable in Markdown viewers.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "markdown.py",
+          "reference_file": null,
+          "reference_start_line": 1,
+          "reference_end_line": 9999
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "HTML Generator",
+      "description": "Creates standalone HTML documentation, specifically preparing data (e.g., Cytoscape.js compatible JSON) for interactive architectural diagrams.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "html.py",
+          "reference_file": null,
+          "reference_start_line": 1,
+          "reference_end_line": 9999
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "MDX Generator",
+      "description": "Produces MDX (Markdown with JSX) files, incorporating Mermaid diagrams and frontmatter for rich, interactive documentation experiences, suitable for modern documentation sites.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "mdx.py",
+          "reference_file": null,
+          "reference_start_line": 1,
+          "reference_end_line": 9999
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "Sphinx Generator",
+      "description": "Generates reStructuredText (RST) formatted documentation, including embedded Mermaid diagrams and structured component information, suitable for Sphinx documentation projects.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "sphinx.py",
+          "reference_file": null,
+          "reference_start_line": 1,
+          "reference_end_line": 9999
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "HTML Template Populator",
+      "description": "Integrates generated architectural data (like Cytoscape JSON and component-specific HTML snippets) into a predefined HTML template to produce the final, complete, and styled HTML output.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "html_template.py",
+          "reference_file": null,
+          "reference_start_line": 1,
+          "reference_end_line": 9999
+        }
+      ],
+      "can_expand": false
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "orchestrates",
+      "src_name": "Output Generation Engine",
+      "dst_name": "Markdown Generator"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "Output Generation Engine",
+      "dst_name": "HTML Generator"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "Output Generation Engine",
+      "dst_name": "MDX Generator"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "Output Generation Engine",
+      "dst_name": "Sphinx Generator"
+    },
+    {
+      "relation": "provides data to",
+      "src_name": "HTML Generator",
+      "dst_name": "HTML Template Populator"
+    }
+  ]
+}

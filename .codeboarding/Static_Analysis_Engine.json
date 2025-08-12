@@ -1,0 +1,84 @@
+{
+  "description": "The `Static Analysis Engine` subsystem is primarily encapsulated within the `static_analyzer` package. Its core components include the `scanner` module for initial project scanning and the `lsp_client` subpackage, which handles Language Server Protocol (LSP) communication for detailed code analysis.",
+  "components": [
+    {
+      "name": "ProjectScanner",
+      "description": "Initiates the static analysis process by scanning the project repository. It identifies relevant source files, determines programming languages used, and extracts basic project metadata. This component acts as the initial data gatherer, preparing the input for more detailed LSP-based analysis.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "ProjectScanner",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
+          "reference_start_line": 13,
+          "reference_end_line": 66
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "LSPClient",
+      "description": "Serves as the generic Language Server Protocol client. It manages the communication lifecycle with an LSP server (initialization, sending requests, receiving responses, shutdown). It orchestrates the detailed static analysis for individual files and the entire workspace, extracting symbols, imports, call graphs, and class hierarchies.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "LSPClient",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py",
+          "reference_start_line": 37,
+          "reference_end_line": 923
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "TypeScriptClient",
+      "description": "A specialized implementation of `LSPClient` tailored for TypeScript projects. It handles TypeScript-specific initialization parameters, workspace configuration (e.g., processing `tsconfig.json`), and file discovery, ensuring the LSP server is correctly set up for TypeScript analysis. This component exemplifies the extensibility of the static analysis engine for different programming languages.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "TypeScriptClient",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/typescript_client.py",
+          "reference_start_line": 10,
+          "reference_end_line": 214
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "FileAnalysisResult",
+      "description": "A data structure used to encapsulate the comprehensive static analysis results for a single source file. It stores extracted information such as imports, symbols (functions, classes), call relationships, class hierarchies, and external references. This acts as the structured output of the static analysis phase.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "FileAnalysisResult",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py",
+          "reference_start_line": 22,
+          "reference_end_line": 34
+        }
+      ],
+      "can_expand": false
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "provides input to",
+      "src_name": "ProjectScanner",
+      "dst_name": "LSPClient"
+    },
+    {
+      "relation": "provides input to",
+      "src_name": "ProjectScanner",
+      "dst_name": "TypeScriptClient"
+    },
+    {
+      "relation": "populates",
+      "src_name": "LSPClient",
+      "dst_name": "FileAnalysisResult"
+    },
+    {
+      "relation": "extends",
+      "src_name": "TypeScriptClient",
+      "dst_name": "LSPClient"
+    },
+    {
+      "relation": "populates",
+      "src_name": "TypeScriptClient",
+      "dst_name": "FileAnalysisResult"
+    }
+  ]
+}

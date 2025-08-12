@@ -1,18 +1,182 @@
 {
-  "description": "One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.",
+  "description": "The CodeBoarding API Service is built around a FastAPI application instance that serves as the central dispatcher for all incoming requests. This instance routes requests to the Job Management Service, which orchestrates the lifecycle of code analysis and documentation generation jobs. The Job Management Service interacts with a Job Store for persistent storage of job data and delegates the intensive processing tasks to the Analysis and Generation Engine. This engine is responsible for performing the actual code analysis and generating the required outputs. A dedicated Health Check Endpoint is also exposed to monitor the API Service's operational status. This architecture ensures a clear separation of concerns, allowing for scalable job processing and robust API management.",
   "components": [
     {
-      "name": "Repo Utils",
-      "description": "Manages temporary repositories for code analysis.",
+      "name": "API Service",
+      "description": "The overarching component responsible for exposing CodeBoarding's functionality to external clients. It handles all incoming HTTP requests and routes them to the appropriate internal handlers.",
       "referenced_source_code": [
         {
-          "qualified_name": "repo_utils.create_temp_repo",
-          "reference_file": null,
-          "reference_start_line": 50,
+          "qualified_name": "local_app",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "FastAPI Application Instance",
+      "description": "The core of the API Service, this instance (`app` in `local_app.py`) manages the routing of incoming requests to specific endpoint functions and handles HTTP protocol details. It is the central dispatcher for all API calls.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "local_app.app",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 44,
+          "reference_end_line": 44
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Job Management Service",
+      "description": "Manages the lifecycle of all analysis and documentation generation jobs, including creation, status tracking, and retrieval. It interacts with the Job Store for persistence and delegates the actual processing to the Analysis and Generation Engine.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "local_app.start_generation_job",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 133,
+          "reference_end_line": 150
+        },
+        {
+          "qualified_name": "local_app.start_docs_generation_job",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 181,
+          "reference_end_line": 231
+        },
+        {
+          "qualified_name": "local_app.get_job",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 161,
+          "reference_end_line": 170
+        },
+        {
+          "qualified_name": "local_app.list_jobs",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 282,
+          "reference_end_line": 311
+        },
+        {
+          "qualified_name": "local_app.get_github_action_status",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 234,
+          "reference_end_line": 279
+        },
+        {
+          "qualified_name": "local_app.make_job",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 77,
+          "reference_end_line": 89
+        },
+        {
+          "qualified_name": "local_app.generate_onboarding",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 92,
+          "reference_end_line": 129
+        },
+        {
+          "qualified_name": "local_app.process_docs_generation_job",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 314,
+          "reference_end_line": 378
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Job Store",
+      "description": "Provides persistent storage and retrieval mechanisms for job-related data, including job status, results, and metadata. It abstracts the underlying database operations.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "duckdb_crud.fetch_job",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
+          "reference_start_line": 73,
+          "reference_end_line": 93
+        },
+        {
+          "qualified_name": "duckdb_crud.init_db",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
+          "reference_start_line": 15,
+          "reference_end_line": 44
+        },
+        {
+          "qualified_name": "duckdb_crud.insert_job",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
+          "reference_start_line": 48,
+          "reference_end_line": 58
+        },
+        {
+          "qualified_name": "duckdb_crud.update_job",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
+          "reference_start_line": 61,
+          "reference_end_line": 70
+        },
+        {
+          "qualified_name": "duckdb_crud.fetch_all_jobs",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
+          "reference_start_line": 96,
+          "reference_end_line": 117
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "Analysis and Generation Engine",
+      "description": "Executes the actual code analysis, diagram generation, and documentation creation processes. It interacts with external repositories and internal static analysis tools to produce the final output.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "demo.generate_docs_remote",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
+          "reference_start_line": 86,
+          "reference_end_line": 101
+        },
+        {
+          "qualified_name": "github_action.generate_analysis",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
+          "reference_start_line": 70,
           "reference_end_line": 100
         }
-      ]
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Health Check Endpoint",
+      "description": "A health check endpoint used to verify the availability and responsiveness of the API Service. It provides a simple status response to indicate the service is operational.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "local_app.get_heart_beat",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 153,
+          "reference_end_line": 159
+        }
+      ],
+      "can_expand": false
     }
   ],
-  "components_relations": []
+  "components_relations": [
+    {
+      "relation": "directs requests to",
+      "src_name": "FastAPI Application Instance",
+      "dst_name": "Job Management Service"
+    },
+    {
+      "relation": "directs requests to",
+      "src_name": "FastAPI Application Instance",
+      "dst_name": "Health Check Endpoint"
+    },
+    {
+      "relation": "manages",
+      "src_name": "Job Management Service",
+      "dst_name": "Job Store"
+    },
+    {
+      "relation": "initiates",
+      "src_name": "Job Management Service",
+      "dst_name": "Analysis and Generation Engine"
+    },
+    {
+      "relation": "updates status in",
+      "src_name": "Analysis and Generation Engine",
+      "dst_name": "Job Store"
+    }
+  ]
 }

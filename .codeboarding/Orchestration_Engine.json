@@ -1,0 +1,149 @@
+{
+  "description": "The CodeBoarding system operates as a sophisticated documentation generation pipeline, orchestrated by a central `Orchestration Engine`. This engine initiates and coordinates the entire process, starting with the `Static Analysis Module` which performs foundational code data extraction. The gathered static analysis data is then fed into the `AI Interpretation Engine`, a collection of specialized AI agents that delve into deep code understanding, generate architectural insights, and validate results. Throughout this process, the `Repository Management Module` provides crucial version control context. Finally, the `Output Management Module` takes the processed insights and generates structured documentation outputs. This modular design ensures a clear separation of concerns, enabling efficient and scalable code analysis and documentation.",
+  "components": [
+    {
+      "name": "Orchestration Engine",
+      "description": "The central control unit that manages the entire documentation generation pipeline. It coordinates all analysis and generation stages, handles project configuration, manages concurrency for component processing, and ensures the integrity and validity of the generated analysis.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.diagram_analysis.diagram_generator.DiagramGenerator",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Static Analysis Module",
+      "description": "Responsible for performing the initial static analysis of the codebase, gathering foundational code data such as project structure, file contents, and basic code metrics. It also handles the creation and management of Language Server Protocol (LSP) clients for detailed code introspection.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "static_analyzer.scanner.ProjectScanner",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
+          "reference_start_line": 13,
+          "reference_end_line": 66
+        },
+        {
+          "qualified_name": "CodeBoarding.static_analyzer.lsp_client",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client",
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "AI Interpretation Engine",
+      "description": "A collective component comprising various specialized AI agents (e.g., DetailsAgent, AbstractionAgent, PlannerAgent, ValidatorAgent, DiffAnalyzingAgent, MetaAgent). This engine performs in-depth code understanding, generates architectural insights, plans analysis steps, validates results, and conducts meta-level analysis based on the static analysis output.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "agents.details_agent.DetailsAgent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/details_agent.py",
+          "reference_start_line": 16,
+          "reference_end_line": 113
+        },
+        {
+          "qualified_name": "agents.abstraction_agent.AbstractionAgent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/abstraction_agent.py",
+          "reference_start_line": 14,
+          "reference_end_line": 100
+        },
+        {
+          "qualified_name": "agents.planner_agent.PlannerAgent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/planner_agent.py",
+          "reference_start_line": 13,
+          "reference_end_line": 31
+        },
+        {
+          "qualified_name": "agents.validator_agent.ValidatorAgent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/validator_agent.py",
+          "reference_start_line": 15,
+          "reference_end_line": 143
+        },
+        {
+          "qualified_name": "agents.diff_analyzer.DiffAnalyzingAgent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
+          "reference_start_line": 20,
+          "reference_end_line": 136
+        },
+        {
+          "qualified_name": "agents.meta_agent.MetaAgent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/meta_agent.py",
+          "reference_start_line": 15,
+          "reference_end_line": 37
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Repository Management Module",
+      "description": "Provides utilities for integrating with version control systems (e.g., Git) to retrieve repository context, commit hashes, and other versioning information crucial for analysis and documentation.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "CodeBoarding.repo_utils",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils",
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Output Management Module",
+      "description": "Manages the final stages of the pipeline, including the serialization of analysis results into structured formats (e.g., JSON) and the sanitization and generation of final documentation outputs (e.g., Markdown).",
+      "referenced_source_code": [
+        {
+          "qualified_name": "diagram_analysis.analysis_json.from_analysis_to_json",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/analysis_json.py",
+          "reference_start_line": 25,
+          "reference_end_line": 32
+        },
+        {
+          "qualified_name": "output_generators.markdown.sanitize",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/markdown.py",
+          "reference_start_line": 107,
+          "reference_end_line": 107
+        }
+      ],
+      "can_expand": false
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "initiates and coordinates",
+      "src_name": "Orchestration Engine",
+      "dst_name": "Static Analysis Module"
+    },
+    {
+      "relation": "manages and dispatches",
+      "src_name": "Orchestration Engine",
+      "dst_name": "AI Interpretation Engine"
+    },
+    {
+      "relation": "utilizes",
+      "src_name": "Orchestration Engine",
+      "dst_name": "Repository Management Module"
+    },
+    {
+      "relation": "directs",
+      "src_name": "Orchestration Engine",
+      "dst_name": "Output Management Module"
+    },
+    {
+      "relation": "provides data to",
+      "src_name": "Static Analysis Module",
+      "dst_name": "Orchestration Engine"
+    },
+    {
+      "relation": "returns insights to",
+      "src_name": "AI Interpretation Engine",
+      "dst_name": "Orchestration Engine"
+    },
+    {
+      "relation": "supplies info to",
+      "src_name": "Repository Management Module",
+      "dst_name": "Orchestration Engine"
+    }
+  ]
+}

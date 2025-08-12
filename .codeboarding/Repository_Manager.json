@@ -1,0 +1,114 @@
+{
+  "description": "The `Repository Manager` serves as the central orchestrator for all source code repository interactions. It delegates core repository operations such as cloning, checking out, and managing repository metadata to the `Repository Operations Handler`. For analyzing code changes, the `Repository Manager` utilizes the `Git Diff Extractor`, which in turn relies on the `Repository Operations Handler` for accessing repository data. The `Git Diff Extractor` then provides the processed diff information back to the `Repository Manager` for further system use. This clear separation of concerns ensures modularity and maintainability within the repository management subsystem.",
+  "components": [
+    {
+      "name": "Repository Manager",
+      "description": "This is the top-level component responsible for orchestrating all interactions with source code repositories. It provides a unified interface for the rest of the system to access repository functionalities, including cloning, checking out versions, and initiating diff operations. It acts as a facade, delegating specific tasks to its sub-components.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "repo_utils",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "repo_utils.git_diff",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/git_diff.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Repository Operations Handler",
+      "description": "Manages the fundamental, low-level operations related to local Git repositories. This includes cloning repositories from remote URLs, sanitizing repository URLs, verifying the existence of remote repositories, checking out specific branches or commits, and retrieving essential repository metadata (e.g., current commit hash, branch name). It also handles authentication tokens and the uploading of generated materials.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "repo_utils.clone_repository",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "repo_utils.checkout_repo",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "repo_utils.sanitize_repo_url",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "repo_utils.remote_repo_exists",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "repo_utils.get_git_commit_hash",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "repo_utils.get_branch",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "repo_utils.upload_onboarding_materials",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        }
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "Git Diff Extractor",
+      "description": "Focuses specifically on extracting and processing differences between various versions of the codebase within a Git repository. It identifies changes at the file and line level (additions, deletions, modifications) and structures this information for further analysis by other components of the system.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "repo_utils.git_diff.git_diff",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/git_diff.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "repo_utils.git_diff.FileChange",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/git_diff.py",
+          "reference_start_line": 9,
+          "reference_end_line": 24
+        }
+      ],
+      "can_expand": true
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "uses",
+      "src_name": "Repository Manager",
+      "dst_name": "Repository Operations Handler"
+    },
+    {
+      "relation": "uses",
+      "src_name": "Repository Manager",
+      "dst_name": "Git Diff Extractor"
+    },
+    {
+      "relation": "depends on",
+      "src_name": "Git Diff Extractor",
+      "dst_name": "Repository Operations Handler"
+    },
+    {
+      "relation": "provides data to",
+      "src_name": "Git Diff Extractor",
+      "dst_name": "Repository Manager"
+    }
+  ]
+}
