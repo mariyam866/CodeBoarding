@@ -77,7 +77,7 @@ npm install --save typescript-language-server typescript # Typescript
 
 > [!IMPORTANT]  
 > After installing the dependencies and servers you wanted to use, please update the configuration to use them.
-> This configuration can be found in the (static_analysis_config.yml)[./static_analysis_config.yml] file.
+> This configuration can be found in the [static_analysis_config.yml](./static_analysis_config.yml) file.
 
 ### Environment Variables
 
