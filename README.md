@@ -23,21 +23,30 @@ For detailed architecture information, see our [diagram documentation](.codeboar
 ```mermaid
 graph LR
     API_Service["API Service"]
-    Orchestrator["Orchestrator"]
-    Static_Analyzer["Static Analyzer"]
-    AI_Interpretation_Engine["AI Interpretation Engine"]
-    Output_Generator["Output Generator"]
-    API_Service -- "Invokes" --> Orchestrator
-    Orchestrator -- "Invokes" --> Static_Analyzer
-    Orchestrator -- "Invokes" --> AI_Interpretation_Engine
-    Orchestrator -- "Invokes" --> Output_Generator
-    Output_Generator -- "Returns final report to" --> Orchestrator
-    Orchestrator -- "Returns final report to" --> API_Service
+    Job_Database["Job Database"]
+    Orchestration_Engine["Orchestration Engine"]
+    Repository_Manager["Repository Manager"]
+    Static_Analysis_Engine["Static Analysis Engine"]
+    AI_Interpretation_Layer["AI Interpretation Layer"]
+    Output_Generation_Engine["Output Generation Engine"]
+    API_Service -- "Initiates Job" --> Job_Database
+    API_Service -- "Triggers Analysis" --> Orchestration_Engine
+    Orchestration_Engine -- "Manages Job State" --> Job_Database
+    Orchestration_Engine -- "Requests Code" --> Repository_Manager
+    Repository_Manager -- "Provides Code" --> Orchestration_Engine
+    Orchestration_Engine -- "Requests Static Analysis" --> Static_Analysis_Engine
+    Static_Analysis_Engine -- "Provides Analysis Results" --> Orchestration_Engine
+    Orchestration_Engine -- "Feeds Data" --> AI_Interpretation_Layer
+    AI_Interpretation_Layer -- "Returns Insights" --> Orchestration_Engine
+    AI_Interpretation_Layer -- "Queries Diff" --> Repository_Manager
+    Orchestration_Engine -- "Passes Final Insights" --> Output_Generation_Engine
+    Output_Generation_Engine -- "Delivers Documentation" --> API_Service
     click API_Service href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/API_Service.md" "Details"
-    click Orchestrator href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestrator.md" "Details"
-    click Static_Analyzer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analyzer.md" "Details"
-    click AI_Interpretation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Engine.md" "Details"
-    click Output_Generator href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generator.md" "Details"
+    click Job_Database href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Job_Database.md" "Details"
+    click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
+    click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
+    click AI_Interpretation_Layer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Layer.md" "Details"
+    click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
 ```
 
 
@@ -117,7 +126,66 @@ python demo.py <github_repo_url> --output-dir <output_path>
 
 ## 🖥️ Examples:
 
-We have visualized **over 300+ popular open-source projects**. See examples:
+We have visualized **over 800+ popular open-source projects**. See examples:
+
+## PyTorch:
+
+```mermaid
+graph LR
+    Tensor_Operations_Core["Tensor Operations & Core"]
+    Automatic_Differentiation_Autograd_Engine_["Automatic Differentiation (Autograd Engine)"]
+    Neural_Network_Modules_torch_nn_["Neural Network Modules (torch.nn)"]
+    Optimizers_torch_optim_["Optimizers (torch.optim)"]
+    Data_Utilities_torch_utils_data_["Data Utilities (torch.utils.data)"]
+    JIT_Compiler_Scripting_TorchScript_["JIT Compiler & Scripting (TorchScript)"]
+    Hardware_Backends["Hardware Backends"]
+    Data_Utilities_torch_utils_data_ -- "provides data to" --> Tensor_Operations_Core
+    Tensor_Operations_Core -- "provides primitives for" --> Neural_Network_Modules_torch_nn_
+    Tensor_Operations_Core -- "leverages" --> Hardware_Backends
+    Neural_Network_Modules_torch_nn_ -- "performs operations on" --> Tensor_Operations_Core
+    Neural_Network_Modules_torch_nn_ -- "operations recorded by" --> Automatic_Differentiation_Autograd_Engine_
+    Neural_Network_Modules_torch_nn_ -- "exported to" --> JIT_Compiler_Scripting_TorchScript_
+    Automatic_Differentiation_Autograd_Engine_ -- "computes gradients for" --> Optimizers_torch_optim_
+    Optimizers_torch_optim_ -- "updates parameters of" --> Neural_Network_Modules_torch_nn_
+    Hardware_Backends -- "executes computations for" --> Tensor_Operations_Core
+    click Tensor_Operations_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Tensor_Operations_Core.md" "Details"
+    click Automatic_Differentiation_Autograd_Engine_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Automatic_Differentiation_Autograd_Engine_.md" "Details"
+    click Neural_Network_Modules_torch_nn_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Neural_Network_Modules_torch_nn_.md" "Details"
+    click Optimizers_torch_optim_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Optimizers_torch_optim_.md" "Details"
+    click Data_Utilities_torch_utils_data_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Data_Utilities_torch_utils_data_.md" "Details"
+    click JIT_Compiler_Scripting_TorchScript_ href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/JIT_Compiler_Scripting_TorchScript_.md" "Details"
+    click Hardware_Backends href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Hardware_Backends.md" "Details"
+```
+
+### FastAPI:
+
+```mermaid
+graph LR
+    Application_Core["Application Core"]
+    Middleware["Middleware"]
+    Routing["Routing"]
+    Request_Handling_Validation["Request Handling & Validation"]
+    Dependency_Injection["Dependency Injection"]
+    Security["Security"]
+    Response_Handling["Response Handling"]
+    API_Documentation["API Documentation"]
+    Application_Core -- " sends request to " --> Middleware
+    Middleware -- " forwards request to " --> Routing
+    Routing -- " uses " --> Request_Handling_Validation
+    Routing -- " uses " --> Dependency_Injection
+    Routing -- " provides data for " --> Response_Handling
+    Dependency_Injection -- " enables " --> Security
+    Response_Handling -- " sends response to " --> Middleware
+    API_Documentation -- " inspects " --> Routing
+    API_Documentation -- " inspects " --> Request_Handling_Validation
+    click Application_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Application_Core.md" "Details"
+    click Middleware href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Middleware.md" "Details"
+    click Routing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Routing.md" "Details"
+    click Request_Handling_Validation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Request_Handling_Validation.md" "Details"
+    click Dependency_Injection href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Dependency_Injection.md" "Details"
+    click Security href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Security.md" "Details"
+    click API_Documentation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/API_Documentation.md" "Details"
+```
 
 ### ChatTTS:
 
@@ -153,76 +221,6 @@ graph LR
     click Speech_Synthesis_Models href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ChatTTS/Speech_Synthesis_Models.md" "Details"
     click Velocity_Inference_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ChatTTS/Velocity_Inference_Engine.md" "Details"
     click System_Utilities_Configuration href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main//ChatTTS/System_Utilities_Configuration.md" "Details"
-```
-
-## PyTorch:
-
-```mermaid
-graph LR
-    Core_Tensor_Operations["Core Tensor Operations"]
-    Neural_Network_Construction["Neural Network Construction"]
-    Automatic_Differentiation_Engine["Automatic Differentiation Engine"]
-    Optimization_Algorithms["Optimization Algorithms"]
-    Performance_Optimization["Performance Optimization"]
-    Distributed_Training_Infrastructure["Distributed Training Infrastructure"]
-    Model_Deployment_Optimization["Model Deployment & Optimization"]
-    Meta_Programming_Code_Generation["Meta-Programming & Code Generation"]
-    Functional_Programming_Transforms["Functional Programming Transforms"]
-    Neural_Network_Construction -- " relies on " --> Core_Tensor_Operations
-    Automatic_Differentiation_Engine -- " uses " --> Core_Tensor_Operations
-    Automatic_Differentiation_Engine -- " uses " --> Neural_Network_Construction
-    Optimization_Algorithms -- " optimizes " --> Neural_Network_Construction
-    Optimization_Algorithms -- " uses " --> Automatic_Differentiation_Engine
-    Performance_Optimization -- " optimizes " --> Core_Tensor_Operations
-    Performance_Optimization -- " optimizes " --> Neural_Network_Construction
-    Distributed_Training_Infrastructure -- " uses " --> Core_Tensor_Operations
-    Distributed_Training_Infrastructure -- " uses " --> Automatic_Differentiation_Engine
-    Distributed_Training_Infrastructure -- " uses " --> Neural_Network_Construction
-    Model_Deployment_Optimization -- " optimizes " --> Neural_Network_Construction
-    Model_Deployment_Optimization -- " optimizes " --> Core_Tensor_Operations
-    Meta_Programming_Code_Generation -- " generates code for " --> Core_Tensor_Operations
-    Meta_Programming_Code_Generation -- " generates code for " --> Neural_Network_Construction
-    Functional_Programming_Transforms -- " uses " --> Core_Tensor_Operations
-    Functional_Programming_Transforms -- " uses " --> Automatic_Differentiation_Engine
-    click Core_Tensor_Operations href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Core Tensor Operations.md" "Details"
-    click Neural_Network_Construction href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Neural Network Construction.md" "Details"
-    click Automatic_Differentiation_Engine href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Automatic Differentiation Engine.md" "Details"
-    click Optimization_Algorithms href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Optimization Algorithms.md" "Details"
-    click Performance_Optimization href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Performance Optimization.md" "Details"
-    click Distributed_Training_Infrastructure href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Distributed Training Infrastructure.md" "Details"
-    click Model_Deployment_Optimization href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Model Deployment & Optimization.md" "Details"
-    click Meta_Programming_Code_Generation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Meta-Programming & Code Generation.md" "Details"
-    click Functional_Programming_Transforms href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/pytorch/Functional Programming Transforms.md" "Details"
-```
-
-### FastAPI:
-
-```mermaid
-graph LR
-    Application_Core["Application Core"]
-    Middleware["Middleware"]
-    Routing["Routing"]
-    Request_Handling_Validation["Request Handling & Validation"]
-    Dependency_Injection["Dependency Injection"]
-    Security["Security"]
-    Response_Handling["Response Handling"]
-    API_Documentation["API Documentation"]
-    Application_Core -- " sends request to " --> Middleware
-    Middleware -- " forwards request to " --> Routing
-    Routing -- " uses " --> Request_Handling_Validation
-    Routing -- " uses " --> Dependency_Injection
-    Routing -- " provides data for " --> Response_Handling
-    Dependency_Injection -- " enables " --> Security
-    Response_Handling -- " sends response to " --> Middleware
-    API_Documentation -- " inspects " --> Routing
-    API_Documentation -- " inspects " --> Request_Handling_Validation
-    click Application_Core href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Application_Core.md" "Details"
-    click Middleware href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Middleware.md" "Details"
-    click Routing href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Routing.md" "Details"
-    click Request_Handling_Validation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Request_Handling_Validation.md" "Details"
-    click Dependency_Injection href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Dependency_Injection.md" "Details"
-    click Security href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/Security.md" "Details"
-    click API_Documentation href "https://github.com/CodeBoarding/GeneratedOnBoardings/blob/main/fastapi/API_Documentation.md" "Details"
 ```
 
 Browse more examples: [GeneratedOnBoardings Repository](https://github.com/CodeBoarding/GeneratedOnBoardings)
