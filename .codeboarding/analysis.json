@@ -38,7 +38,7 @@
           "reference_end_line": 1
         }
       ],
-      "can_expand": false
+      "can_expand": true
     },
     {
       "name": "Repository Manager",

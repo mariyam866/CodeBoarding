@@ -1,0 +1,92 @@
+{
+  "description": "The Orchestration Engine subsystem, centered around the DiagramGenerator, manages the entire documentation generation pipeline. It coordinates analysis stages, from pre-analysis and static analysis to core analysis and component-level processing.",
+  "components": [
+    {
+      "name": "Orchestration Engine (DiagramGenerator)",
+      "description": "The central control unit that manages the entire documentation generation pipeline, coordinating all analysis and generation stages. It initializes and manages the lifecycle of all analysis agents.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_start_line": 25,
+          "reference_end_line": 202
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Pre-Analysis Stage",
+      "description": "Performs preparatory steps before the main analysis begins. This includes generating static analysis results and instantiating all the necessary AI agents with their respective contexts.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator:pre_analysis",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Static Analysis Generator",
+      "description": "Executes the static code analysis phase. It scans the repository for programming languages, creates language-specific LSP clients, and builds static analysis data (references, call graphs, class hierarchies, package dependencies).",
+      "referenced_source_code": [
+        {
+          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator:generate_static_analysis",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Core Analysis Driver",
+      "description": "Drives the core, multi-level analysis process. It checks for updates, performs initial project abstraction, plans the analysis of components by levels, and orchestrates the parallel processing of components.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator:generate_analysis",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Component Processor",
+      "description": "Focuses on the detailed analysis of a single component. It checks for existing analysis, applies feedback if a partial update is needed, and performs a series of detailed analysis steps (sub-CFG, CFG, structure enhancement, analysis) using the DetailsAgent. It then validates the analysis and plans for new components.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator:process_component",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
+        }
+      ],
+      "can_expand": true
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "orchestrates",
+      "src_name": "Orchestration Engine (DiagramGenerator)",
+      "dst_name": "Pre-Analysis Stage"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "Orchestration Engine (DiagramGenerator)",
+      "dst_name": "Core Analysis Driver"
+    },
+    {
+      "relation": "calls",
+      "src_name": "Pre-Analysis Stage",
+      "dst_name": "Static Analysis Generator"
+    },
+    {
+      "relation": "submits tasks to",
+      "src_name": "Core Analysis Driver",
+      "dst_name": "Component Processor"
+    }
+  ]
+}
