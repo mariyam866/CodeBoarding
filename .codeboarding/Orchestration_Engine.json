@@ -11,8 +11,7 @@
           "reference_start_line": 25,
           "reference_end_line": 202
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Pre-Analysis Stage",
@@ -24,8 +23,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Static Analysis Generator",
@@ -37,8 +35,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Core Analysis Driver",
@@ -50,8 +47,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Component Processor",
@@ -63,8 +59,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "can_expand": true
+      ]
     }
   ],
   "components_relations": [
