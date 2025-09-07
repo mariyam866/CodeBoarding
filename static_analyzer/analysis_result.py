@@ -1,24 +1,24 @@
 from typing import List
 
-from static_analyzer.graph import Node
+from static_analyzer.graph import Node, CallGraph
 
 
 class StaticAnalysisResults:
     def __init__(self):
         self.results = {}
 
-    def add_class_hierarchy(self, language, hierarchy):
+    def add_class_hierarchy(self, language: str, hierarchy):
         """
         Adds a class hierarchy to the results.
 
-        :param class_name: The name of the class.
+        :param language: The name of the class.
         :param hierarchy: A list representing the class hierarchy.
         """
         if language not in self.results:
             self.results[language] = {}
         self.results[language]["hierarchy"] = hierarchy
 
-    def add_cfg(self, language, cfg):
+    def add_cfg(self, language: str, cfg: CallGraph):
         """
         Adds a control flow graph (CFG) to the results.
 
@@ -29,7 +29,7 @@ class StaticAnalysisResults:
             self.results[language] = {}
         self.results[language]["cfg"] = cfg
 
-    def add_package_dependencies(self, language, dependencies):
+    def add_package_dependencies(self, language: str, dependencies):
         """
         Adds package dependencies to the results.
 
@@ -40,7 +40,7 @@ class StaticAnalysisResults:
             self.results[language] = {}
         self.results[language]["dependencies"] = dependencies
 
-    def add_references(self, language, references: List[Node]):
+    def add_references(self, language: str, references: List[Node]):
         """
         Adds source code references to the results.
 
@@ -53,7 +53,7 @@ class StaticAnalysisResults:
         self.results[language]['references'] = {reference.fully_qualified_name.lower(): reference for reference in
                                                 references}
 
-    def get_cfg(self, language):
+    def get_cfg(self, language: str) -> CallGraph:
         """
         Retrieves the control flow graph for a specific language.
 
@@ -64,7 +64,7 @@ class StaticAnalysisResults:
             return self.results[language]["cfg"]
         raise ValueError(f"Control flow graph for language '{language}' not found in results.")
 
-    def get_hierarchy(self, language) -> dict:
+    def get_hierarchy(self, language: str) -> dict:
         """
         Retrieves the class hierarchy for a specific language.
 
@@ -82,7 +82,7 @@ class StaticAnalysisResults:
             return self.results[language]["hierarchy"]
         raise ValueError(f"Class hierarchy for language '{language}' not found in results.")
 
-    def get_package_dependencies(self, language) -> dict:
+    def get_package_dependencies(self, language: str) -> dict:
         """
         Retrieves the package dependencies for a specific language.
 
@@ -93,7 +93,7 @@ class StaticAnalysisResults:
             return self.results[language]["dependencies"]
         raise ValueError(f"Package dependencies for language '{language}' not found in results.")
 
-    def get_reference(self, language, qualified_name) -> Node:
+    def get_reference(self, language: str, qualified_name: str) -> Node:
         """
         Retrieves the source code reference for a specific qualified name in a language.
 
@@ -114,7 +114,7 @@ class StaticAnalysisResults:
                         f"please use the full file path instead of the qualified name.")
         raise ValueError(f"Source code reference for '{qualified_name}' in language '{language}' not found in results.")
 
-    def get_loose_reference(self, language, qualified_name) -> tuple[str, Node]:
+    def get_loose_reference(self, language: str, qualified_name: str) -> tuple[str, Node]:
         lower_qn = qualified_name.lower()
         if language in self.results and "references" in self.results[language]:
             # Check if the qualified name is a subset of any reference:
@@ -136,3 +136,36 @@ class StaticAnalysisResults:
         :return: A list of programming languages.
         """
         return list(self.results.keys())
+
+    def add_source_files(self, language: str, source_files):
+        """
+        Adds source files to the analysis results.
+
+        :param language: The programming language.
+        :param source_files: A list of source files.
+        """
+        if language not in self.results:
+            self.results[language] = {}
+        self.results[language]["source_files"] = source_files
+
+    def get_source_files(self, language: str) -> List[str]:
+        """
+        Retrieves the list of source files for a given language.
+
+        :param language: The programming language.
+        :return: A list of source files.
+        """
+        if language not in self.results:
+            return []
+        return self.results[language].get("source_files", [])
+
+    def get_all_source_files(self) -> List[str]:
+        """
+        Retrieves the list of all source files across all languages.
+
+        :return: A list of source files.
+        """
+        all_source_files = []
+        for language in self.results:
+            all_source_files.extend(self.get_source_files(language))
+        return all_source_files

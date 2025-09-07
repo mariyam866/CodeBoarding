@@ -74,6 +74,7 @@ class DiagramGenerator:
             output_path = os.path.join(self.output_dir, f"{safe_name}.json")
 
             # Save the analysis result
+            self.details_agent.classify_files(component, analysis)
             with open(output_path, "w") as f:
                 f.write(from_analysis_to_json(analysis, new_components))
 
@@ -129,7 +130,6 @@ class DiagramGenerator:
                 analysis = self.abstraction_agent.apply_feedback(analysis, feedback)
         else:
             analysis = self.diff_analyzer_agent.get_analysis()
-
         assert analysis is not None, "Analysis should not be None at this point"
 
         # Get the initial components to analyze (level 0)
@@ -138,6 +138,8 @@ class DiagramGenerator:
 
         # Save the root analysis
         analysis_path = os.path.join(self.output_dir, "analysis.json")
+        # Classify files for the root analysis as last step before saving
+        self.abstraction_agent.classify_files(analysis)
         with open(analysis_path, "w") as f:
             f.write(from_analysis_to_json(analysis, current_level_components))
         files.append(analysis_path)
@@ -198,5 +200,6 @@ class DiagramGenerator:
             results.add_cfg(client.language.language, analysis.get('call_graph', []))
             results.add_class_hierarchy(client.language.language, analysis.get('class_hierarchies', []))
             results.add_package_dependencies(client.language.language, analysis.get('package_relations', []))
+            results.add_source_files(client.language.language, analysis.get('source_files', []))
 
         return results
