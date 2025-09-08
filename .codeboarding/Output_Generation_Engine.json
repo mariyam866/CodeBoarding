@@ -1,5 +1,5 @@
 {
-  "description": "The documentation generation process is orchestrated by the `Output Generation Engine`, primarily implemented in `demo.py`. This engine is responsible for cloning the target Git repository using `Repository Utilities` and then initiating the architectural analysis through the `Diagram Generator`. Once the analysis is complete, the `Output Generation Engine` dispatches the generation of documentation to various specialized generators, including the `Markdown Generator`, `HTML Generator`, `MDX Generator`, and `Sphinx Generator`, based on the desired output format. The `HTML Generator` further interacts with the `HTML Template Populator` to produce interactive HTML documentation. This modular design allows for flexible and extensible documentation generation across different formats.",
+  "description": "The Output Generation Engine subsystem is responsible for transforming processed architectural insights into various documentation formats. It orchestrates specialized generators for HTML, Markdown, MDX, and Sphinx, ensuring that the insights are presented in a structured and accessible manner. The GitHubActionOutputFormatter then adapts these outputs for seamless integration into GitHub Actions workflows. This modular design allows for flexible and extensible documentation generation across different platforms and tools.",
   "components": [
     {
       "name": "Output Generation Engine",
@@ -17,104 +17,119 @@
           "reference_start_line": 82,
           "reference_end_line": 101
         }
-      ]
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/__init__.py"
+      ],
+      "can_expand": true
     },
     {
-      "name": "Markdown Generator",
-      "description": "Generates standard Markdown documentation, including embedded Mermaid diagrams and basic component details, making the architectural insights easily readable in Markdown viewers.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "markdown.py",
-          "reference_file": null,
-          "reference_start_line": 1,
-          "reference_end_line": 9999
-        }
-      ]
+      "name": "HTMLGenerator",
+      "description": "This component is dedicated to converting the processed architectural insights into a structured HTML format. It handles the rendering of diagrams, text, and other elements into web-friendly documentation. It prepares data (e.g., Cytoscape.js compatible JSON) for interactive architectural diagrams.",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/html.py"
+      ],
+      "can_expand": true
     },
     {
-      "name": "HTML Generator",
-      "description": "Creates standalone HTML documentation, specifically preparing data (e.g., Cytoscape.js compatible JSON) for interactive architectural diagrams.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "html.py",
-          "reference_file": null,
-          "reference_start_line": 1,
-          "reference_end_line": 9999
-        }
-      ]
+      "name": "MarkdownGenerator",
+      "description": "Responsible for generating documentation in standard Markdown format. This component ensures that architectural insights are presented in a widely compatible and easily readable text-based format, suitable for various platforms and tools. It includes embedded Mermaid diagrams and basic component details.",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/markdown.py"
+      ],
+      "can_expand": true
     },
     {
-      "name": "MDX Generator",
-      "description": "Produces MDX (Markdown with JSX) files, incorporating Mermaid diagrams and frontmatter for rich, interactive documentation experiences, suitable for modern documentation sites.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "mdx.py",
-          "reference_file": null,
-          "reference_start_line": 1,
-          "reference_end_line": 9999
-        }
-      ]
+      "name": "MDXGenerator",
+      "description": "This component extends Markdown generation by incorporating JSX capabilities, allowing for more dynamic and interactive documentation. It transforms insights into MDX, enabling the embedding of React components within the documentation, including Mermaid diagrams and frontmatter.",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/mdx.py"
+      ],
+      "can_expand": true
     },
     {
-      "name": "Sphinx Generator",
-      "description": "Generates reStructuredText (RST) formatted documentation, including embedded Mermaid diagrams and structured component information, suitable for Sphinx documentation projects.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "sphinx.py",
-          "reference_file": null,
-          "reference_start_line": 1,
-          "reference_end_line": 9999
-        }
-      ]
+      "name": "SphinxGenerator",
+      "description": "Focuses on generating documentation in reStructuredText (RST) format, specifically tailored for use with the Sphinx documentation generator. This component ensures compatibility with Sphinx's powerful features for technical documentation, including embedded Mermaid diagrams and structured component information.",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/sphinx.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "GitHubActionOutputFormatter",
+      "description": "This component acts as an integration layer, specifically formatting and preparing the generated documentation for consumption within GitHub Actions workflows. It leverages the capabilities of the other generators (HTML, Markdown, MDX) to produce output suitable for GitHub's environment.",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py"
+      ],
+      "can_expand": false
     },
     {
       "name": "HTML Template Populator",
       "description": "Integrates generated architectural data (like Cytoscape JSON and component-specific HTML snippets) into a predefined HTML template to produce the final, complete, and styled HTML output.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "html_template.py",
-          "reference_file": null,
-          "reference_start_line": 1,
-          "reference_end_line": 9999
-        }
-      ]
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/html_template.py"
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     }
   ],
   "components_relations": [
     {
       "relation": "orchestrates",
       "src_name": "Output Generation Engine",
-      "dst_name": "Markdown Generator"
+      "dst_name": "HTMLGenerator"
     },
     {
       "relation": "orchestrates",
       "src_name": "Output Generation Engine",
-      "dst_name": "HTML Generator"
+      "dst_name": "MarkdownGenerator"
     },
     {
       "relation": "orchestrates",
       "src_name": "Output Generation Engine",
-      "dst_name": "MDX Generator"
+      "dst_name": "MDXGenerator"
     },
     {
       "relation": "orchestrates",
       "src_name": "Output Generation Engine",
-      "dst_name": "Sphinx Generator"
+      "dst_name": "SphinxGenerator"
+    },
+    {
+      "relation": "uses",
+      "src_name": "Output Generation Engine",
+      "dst_name": "GitHubActionOutputFormatter"
     },
     {
       "relation": "provides data to",
-      "src_name": "HTML Generator",
+      "src_name": "HTMLGenerator",
       "dst_name": "HTML Template Populator"
     },
     {
-      "relation": "clones repository",
-      "src_name": "Output Generation Engine",
-      "dst_name": "Repository Utilities"
+      "relation": "uses",
+      "src_name": "GitHubActionOutputFormatter",
+      "dst_name": "HTMLGenerator"
     },
     {
-      "relation": "generates analysis with",
-      "src_name": "Output Generation Engine",
-      "dst_name": "Diagram Generator"
+      "relation": "uses",
+      "src_name": "GitHubActionOutputFormatter",
+      "dst_name": "MarkdownGenerator"
+    },
+    {
+      "relation": "uses",
+      "src_name": "GitHubActionOutputFormatter",
+      "dst_name": "MDXGenerator"
     }
   ]
 }

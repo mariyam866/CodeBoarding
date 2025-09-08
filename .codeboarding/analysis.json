@@ -1,5 +1,5 @@
 {
-  "description": "The CodeBoarding system operates as a sophisticated pipeline for automated architectural documentation. It begins with the API Service receiving a request, which is then logged and managed by the Job Database. The Orchestration Engine serves as the central nervous system, coordinating the entire analysis process. It first directs the Repository Manager to fetch the target codebase. This code then undergoes structural examination by the Static Analysis Engine. The resulting raw data is intelligently processed by the AI Interpretation Layer, a suite of agents that abstract, detail, plan, validate, and analyze changes within the architecture. Finally, the refined architectural insights are passed to the Output Generation Engine to produce various documentation formats, completing the cycle by making the output accessible via the API Service. This design emphasizes a clear, sequential flow, distinct component responsibilities, and extensibility for future language and AI model integrations.",
+  "description": "The CodeBoarding system operates through a robust, multi-layered architecture designed for comprehensive code analysis and documentation generation. The API Service serves as the primary external interface, initiating jobs and managing user interactions. All job lifecycle and status information is persistently stored and managed by the Job Database. The Orchestration Engine acts as the central coordinator, driving the entire documentation pipeline. It interacts with the Repository Manager to retrieve source code and then dispatches requests to the Static Analysis Engine. The Static Analysis Engine performs deep, language-specific analysis, now providing richer and more detailed structural information. This enhanced data is then fed by the Orchestration Engine to the AI Interpretation Layer. This layer, comprising specialized AI agents, performs sophisticated interpretation, generating enhanced high-level architectural insights, and may query the Repository Manager for diff analysis. Finally, the Orchestration Engine passes these refined insights to the Output Generation Engine, which transforms them into various documentation formats with enhanced capabilities, including integration with GitHub Actions, before delivering the final output back through the API Service. This updated architecture reflects significant internal enhancements in analysis depth and output quality, particularly within the AI interpretation and static analysis components.",
   "components": [
     {
       "name": "API Service",
@@ -7,10 +7,13 @@
       "referenced_source_code": [
         {
           "qualified_name": "local_app",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_file": "local_app.py",
           "reference_start_line": 1,
           "reference_end_line": 1
         }
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py"
       ],
       "can_expand": true
     },
@@ -20,10 +23,13 @@
       "referenced_source_code": [
         {
           "qualified_name": "duckdb_crud",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
+          "reference_file": "duckdb_crud.py",
           "reference_start_line": 1,
           "reference_end_line": 1
         }
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py"
       ],
       "can_expand": true
     },
@@ -37,6 +43,12 @@
           "reference_start_line": 1,
           "reference_end_line": 1
         }
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/analysis_json.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/version.py"
       ],
       "can_expand": true
     },
@@ -57,11 +69,16 @@
           "reference_end_line": 76
         }
       ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/git_diff.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/errors.py"
+      ],
       "can_expand": true
     },
     {
       "name": "Static Analysis Engine",
-      "description": "Performs deep, language-specific analysis of source code to extract structural information without semantic interpretation.",
+      "description": "Performs deep, language-specific analysis of source code to extract richer, more detailed, and comprehensive structural information without semantic interpretation.",
       "referenced_source_code": [
         {
           "qualified_name": "scanner",
@@ -74,13 +91,29 @@
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/typescript_client.py",
           "reference_start_line": 10,
           "reference_end_line": 214
+        },
+        {
+          "qualified_name": "analysis_result",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/abstraction_agent.py",
+          "reference_start_line": 88,
+          "reference_end_line": 88
         }
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/programming_language.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/graph.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/analysis_result.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/typescript_client.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py"
       ],
       "can_expand": true
     },
     {
       "name": "AI Interpretation Layer",
-      "description": "A collection of specialized AI agents that interpret static analysis data to generate high-level architectural insights, including abstraction, detailing, planning, validation, and diff analysis.",
+      "description": "A collection of specialized AI agents that perform sophisticated interpretation of static analysis data, generating enhanced high-level architectural insights, including detailed abstractions, refined planning, robust validation, and comprehensive diff analysis, with structured outputs.",
       "referenced_source_code": [
         {
           "qualified_name": "meta_agent",
@@ -117,40 +150,110 @@
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
           "reference_start_line": 1,
           "reference_end_line": 1
+        },
+        {
+          "qualified_name": "agent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
+          "reference_start_line": 20,
+          "reference_end_line": 136
+        },
+        {
+          "qualified_name": "agent_responses",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent_responses.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
+        },
+        {
+          "qualified_name": "prompts",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/details_agent.py",
+          "reference_start_line": 23,
+          "reference_end_line": 23
         }
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/details_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/validator_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/abstraction_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/planner_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/meta_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent_responses.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/prompts.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_source.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file_structure.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/external_deps.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_packages.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_cfg.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/get_method_invocations.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_git_diff.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/utils.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_structure.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_docs.py"
       ],
       "can_expand": true
     },
     {
       "name": "Output Generation Engine",
-      "description": "Transforms the final, validated architectural insights into various human-readable and diagram-friendly documentation formats.",
+      "description": "Transforms the final, validated architectural insights into various human-readable and diagram-friendly documentation formats, with enhanced capabilities for specific output formats and external integrations like GitHub Actions.",
       "referenced_source_code": [
         {
           "qualified_name": "html",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
-          "reference_start_line": 36,
-          "reference_end_line": 50
+          "reference_start_line": 37,
+          "reference_end_line": 51
         },
         {
           "qualified_name": "markdown",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
-          "reference_start_line": 19,
-          "reference_end_line": 33
+          "reference_start_line": 20,
+          "reference_end_line": 34
         },
         {
           "qualified_name": "mdx",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
-          "reference_start_line": 53,
-          "reference_end_line": 67
+          "reference_start_line": 54,
+          "reference_end_line": 68
         },
         {
           "qualified_name": "sphinx",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/sphinx.py",
           "reference_start_line": 1,
           "reference_end_line": 1
+        },
+        {
+          "qualified_name": "github_action",
+          "reference_file": "github_action.py",
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
       ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/sphinx.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/mdx.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/html.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/html_template.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/markdown.py"
+      ],
       "can_expand": true
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/vscode_constants.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/vscode_runnable.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/utils.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/logging_config.py"
+      ],
+      "can_expand": false
     }
   ],
   "components_relations": [
@@ -185,17 +288,17 @@
       "dst_name": "Static Analysis Engine"
     },
     {
-      "relation": "Provides Analysis Results",
+      "relation": "Provides Richer Analysis Results",
       "src_name": "Static Analysis Engine",
       "dst_name": "Orchestration Engine"
     },
     {
-      "relation": "Feeds Data",
+      "relation": "Feeds Rich Analysis Data",
       "src_name": "Orchestration Engine",
       "dst_name": "AI Interpretation Layer"
     },
     {
-      "relation": "Returns Insights",
+      "relation": "Returns Enhanced Architectural Insights",
       "src_name": "AI Interpretation Layer",
       "dst_name": "Orchestration Engine"
     },
@@ -205,7 +308,7 @@
       "dst_name": "Repository Manager"
     },
     {
-      "relation": "Passes Final Insights",
+      "relation": "Passes Enhanced Insights for Generation",
       "src_name": "Orchestration Engine",
       "dst_name": "Output Generation Engine"
     },

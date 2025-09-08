@@ -1,66 +1,92 @@
 ```mermaid
 graph LR
-    Orchestration_Engine_DiagramGenerator_["Orchestration Engine (DiagramGenerator)"]
-    Pre_Analysis_Stage["Pre-Analysis Stage"]
-    Static_Analysis_Generator["Static Analysis Generator"]
-    Core_Analysis_Driver["Core Analysis Driver"]
-    Component_Processor["Component Processor"]
-    Orchestration_Engine_DiagramGenerator_ -- "orchestrates" --> Pre_Analysis_Stage
-    Orchestration_Engine_DiagramGenerator_ -- "orchestrates" --> Core_Analysis_Driver
-    Pre_Analysis_Stage -- "calls" --> Static_Analysis_Generator
-    Core_Analysis_Driver -- "submits tasks to" --> Component_Processor
+    Orchestration_Engine["Orchestration Engine"]
+    Job_Database["Job Database"]
+    External_Interfaces["External Interfaces"]
+    Repository_Manager["Repository Manager"]
+    Static_Analysis_Engine["Static Analysis Engine"]
+    AI_Interpretation_Layer["AI Interpretation Layer"]
+    Diagram_Generation_Service["Diagram Generation Service"]
+    Output_Generation_Engine["Output Generation Engine"]
+    Unclassified["Unclassified"]
+    External_Interfaces -- "triggers" --> Orchestration_Engine
+    Orchestration_Engine -- "manages" --> Job_Database
+    Orchestration_Engine -- "delegates to" --> Repository_Manager
+    Orchestration_Engine -- "delegates to" --> Static_Analysis_Engine
+    Orchestration_Engine -- "delegates to" --> AI_Interpretation_Layer
+    Orchestration_Engine -- "delegates to" --> Diagram_Generation_Service
+    Orchestration_Engine -- "delegates to" --> Output_Generation_Engine
+    click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
+    click Job_Database href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Job_Database.md" "Details"
+    click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
+    click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
+    click AI_Interpretation_Layer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Layer.md" "Details"
+    click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
 ```
 
-[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The Orchestration Engine subsystem, centered around the DiagramGenerator, manages the entire documentation generation pipeline. It coordinates analysis stages, from pre-analysis and static analysis to core analysis and component-level processing.
+The component analysis is being refined to address the feedback regarding the `Orchestration Engine` and missing destination components. The `Orchestration Engine`'s role is central to the documentation generation pipeline, and its implementation details are crucial for accurate representation.
 
-### Orchestration Engine (DiagramGenerator)
-The central control unit that manages the entire documentation generation pipeline, coordinating all analysis and generation stages. It initializes and manages the lifecycle of all analysis agents.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py#L25-L202" target="_blank" rel="noopener noreferrer">`diagram_analysis.diagram_generator.DiagramGenerator`:25-202</a>
-
-
-### Pre-Analysis Stage
-Performs preparatory steps before the main analysis begins. This includes generating static analysis results and instantiating all the necessary AI agents with their respective contexts.
+### Orchestration Engine [[Expand]](./Orchestration_Engine.md)
+The central component responsible for managing the documentation generation pipeline, including job status and delegating the core generation process to other pipeline stages.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_analysis.diagram_generator.DiagramGenerator:pre_analysis`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L92-L129" target="_blank" rel="noopener noreferrer">`local_app.generate_onboarding`:92-129</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/demo.py#L78-L97" target="_blank" rel="noopener noreferrer">`demo.generate_docs_remote`:78-97</a>
 
 
-### Static Analysis Generator
-Executes the static code analysis phase. It scans the repository for programming languages, creates language-specific LSP clients, and builds static analysis data (references, call graphs, class hierarchies, package dependencies).
+### Job Database [[Expand]](./Job_Database.md)
+Manages the persistence and status of documentation generation jobs.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_analysis.diagram_generator.DiagramGenerator:generate_static_analysis`</a>
-
-
-### Core Analysis Driver
-Drives the core, multi-level analysis process. It checks for updates, performs initial project abstraction, plans the analysis of components by levels, and orchestrates the parallel processing of components.
+### External Interfaces
+Provides API endpoints for interacting with the documentation generation system.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_analysis.diagram_generator.DiagramGenerator:generate_analysis`</a>
-
-
-### Component Processor
-Focuses on the detailed analysis of a single component. It checks for existing analysis, applies feedback if a partial update is needed, and performs a series of detailed analysis steps (sub-CFG, CFG, structure enhancement, analysis) using the DetailsAgent. It then validates the analysis and plans for new components.
+### Repository Manager [[Expand]](./Repository_Manager.md)
+Manages access and retrieval of code repositories for analysis within the documentation generation pipeline.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_analysis.diagram_generator.DiagramGenerator:process_component`</a>
+### Static Analysis Engine [[Expand]](./Static_Analysis_Engine.md)
+Performs static code analysis to extract structural and semantic information from source code.
 
+
+**Related Classes/Methods**: _None_
+
+### AI Interpretation Layer [[Expand]](./AI_Interpretation_Layer.md)
+Interprets analysis results and generates insights using AI models for documentation content.
+
+
+**Related Classes/Methods**: _None_
+
+### Diagram Generation Service
+Generates visual diagrams based on the interpreted code structure and relationships.
+
+
+**Related Classes/Methods**: _None_
+
+### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
+Formats and produces the final documentation output in various formats.
+
+
+**Related Classes/Methods**: _None_
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
 
 
 

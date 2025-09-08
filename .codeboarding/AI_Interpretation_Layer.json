@@ -1,151 +1,113 @@
 {
-  "description": "The CodeBoarding project employs a multi-agent architecture orchestrated by the Orchestrator component (agents.agent.CodeBoardingAgent). This central component manages the entire analysis workflow, from initial project context establishment to the final validation of architectural insights. The process begins with the Orchestrator providing initial project context to the Metadata Analyzer, which then returns high-level project insights. Based on these insights, the Orchestrator directs the Analysis Planner to formulate a strategic analysis plan. For code changes, the Diff Analyzer processes raw diff data, providing focused information back to the Orchestrator. The Detailed Code Analyzer performs in-depth static analysis under the Orchestrator's guidance, generating comprehensive data. This detailed analysis is then fed to the Abstraction Engine, which synthesizes high-level architectural insights. Finally, the Validation Engine verifies these insights, reporting back to the Orchestrator to ensure the integrity and accuracy of the generated architecture.",
+  "description": "The system's architecture is centered around an AI Interpretation Layer orchestrated by the Meta Agent. This layer processes raw code data and repository information, provided by the Static Analysis Engine Component and Repository Management Component, respectively. A suite of Specialized AI Agents (including Abstraction, Details, Planner, Validator, and Diff Analyzer agents) performs targeted analysis under the Meta Agent's guidance. Their diverse outputs are then collected and standardized by the Agent Response Handler, which acts as a crucial intermediary before insights are passed to the Output Generation Layer for producing architectural diagrams and comprehensive documentation. This design ensures a clear separation of concerns, from data acquisition and intelligent analysis to structured output generation.",
   "components": [
     {
-      "name": "Metadata Analyzer",
-      "description": "Analyzes high-level project metadata to establish the initial context for subsequent analysis. It provides foundational information about the codebase.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "agents.meta_agent",
-          "reference_file": "agents/meta_agent.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
-        }
-      ]
+      "name": "Static Analysis Engine Component",
+      "description": "This component is responsible for performing static analysis on the codebase, extracting structural information, control flow graphs (CFG), class hierarchies, and raw source code. It acts as a primary data source for the AI interpretation layer.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
-      "name": "Analysis Planner",
-      "description": "Formulates a strategic plan for the code analysis, identifying key areas or components for deeper inspection based on initial context.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "agents.planner_agent",
-          "reference_file": "agents/planner_agent.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
-        }
-      ]
+      "name": "Repository Management Component",
+      "description": "Manages access to the code repository, providing functionalities like retrieving different versions of the codebase and generating code differences (diffs) between them. It's a crucial data source for analyzing changes.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
-      "name": "Diff Analyzer",
-      "description": "Identifies and processes code changes (diffs) to focus the analysis on modified or new code, optimizing the analysis scope and efficiency.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "agents.diff_analyzer",
-          "reference_file": "agents/diff_analyzer.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
-        }
-      ]
+      "name": "Meta Agent",
+      "description": "The central orchestrator of the AI Interpretation Layer. It determines the overall analysis strategy, sequences the execution of specialized agents, and synthesizes their individual outputs to achieve the analysis goals.",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/meta_agent.py"
+      ],
+      "can_expand": true
     },
     {
-      "name": "Detailed Code Analyzer",
-      "description": "Performs in-depth static analysis, including generating control flow graphs (CFG) and enhancing the structural understanding of the code. This agent delves into the granular details.",
+      "name": "Specialized AI Agents",
+      "description": "This component represents a collection of distinct AI agents, each with a specialized function: `Abstraction Agent` for high-level architectural views, `Details Agent` for fine-grained implementation insights, `Planner Agent` for formulating analysis strategies, `Validator Agent` for ensuring accuracy and consistency, and `Diff Analyzer Agent` for identifying architectural changes from code differences. They process data from the input components under the Meta Agent's guidance.",
       "referenced_source_code": [
         {
-          "qualified_name": "agents.details_agent",
-          "reference_file": "agents/details_agent.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "qualified_name": "agent",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
+          "reference_start_line": 20,
+          "reference_end_line": 136
         }
-      ]
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/details_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/validator_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/abstraction_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/planner_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/prompts.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_source.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file_structure.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/external_deps.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_packages.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_cfg.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/get_method_invocations.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_git_diff.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/utils.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_structure.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_docs.py"
+      ],
+      "can_expand": true
     },
     {
-      "name": "Abstraction Engine",
-      "description": "Transforms detailed code analysis results into high-level architectural insights, identifying components, their responsibilities, and interactions. It's responsible for synthesizing complex data into abstract representations.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "agents.abstraction_agent",
-          "reference_file": "agents/abstraction_agent.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
-        }
-      ]
+      "name": "Agent Response Handler",
+      "description": "Responsible for collecting, standardizing, and managing the structured outputs generated by all specialized AI agents. It ensures that the insights are in a consistent and consumable format for downstream components.",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent_responses.py"
+      ],
+      "can_expand": true
     },
     {
-      "name": "Validation Engine",
-      "description": "Verifies the accuracy, consistency, and completeness of the identified architectural components, their relationships, and code references against the source code. Ensures the integrity of the generated insights.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "agents.validator_agent",
-          "reference_file": "agents/validator_agent.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
-        }
-      ]
+      "name": "Output Generation Layer",
+      "description": "This layer consumes the standardized outputs from the `Agent Response Handler`. It includes components like the `Diagram Analysis Component` for generating visual architectural diagrams and the `Output Generation Engine Component` for producing various forms of documentation and reports.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
-      "name": "Orchestrator",
-      "description": "Central coordinator, managing the flow of data and control between AI agents.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "agents.agent.CodeBoardingAgent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
-          "reference_start_line": 27,
-          "reference_end_line": 207
-        }
-      ]
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     }
   ],
   "components_relations": [
     {
-      "relation": "Provides initial project context.",
-      "src_name": "Orchestrator",
-      "dst_name": "Metadata Analyzer"
+      "relation": "Provides data to",
+      "src_name": "Static Analysis Engine Component",
+      "dst_name": "Specialized AI Agents"
     },
     {
-      "relation": "Returns high-level project insights.",
-      "src_name": "Metadata Analyzer",
-      "dst_name": "Orchestrator"
+      "relation": "Provides data to",
+      "src_name": "Repository Management Component",
+      "dst_name": "Specialized AI Agents"
     },
     {
-      "relation": "Provides context for strategic planning.",
-      "src_name": "Orchestrator",
-      "dst_name": "Analysis Planner"
+      "relation": "Orchestrates",
+      "src_name": "Meta Agent",
+      "dst_name": "Specialized AI Agents"
     },
     {
-      "relation": "Outputs a strategic analysis plan.",
-      "src_name": "Analysis Planner",
-      "dst_name": "Orchestrator"
+      "relation": "Produces outputs for",
+      "src_name": "Specialized AI Agents",
+      "dst_name": "Agent Response Handler"
     },
     {
-      "relation": "Provides raw code change data.",
-      "src_name": "Orchestrator",
-      "dst_name": "Diff Analyzer"
-    },
-    {
-      "relation": "Provides filtered and focused code information.",
-      "src_name": "Diff Analyzer",
-      "dst_name": "Orchestrator"
-    },
-    {
-      "relation": "Provides instructions and scope for in-depth analysis.",
-      "src_name": "Orchestrator",
-      "dst_name": "Detailed Code Analyzer"
-    },
-    {
-      "relation": "Outputs comprehensive static analysis data.",
-      "src_name": "Detailed Code Analyzer",
-      "dst_name": "Orchestrator"
-    },
-    {
-      "relation": "Provides detailed code analysis results.",
-      "src_name": "Orchestrator",
-      "dst_name": "Abstraction Engine"
-    },
-    {
-      "relation": "Outputs high-level architectural insights.",
-      "src_name": "Abstraction Engine",
-      "dst_name": "Orchestrator"
-    },
-    {
-      "relation": "Provides identified architectural insights.",
-      "src_name": "Orchestrator",
-      "dst_name": "Validation Engine"
-    },
-    {
-      "relation": "Provides validation reports and feedback.",
-      "src_name": "Validation Engine",
-      "dst_name": "Orchestrator"
+      "relation": "Provides outputs to",
+      "src_name": "Agent Response Handler",
+      "dst_name": "Output Generation Layer"
     }
   ]
 }

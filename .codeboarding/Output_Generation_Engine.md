@@ -1,26 +1,30 @@
 ```mermaid
 graph LR
     Output_Generation_Engine["Output Generation Engine"]
-    Markdown_Generator["Markdown Generator"]
-    HTML_Generator["HTML Generator"]
-    MDX_Generator["MDX Generator"]
-    Sphinx_Generator["Sphinx Generator"]
+    HTMLGenerator["HTMLGenerator"]
+    MarkdownGenerator["MarkdownGenerator"]
+    MDXGenerator["MDXGenerator"]
+    SphinxGenerator["SphinxGenerator"]
+    GitHubActionOutputFormatter["GitHubActionOutputFormatter"]
     HTML_Template_Populator["HTML Template Populator"]
-    Output_Generation_Engine -- "orchestrates" --> Markdown_Generator
-    Output_Generation_Engine -- "orchestrates" --> HTML_Generator
-    Output_Generation_Engine -- "orchestrates" --> MDX_Generator
-    Output_Generation_Engine -- "orchestrates" --> Sphinx_Generator
-    HTML_Generator -- "provides data to" --> HTML_Template_Populator
-    Output_Generation_Engine -- "clones repository" --> Repository_Utilities
-    Output_Generation_Engine -- "generates analysis with" --> Diagram_Generator
+    Unclassified["Unclassified"]
+    Output_Generation_Engine -- "orchestrates" --> HTMLGenerator
+    Output_Generation_Engine -- "orchestrates" --> MarkdownGenerator
+    Output_Generation_Engine -- "orchestrates" --> MDXGenerator
+    Output_Generation_Engine -- "orchestrates" --> SphinxGenerator
+    Output_Generation_Engine -- "uses" --> GitHubActionOutputFormatter
+    HTMLGenerator -- "provides data to" --> HTML_Template_Populator
+    GitHubActionOutputFormatter -- "uses" --> HTMLGenerator
+    GitHubActionOutputFormatter -- "uses" --> MarkdownGenerator
+    GitHubActionOutputFormatter -- "uses" --> MDXGenerator
     click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
 ```
 
-[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/GeneratedOnBoardings)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/demo)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The documentation generation process is orchestrated by the `Output Generation Engine`, primarily implemented in `demo.py`. This engine is responsible for cloning the target Git repository using `Repository Utilities` and then initiating the architectural analysis through the `Diagram Generator`. Once the analysis is complete, the `Output Generation Engine` dispatches the generation of documentation to various specialized generators, including the `Markdown Generator`, `HTML Generator`, `MDX Generator`, and `Sphinx Generator`, based on the desired output format. The `HTML Generator` further interacts with the `HTML Template Populator` to produce interactive HTML documentation. This modular design allows for flexible and extensible documentation generation across different formats.
+The Output Generation Engine subsystem is responsible for transforming processed architectural insights into various documentation formats. It orchestrates specialized generators for HTML, Markdown, MDX, and Sphinx, ensuring that the insights are presented in a structured and accessible manner. The GitHubActionOutputFormatter then adapts these outputs for seamless integration into GitHub Actions workflows. This modular design allows for flexible and extensible documentation generation across different platforms and tools.
 
 ### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
 The primary component responsible for orchestrating the overall process of generating documentation in various formats. It handles repository cloning, initiates the analysis generation, and dispatches the actual documentation generation to specific format generators based on the desired output.
@@ -32,45 +36,47 @@ The primary component responsible for orchestrating the overall process of gener
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/demo.py#L82-L101" target="_blank" rel="noopener noreferrer">`demo.py`:82-101</a>
 
 
-### Markdown Generator
-Generates standard Markdown documentation, including embedded Mermaid diagrams and basic component details, making the architectural insights easily readable in Markdown viewers.
+### HTMLGenerator
+This component is dedicated to converting the processed architectural insights into a structured HTML format. It handles the rendering of diagrams, text, and other elements into web-friendly documentation. It prepares data (e.g., Cytoscape.js compatible JSON) for interactive architectural diagrams.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
+
+### MarkdownGenerator
+Responsible for generating documentation in standard Markdown format. This component ensures that architectural insights are presented in a widely compatible and easily readable text-based format, suitable for various platforms and tools. It includes embedded Mermaid diagrams and basic component details.
 
 
+**Related Classes/Methods**: _None_
 
-### HTML Generator
-Creates standalone HTML documentation, specifically preparing data (e.g., Cytoscape.js compatible JSON) for interactive architectural diagrams.
-
-
-**Related Classes/Methods**:
+### MDXGenerator
+This component extends Markdown generation by incorporating JSX capabilities, allowing for more dynamic and interactive documentation. It transforms insights into MDX, enabling the embedding of React components within the documentation, including Mermaid diagrams and frontmatter.
 
 
+**Related Classes/Methods**: _None_
 
-### MDX Generator
-Produces MDX (Markdown with JSX) files, incorporating Mermaid diagrams and frontmatter for rich, interactive documentation experiences, suitable for modern documentation sites.
-
-
-**Related Classes/Methods**:
+### SphinxGenerator
+Focuses on generating documentation in reStructuredText (RST) format, specifically tailored for use with the Sphinx documentation generator. This component ensures compatibility with Sphinx's powerful features for technical documentation, including embedded Mermaid diagrams and structured component information.
 
 
+**Related Classes/Methods**: _None_
 
-### Sphinx Generator
-Generates reStructuredText (RST) formatted documentation, including embedded Mermaid diagrams and structured component information, suitable for Sphinx documentation projects.
-
-
-**Related Classes/Methods**:
+### GitHubActionOutputFormatter
+This component acts as an integration layer, specifically formatting and preparing the generated documentation for consumption within GitHub Actions workflows. It leverages the capabilities of the other generators (HTML, Markdown, MDX) to produce output suitable for GitHub's environment.
 
 
+**Related Classes/Methods**: _None_
 
 ### HTML Template Populator
 Integrates generated architectural data (like Cytoscape JSON and component-specific HTML snippets) into a predefined HTML template to produce the final, complete, and styled HTML output.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
 
 
+**Related Classes/Methods**: _None_
 
 
 

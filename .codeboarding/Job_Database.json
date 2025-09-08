@@ -1,69 +1,47 @@
 {
-  "description": "One paragraph explaining the functionality which is represented by this graph. What the main flow is and what is its purpose.",
+  "description": "This analysis aims to identify and define the `duckdb_crud` component, which is currently well-defined in terms of its purpose but lacks specific source code references. The analysis also seeks to incorporate related components, `Job Orchestrator` and `DuckDB Database`, which are currently missing from the analysis. The main flow involves examining the file structure of relevant directories to locate potential source files for `duckdb_crud` to ensure all related components are properly defined and validated.",
   "components": [
     {
-      "name": "Job Data Store Manager",
-      "description": "This component is the core of the `Job Database` subsystem. It is responsible for the complete lifecycle management of documentation generation jobs, including their status, progress, and results. It provides a comprehensive set of CRUD (Create, Read, Update, Delete) operations for job metadata, ensuring data persistence and retrieval using a DuckDB database. It also handles the underlying database connection management and schema initialization. This component aligns with the \"Data Store/Cache\" expected component pattern, providing the necessary persistence for the pipeline's state.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "duckdb_crud.init_db",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
-          "reference_start_line": 15,
-          "reference_end_line": 44
-        },
-        {
-          "qualified_name": "duckdb_crud.insert_job",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
-          "reference_start_line": 48,
-          "reference_end_line": 58
-        },
-        {
-          "qualified_name": "duckdb_crud.update_job",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
-          "reference_start_line": 61,
-          "reference_end_line": 70
-        },
-        {
-          "qualified_name": "duckdb_crud.fetch_job",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
-          "reference_start_line": 73,
-          "reference_end_line": 93
-        },
-        {
-          "qualified_name": "duckdb_crud.fetch_all_jobs",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
-          "reference_start_line": 96,
-          "reference_end_line": 117
-        },
-        {
-          "qualified_name": "duckdb_crud._connect",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
-          "reference_start_line": 11,
-          "reference_end_line": 12
-        }
-      ]
+      "name": "duckdb_crud",
+      "description": "A component responsible for CRUD operations on DuckDB, currently lacking specific source code references.",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py"
+      ],
+      "can_expand": true
     },
     {
-      "name": "Orchestrator",
-      "description": "The central coordinator of the documentation generation pipeline.",
-      "referenced_source_code": []
+      "name": "Job Orchestrator",
+      "description": "A component related to `duckdb_crud`, currently not present in the analysis.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     },
     {
-      "name": "API Service",
-      "description": "The external interface of the tool.",
-      "referenced_source_code": []
+      "name": "DuckDB Database",
+      "description": "A database component related to `duckdb_crud`, currently not present in the analysis.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     }
   ],
   "components_relations": [
     {
-      "relation": "interacts with",
-      "src_name": "Orchestrator",
-      "dst_name": "Job Data Store Manager"
+      "relation": "related to",
+      "src_name": "duckdb_crud",
+      "dst_name": "Job Orchestrator"
     },
     {
-      "relation": "interacts with",
-      "src_name": "API Service",
-      "dst_name": "Job Data Store Manager"
+      "relation": "related to",
+      "src_name": "duckdb_crud",
+      "dst_name": "DuckDB Database"
     }
   ]
 }

@@ -1,87 +1,123 @@
 {
-  "description": "The Orchestration Engine subsystem, centered around the DiagramGenerator, manages the entire documentation generation pipeline. It coordinates analysis stages, from pre-analysis and static analysis to core analysis and component-level processing.",
+  "description": "The component analysis is being refined to address the feedback regarding the `Orchestration Engine` and missing destination components. The `Orchestration Engine`'s role is central to the documentation generation pipeline, and its implementation details are crucial for accurate representation.",
   "components": [
     {
-      "name": "Orchestration Engine (DiagramGenerator)",
-      "description": "The central control unit that manages the entire documentation generation pipeline, coordinating all analysis and generation stages. It initializes and manages the lifecycle of all analysis agents.",
+      "name": "Orchestration Engine",
+      "description": "The central component responsible for managing the documentation generation pipeline, including job status and delegating the core generation process to other pipeline stages.",
       "referenced_source_code": [
         {
-          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 25,
-          "reference_end_line": 202
+          "qualified_name": "local_app.generate_onboarding",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 92,
+          "reference_end_line": 129
+        },
+        {
+          "qualified_name": "demo.generate_docs_remote",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
+          "reference_start_line": 78,
+          "reference_end_line": 97
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
-      "name": "Pre-Analysis Stage",
-      "description": "Performs preparatory steps before the main analysis begins. This includes generating static analysis results and instantiating all the necessary AI agents with their respective contexts.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator:pre_analysis",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        }
-      ]
+      "name": "Job Database",
+      "description": "Manages the persistence and status of documentation generation jobs.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
-      "name": "Static Analysis Generator",
-      "description": "Executes the static code analysis phase. It scans the repository for programming languages, creates language-specific LSP clients, and builds static analysis data (references, call graphs, class hierarchies, package dependencies).",
-      "referenced_source_code": [
-        {
-          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator:generate_static_analysis",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        }
-      ]
+      "name": "External Interfaces",
+      "description": "Provides API endpoints for interacting with the documentation generation system.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
-      "name": "Core Analysis Driver",
-      "description": "Drives the core, multi-level analysis process. It checks for updates, performs initial project abstraction, plans the analysis of components by levels, and orchestrates the parallel processing of components.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator:generate_analysis",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        }
-      ]
+      "name": "Repository Manager",
+      "description": "Manages access and retrieval of code repositories for analysis within the documentation generation pipeline.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
-      "name": "Component Processor",
-      "description": "Focuses on the detailed analysis of a single component. It checks for existing analysis, applies feedback if a partial update is needed, and performs a series of detailed analysis steps (sub-CFG, CFG, structure enhancement, analysis) using the DetailsAgent. It then validates the analysis and plans for new components.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "diagram_analysis.diagram_generator.DiagramGenerator:process_component",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        }
-      ]
+      "name": "Static Analysis Engine",
+      "description": "Performs static code analysis to extract structural and semantic information from source code.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
+    },
+    {
+      "name": "AI Interpretation Layer",
+      "description": "Interprets analysis results and generates insights using AI models for documentation content.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
+    },
+    {
+      "name": "Diagram Generation Service",
+      "description": "Generates visual diagrams based on the interpreted code structure and relationships.",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/analysis_json.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/version.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Output Generation Engine",
+      "description": "Formats and produces the final documentation output in various formats.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     }
   ],
   "components_relations": [
     {
-      "relation": "orchestrates",
-      "src_name": "Orchestration Engine (DiagramGenerator)",
-      "dst_name": "Pre-Analysis Stage"
+      "relation": "triggers",
+      "src_name": "External Interfaces",
+      "dst_name": "Orchestration Engine"
     },
     {
-      "relation": "orchestrates",
-      "src_name": "Orchestration Engine (DiagramGenerator)",
-      "dst_name": "Core Analysis Driver"
+      "relation": "manages",
+      "src_name": "Orchestration Engine",
+      "dst_name": "Job Database"
     },
     {
-      "relation": "calls",
-      "src_name": "Pre-Analysis Stage",
-      "dst_name": "Static Analysis Generator"
+      "relation": "delegates to",
+      "src_name": "Orchestration Engine",
+      "dst_name": "Repository Manager"
     },
     {
-      "relation": "submits tasks to",
-      "src_name": "Core Analysis Driver",
-      "dst_name": "Component Processor"
+      "relation": "delegates to",
+      "src_name": "Orchestration Engine",
+      "dst_name": "Static Analysis Engine"
+    },
+    {
+      "relation": "delegates to",
+      "src_name": "Orchestration Engine",
+      "dst_name": "AI Interpretation Layer"
+    },
+    {
+      "relation": "delegates to",
+      "src_name": "Orchestration Engine",
+      "dst_name": "Diagram Generation Service"
+    },
+    {
+      "relation": "delegates to",
+      "src_name": "Orchestration Engine",
+      "dst_name": "Output Generation Engine"
     }
   ]
 }

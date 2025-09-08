@@ -1,5 +1,5 @@
 {
-  "description": "The `Static Analysis Engine` subsystem is primarily encapsulated within the `static_analyzer` package. Its core components include the `scanner` module for initial project scanning and the `lsp_client` subpackage, which handles Language Server Protocol (LSP) communication for detailed code analysis.",
+  "description": "The static analysis subsystem is designed to systematically extract comprehensive code intelligence from a project. It starts with the `ProjectScanner` component, which is responsible for initial project introspection and file identification. The identified files are then handed over to language-specific analysis clients, primarily the `LSPClient` and its specialized extension, `TypeScriptClient`. These clients leverage the Language Server Protocol to perform deep static analysis, generating detailed insights into the codebase, such as call graphs, class hierarchies, and symbol references. All the generated analysis data is then consolidated and managed by the `StaticAnalysisResults` component, which acts as a central, language-agnostic repository for structured analysis outcomes, making them readily available for subsequent processing and consumption by other parts of the system.",
   "components": [
     {
       "name": "ProjectScanner",
@@ -11,23 +11,32 @@
           "reference_start_line": 13,
           "reference_end_line": 66
         }
-      ]
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/programming_language.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py"
+      ],
+      "can_expand": true
     },
     {
       "name": "LSPClient",
-      "description": "Serves as the generic Language Server Protocol client. It manages the communication lifecycle with an LSP server (initialization, sending requests, receiving responses, shutdown). It orchestrates the detailed static analysis for individual files and the entire workspace, extracting symbols, imports, call graphs, and class hierarchies.",
+      "description": "Serves as the generic Language Server Protocol client. It manages the communication lifecycle with an LSP server (initialization, sending requests, receiving responses, shutdown). It orchestrates the detailed static analysis for individual files and the entire workspace, extracting symbols, imports, call graphs, and class hierarchies. It populates the `StaticAnalysisResults` with its findings.",
       "referenced_source_code": [
         {
           "qualified_name": "LSPClient",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py",
           "reference_start_line": 37,
-          "reference_end_line": 923
+          "reference_end_line": 924
         }
-      ]
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py"
+      ],
+      "can_expand": true
     },
     {
       "name": "TypeScriptClient",
-      "description": "A specialized implementation of `LSPClient` tailored for TypeScript projects. It handles TypeScript-specific initialization parameters, workspace configuration (e.g., processing `tsconfig.json`), and file discovery, ensuring the LSP server is correctly set up for TypeScript analysis. This component exemplifies the extensibility of the static analysis engine for different programming languages.",
+      "description": "A specialized implementation of `LSPClient` tailored for TypeScript projects. It handles TypeScript-specific initialization parameters, workspace configuration (e.g., processing `tsconfig.json`), and file discovery, ensuring the LSP server is correctly set up for TypeScript analysis. This component exemplifies the extensibility of the static analysis engine for different programming languages and also populates `StaticAnalysisResults`.",
       "referenced_source_code": [
         {
           "qualified_name": "TypeScriptClient",
@@ -35,19 +44,38 @@
           "reference_start_line": 10,
           "reference_end_line": 214
         }
-      ]
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/typescript_client.py"
+      ],
+      "can_expand": true
     },
     {
-      "name": "FileAnalysisResult",
-      "description": "A data structure used to encapsulate the comprehensive static analysis results for a single source file. It stores extracted information such as imports, symbols (functions, classes), call relationships, class hierarchies, and external references. This acts as the structured output of the static analysis phase.",
+      "name": "StaticAnalysisResults",
+      "description": "This central component acts as a repository for all aggregated static analysis results across different programming languages. It collects and manages various types of analysis data, including class hierarchies, control flow graphs, package dependencies, and source code references, provided by the LSP clients. It offers methods to add and retrieve these structured results for downstream processing and consumption.",
       "referenced_source_code": [
         {
-          "qualified_name": "FileAnalysisResult",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py",
-          "reference_start_line": 22,
-          "reference_end_line": 34
+          "qualified_name": "StaticAnalysisResults",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/analysis_result.py",
+          "reference_start_line": 6,
+          "reference_end_line": 171
         }
-      ]
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/graph.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/analysis_result.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/__init__.py"
+      ],
+      "can_expand": false
     }
   ],
   "components_relations": [
@@ -64,7 +92,7 @@
     {
       "relation": "populates",
       "src_name": "LSPClient",
-      "dst_name": "FileAnalysisResult"
+      "dst_name": "StaticAnalysisResults"
     },
     {
       "relation": "extends",
@@ -74,7 +102,7 @@
     {
       "relation": "populates",
       "src_name": "TypeScriptClient",
-      "dst_name": "FileAnalysisResult"
+      "dst_name": "StaticAnalysisResults"
     }
   ]
 }
