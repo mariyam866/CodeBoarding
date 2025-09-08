@@ -7,11 +7,13 @@
       "referenced_source_code": [
         {
           "qualified_name": "langchain_core.embeddings.Embeddings:embed_query",
-          "reference_file": "langchain_core.embeddings.Embeddings:embed_query",
+          "reference_file": "",
           "reference_start_line": 100,
           "reference_end_line": 110
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": false
     },
     {
       "name": "VectorStore",
@@ -23,7 +25,9 @@
           "reference_start_line": 200,
           "reference_end_line": 250
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "DocumentRetriever",
@@ -31,11 +35,13 @@
       "referenced_source_code": [
         {
           "qualified_name": "langchain_core.retrievers.BaseRetriever:get_relevant_documents",
-          "reference_file": "langchain_core.retrievers.BaseRetriever:get_relevant_documents",
+          "reference_file": "langchain_core.retrievers.BaseRetriever.get_relevant_documents",
           "reference_start_line": 50,
           "reference_end_line": 70
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "ResponseGenerator",
@@ -43,16 +49,22 @@
       "referenced_source_code": [
         {
           "qualified_name": "langchain_core.language_models.llms.BaseLLM:invoke",
-          "reference_file": "I cannot identify the reference file without the list of files you are referring to. Please provide the list of files so I can proceed with the analysis.",
+          "reference_file": "langchain_core.language_models.llms.BaseLLM:invoke",
           "reference_start_line": 150,
           "reference_end_line": 180
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": []
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py"
+      ],
+      "can_expand": false
     }
   ],
   "components_relations": [

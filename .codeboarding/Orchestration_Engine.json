@@ -4,70 +4,47 @@
     {
       "name": "Orchestration Engine",
       "description": "The central component responsible for managing the documentation generation pipeline, including job status and delegating the core generation process to other pipeline stages.",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "Job Database",
       "description": "Manages the persistence and status of documentation generation jobs.",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "External Interfaces",
       "description": "Provides API endpoints for interacting with the documentation generation system.",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "Repository Manager",
       "description": "Manages access and retrieval of code repositories for analysis within the documentation generation pipeline.",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "Static Analysis Engine",
       "description": "Performs advanced static code analysis to extract detailed structural and semantic information from source code. Recent enhancements have refined its internal logic, potentially leading to improved accuracy, performance, or the ability to analyze new language constructs and complex patterns.",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "AI Interpretation Layer",
       "description": "Interprets analysis results and generates insights using AI models for documentation content.",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "Diagram Generation Service",
       "description": "Generates visual diagrams based on the interpreted code structure and relationships.",
-      "referenced_source_code": [],
-      "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/__init__.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/analysis_json.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/version.py"
-      ],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "Output Generation Engine",
       "description": "Formats and produces the final documentation output in various formats.",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [

@@ -184,6 +184,71 @@ Component for all unclassified files and utility functions (Utility functions/Ex
 
 ```mermaid
 graph LR
+    QueryProcessor["QueryProcessor"]
+    VectorStore["VectorStore"]
+    DocumentRetriever["DocumentRetriever"]
+    ResponseGenerator["ResponseGenerator"]
+    Unclassified["Unclassified"]
+    QueryProcessor -- "sends query to" --> VectorStore
+    DocumentRetriever -- "retrieves from" --> VectorStore
+    DocumentRetriever -- "sends documents to" --> ResponseGenerator
+    QueryProcessor -- "sends query and documents to" --> ResponseGenerator
+```
+
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
+
+## Details
+
+This graph represents the core functionality of a LangChain-based application that processes user queries, retrieves relevant documents, and generates responses. The main flow involves receiving a query, embedding it, searching a vector store, retrieving documents, and then using a language model to synthesize an answer based on the query and retrieved information. Its purpose is to provide an intelligent question-answering system over a corpus of documents.
+
+### QueryProcessor
+Handles incoming user queries, embeds them, and prepares them for similarity search.
+
+
+**Related Classes/Methods**:
+
+
+
+### VectorStore
+Stores and retrieves document embeddings based on similarity search.
+
+
+**Related Classes/Methods**:
+
+- `langchain_community.vectorstores.chroma.Chroma:similarity_search`:200-250
+
+
+### DocumentRetriever
+Retrieves relevant documents from the vector store.
+
+
+**Related Classes/Methods**:
+
+- `langchain_core.retrievers.BaseRetriever:get_relevant_documents`:50-70
+
+
+### ResponseGenerator
+Generates a natural language response using a large language model based on the query and retrieved documents.
+
+
+**Related Classes/Methods**:
+
+- `langchain_core.language_models.llms.BaseLLM:invoke`:150-180
+
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
+
+
+
+### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
+
+
+```mermaid
+graph LR
     Orchestration_Engine["Orchestration Engine"]
     Job_Database["Job Database"]
     External_Interfaces["External Interfaces"]
@@ -204,7 +269,7 @@ graph LR
     Orchestration_Engine -- "coordinates" --> Output_Generation_Engine
     Orchestration_Engine -- "delegates to" --> AI_Interpretation_Layer
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
-    click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
+    click Job_Database href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Job_Database.md" "Details"
     click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
     click AI_Interpretation_Layer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Layer.md" "Details"
     click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
@@ -222,7 +287,7 @@ The central component responsible for managing the documentation generation pipe
 
 **Related Classes/Methods**: _None_
 
-### Job Database
+### Job Database [[Expand]](./Job_Database.md)
 Manages the persistence and status of documentation generation jobs.
 
 
@@ -234,7 +299,7 @@ Provides API endpoints for interacting with the documentation generation system.
 
 **Related Classes/Methods**: _None_
 
-### Repository Manager [[Expand]](./Repository_Manager.md)
+### Repository Manager
 Manages access and retrieval of code repositories for analysis within the documentation generation pipeline.
 
 
@@ -371,70 +436,6 @@ Component for all unclassified files and utility functions (Utility functions/Ex
 
 ```mermaid
 graph LR
-    Repository_Manager["Repository Manager"]
-    Repository_Operations_Handler["Repository Operations Handler"]
-    Git_Diff_Extractor["Git Diff Extractor"]
-    Agent_Orchestrator["Agent Orchestrator"]
-    Static_Analyzer["Static Analyzer"]
-    Unclassified["Unclassified"]
-    Agent_Orchestrator -- "initiates repository-related tasks by consuming services from" --> Repository_Manager
-    Repository_Manager -- "delegates low-level Git operations to" --> Repository_Operations_Handler
-    Repository_Manager -- "utilizes to obtain and process code differences" --> Git_Diff_Extractor
-    Git_Diff_Extractor -- "relies on for underlying repository access and operations to perform diffs" --> Repository_Operations_Handler
-    Agent_Orchestrator -- "orchestrates to perform code analysis tasks" --> Static_Analyzer
-    Static_Analyzer -- "provides analysis results back to for further processing and response generation" --> Agent_Orchestrator
-    click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
-```
-
-[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
-
-## Details
-
-The system's architecture is centered around the Agent Orchestrator, which manages the overall agent-based processing workflow. It interacts with the Repository Manager to handle all source code repository operations, including cloning, checking out, and extracting code differences. The Repository Manager in turn delegates specific tasks to the Repository Operations Handler for low-level Git commands and the Git Diff Extractor for detailed code change analysis. Once repository data is prepared, the Agent Orchestrator orchestrates the Static Analyzer to perform in-depth static analysis, identifying code patterns, building graphs, and extracting structural information. The Static Analyzer then returns its findings to the Agent Orchestrator, which uses these results to generate refined responses. This modular design ensures clear separation of concerns, with the Static Analyzer's internal mechanisms recently enhanced to provide more robust analysis capabilities.
-
-### Repository Manager [[Expand]](./Repository_Manager.md)
-Orchestrates all interactions with source code repositories, providing a unified interface for cloning, checking out versions, and initiating diff operations. It delegates specific tasks to its sub-components.
-
-
-**Related Classes/Methods**: _None_
-
-### Repository Operations Handler
-Manages fundamental, low-level operations related to local Git repositories, including cloning, checking out, sanitizing URLs, verifying remotes, and retrieving essential repository metadata.
-
-
-**Related Classes/Methods**: _None_
-
-### Git Diff Extractor
-Focuses on extracting and processing file and line-level differences between codebase versions within a Git repository, structuring this information for further analysis.
-
-
-**Related Classes/Methods**: _None_
-
-### Agent Orchestrator
-Manages the overall agent-based processing logic, consuming data from the Repository Manager and orchestrating operations with the Static Analyzer. It processes repository information and generates refined responses.
-
-
-**Related Classes/Methods**: _None_
-
-### Static Analyzer
-Performs various static analysis tasks on source code provided by the Agent Orchestrator. It processes code to identify patterns, build graphs, and extract structural information. Recent internal refinements within scanner.py have enhanced its capabilities in these areas.
-
-
-**Related Classes/Methods**: _None_
-
-### Unclassified
-Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
-
-
-**Related Classes/Methods**: _None_
-
-
-
-### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
-
-
-```mermaid
-graph LR
     ProjectScanner["ProjectScanner"]
     LSPClient["LSPClient"]
     TypeScriptClient["TypeScriptClient"]
@@ -517,6 +518,7 @@ graph LR
     Output_Generation_Engine["Output Generation Engine"]
     Unclassified["Unclassified"]
     Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
     API_Service -- "Initiates Job" --> Job_Database
     API_Service -- "Triggers Analysis" --> Orchestration_Engine
     Orchestration_Engine -- "Manages Job State" --> Job_Database
@@ -530,8 +532,8 @@ graph LR
     Orchestration_Engine -- "Passes Enhanced Insights for Generation" --> Output_Generation_Engine
     Output_Generation_Engine -- "Delivers Documentation" --> API_Service
     click API_Service href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/API_Service.md" "Details"
+    click Job_Database href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Job_Database.md" "Details"
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
-    click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
     click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
     click AI_Interpretation_Layer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Layer.md" "Details"
     click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
@@ -552,7 +554,7 @@ The external interface for CodeBoarding, handling user requests, job initiation,
 - `local_app`
 
 
-### Job Database
+### Job Database [[Expand]](./Job_Database.md)
 Persistent storage for managing the lifecycle, status, and results of all documentation generation jobs.
 
 
@@ -570,7 +572,7 @@ The central control unit that manages the entire documentation generation pipeli
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_generator`</a>
 
 
-### Repository Manager [[Expand]](./Repository_Manager.md)
+### Repository Manager
 Manages all interactions with source code repositories, including cloning, fetching, and extracting version differences.
 
 
@@ -620,6 +622,12 @@ Transforms the final, validated architectural insights into various human-readab
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/sphinx.py" target="_blank" rel="noopener noreferrer">`sphinx`</a>
 - `github_action`
 
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)

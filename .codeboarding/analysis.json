@@ -31,7 +31,7 @@
       "assigned_files": [
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py"
       ],
-      "can_expand": false
+      "can_expand": true
     },
     {
       "name": "Orchestration Engine",
@@ -45,10 +45,8 @@
         }
       ],
       "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/__init__.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/analysis_json.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/version.py"
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/__init__.py"
       ],
       "can_expand": true
     },
@@ -74,7 +72,7 @@
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/git_diff.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/errors.py"
       ],
-      "can_expand": true
+      "can_expand": false
     },
     {
       "name": "Static Analysis Engine",
@@ -192,7 +190,8 @@
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/utils.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_structure.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_docs.py"
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_docs.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/analysis_json.py"
       ],
       "can_expand": true
     },
@@ -251,8 +250,16 @@
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/vscode_runnable.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/utils.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/logging_config.py"
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/logging_config.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/version.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     },
     {
