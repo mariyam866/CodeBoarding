@@ -16,11 +16,11 @@ VSCODE_CONFIG = {
         }
     },
     "tools": {
-        "github_linguist": {
-            "name": "GitHub Linguist",
-            "command": ["github-linguist", "-b", "-j"],
+        "tokei": {
+            "name": "tokei",
+            "command": ["tokei", "-o", "json"],
             "description": "Analyze repository languages and file types",
-            "install_command": "gem install github-linguist",
+            "install_command": "conda install -c conda-forge tokei",
             "output_format": "json"
         }
     }

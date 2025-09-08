@@ -79,6 +79,9 @@ def main():
     for lang, server in VSCODE_CONFIG["lsp_servers"].items():
         server['command'][0] = str(Path(args.binary_location) / server['command'][0])
 
+    for tool, tool_info in VSCODE_CONFIG["tools"].items():
+        tool_info['command'][0] = str(Path(args.binary_location) / tool_info['command'][0])
+
     if args.partial_updates_component and args.partial_updates_analysis:
         partial_updates(args.partial_updates_component, args.partial_updates_analysis)
     else:
