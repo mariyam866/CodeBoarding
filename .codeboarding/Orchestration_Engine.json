@@ -1,23 +1,10 @@
 {
-  "description": "The component analysis is being refined to address the feedback regarding the `Orchestration Engine` and missing destination components. The `Orchestration Engine`'s role is central to the documentation generation pipeline, and its implementation details are crucial for accurate representation.",
+  "description": "The system is orchestrated by the `Orchestration Engine`, which manages the end-to-end process of generating documentation. This engine interacts with `External Interfaces` to initiate jobs and persists job status in the `Job Database`. For code analysis, it delegates to the `Repository Manager` to access source code, which is then fed into the `Static Analysis Engine`. The `Static Analysis Engine` performs in-depth structural and semantic analysis, with recent updates significantly enhancing its internal logic and capabilities for extracting richer code insights. The results from static analysis are then passed to the `AI Interpretation Layer` for generating high-level insights and content. Subsequently, the `Diagram Generation Service` creates visual representations, and the `Output Generation Engine` compiles the final documentation. The CodeBoarding system is structured around an `Orchestration Engine` that manages the entire documentation generation workflow. This engine is initiated via `External Interfaces` and maintains job states in a `Job Database`. It delegates core tasks to specialized components: the `Repository Manager` for code retrieval, and the `Static Analysis Engine` for in-depth code analysis. The `Static Analysis Engine`, recently enhanced for more sophisticated analysis, feeds its findings to the `AI Interpretation Layer`. This layer processes the analysis to generate documentation content and insights, which are then used by the `Diagram Generation Service` for visual representations and the `Output Generation Engine` for final documentation production.",
   "components": [
     {
       "name": "Orchestration Engine",
       "description": "The central component responsible for managing the documentation generation pipeline, including job status and delegating the core generation process to other pipeline stages.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "local_app.generate_onboarding",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 92,
-          "reference_end_line": 129
-        },
-        {
-          "qualified_name": "demo.generate_docs_remote",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
-          "reference_start_line": 78,
-          "reference_end_line": 97
-        }
-      ],
+      "referenced_source_code": [],
       "assigned_files": [],
       "can_expand": true
     },
@@ -44,7 +31,7 @@
     },
     {
       "name": "Static Analysis Engine",
-      "description": "Performs static code analysis to extract structural and semantic information from source code.",
+      "description": "Performs advanced static code analysis to extract detailed structural and semantic information from source code. Recent enhancements have refined its internal logic, potentially leading to improved accuracy, performance, or the ability to analyze new language constructs and complex patterns.",
       "referenced_source_code": [],
       "assigned_files": [],
       "can_expand": true
@@ -73,7 +60,7 @@
       "description": "Formats and produces the final documentation output in various formats.",
       "referenced_source_code": [],
       "assigned_files": [],
-      "can_expand": false
+      "can_expand": true
     },
     {
       "name": "Unclassified",
@@ -105,19 +92,34 @@
       "dst_name": "Static Analysis Engine"
     },
     {
-      "relation": "delegates to",
-      "src_name": "Orchestration Engine",
+      "relation": "provides analysis to",
+      "src_name": "Static Analysis Engine",
       "dst_name": "AI Interpretation Layer"
     },
     {
-      "relation": "delegates to",
+      "relation": "informs",
+      "src_name": "AI Interpretation Layer",
+      "dst_name": "Diagram Generation Service"
+    },
+    {
+      "relation": "provides content to",
+      "src_name": "AI Interpretation Layer",
+      "dst_name": "Output Generation Engine"
+    },
+    {
+      "relation": "coordinates",
       "src_name": "Orchestration Engine",
       "dst_name": "Diagram Generation Service"
     },
     {
-      "relation": "delegates to",
+      "relation": "coordinates",
       "src_name": "Orchestration Engine",
       "dst_name": "Output Generation Engine"
+    },
+    {
+      "relation": "delegates to",
+      "src_name": "Orchestration Engine",
+      "dst_name": "AI Interpretation Layer"
     }
   ]
 }

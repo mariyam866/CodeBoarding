@@ -1,111 +1,41 @@
 {
-  "description": "The system's architecture is centered around the `Repository Manager`, which provides foundational access to source code repositories through its `Repository Operations Handler` and `Git Diff Extractor` sub-components. Building upon this foundation, the `Agent Orchestrator` acts as the primary intelligence layer, consuming repository data to drive complex processing workflows. It leverages the `Static Analyzer` to perform in-depth code analysis, receiving structured results that inform its decision-making and response generation. This integrated approach allows for sophisticated analysis and intelligent interaction with the codebase, with the `Agent Orchestrator` serving as the central coordinator for both repository interactions and static analysis.",
+  "description": "The system's architecture is centered around the Agent Orchestrator, which manages the overall agent-based processing workflow. It interacts with the Repository Manager to handle all source code repository operations, including cloning, checking out, and extracting code differences. The Repository Manager in turn delegates specific tasks to the Repository Operations Handler for low-level Git commands and the Git Diff Extractor for detailed code change analysis. Once repository data is prepared, the Agent Orchestrator orchestrates the Static Analyzer to perform in-depth static analysis, identifying code patterns, building graphs, and extracting structural information. The Static Analyzer then returns its findings to the Agent Orchestrator, which uses these results to generate refined responses. This modular design ensures clear separation of concerns, with the Static Analyzer's internal mechanisms recently enhanced to provide more robust analysis capabilities.",
   "components": [
     {
       "name": "Repository Manager",
-      "description": "This is the top-level component responsible for orchestrating all interactions with source code repositories. It provides a unified interface for the rest of the system to access repository functionalities, including cloning, checking out versions, and initiating diff operations. It acts as a facade, delegating specific tasks to its sub-components.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "repo_utils",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "repo_utils.git_diff",
-          "reference_file": "repo_utils/git_diff.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        }
-      ],
+      "description": "Orchestrates all interactions with source code repositories, providing a unified interface for cloning, checking out versions, and initiating diff operations. It delegates specific tasks to its sub-components.",
+      "referenced_source_code": [],
       "assigned_files": [],
       "can_expand": true
     },
     {
       "name": "Repository Operations Handler",
-      "description": "Manages the fundamental, low-level operations related to local Git repositories. This includes cloning repositories from remote URLs, sanitizing repository URLs, verifying the existence of remote repositories, checking out specific branches or commits, and retrieving essential repository metadata (e.g., current commit hash, branch name). It also handles authentication tokens and the uploading of generated materials.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "repo_utils.clone_repository",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "repo_utils.checkout_repo",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "repo_utils.sanitize_repo_url",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "repo_utils.remote_repo_exists",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "repo_utils.get_git_commit_hash",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "repo_utils.get_branch",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "repo_utils.upload_onboarding_materials",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        }
-      ],
-      "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/errors.py"
-      ],
-      "can_expand": false
+      "description": "Manages fundamental, low-level operations related to local Git repositories, including cloning, checking out, sanitizing URLs, verifying remotes, and retrieving essential repository metadata.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "Git Diff Extractor",
-      "description": "Focuses specifically on extracting and processing differences between various versions of the codebase within a Git repository. It identifies changes at the file and line level (additions, deletions, modifications) and structures this information for further analysis by other components of the system.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "repo_utils.git_diff.git_diff",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/git_diff.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
-        },
-        {
-          "qualified_name": "repo_utils.git_diff.FileChange",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/git_diff.py",
-          "reference_start_line": 9,
-          "reference_end_line": 24
-        }
-      ],
+      "description": "Focuses on extracting and processing file and line-level differences between codebase versions within a Git repository, structuring this information for further analysis.",
+      "referenced_source_code": [],
       "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/git_diff.py"
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/git_diff.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/errors.py"
       ],
-      "can_expand": false
+      "can_expand": true
     },
     {
       "name": "Agent Orchestrator",
-      "description": "Manages the overall agent-based processing logic, consuming data from the `Repository Manager` and orchestrating operations with the `Static Analyzer`. It is responsible for complex task execution, processing repository information, and generating refined responses based on analysis.",
+      "description": "Manages the overall agent-based processing logic, consuming data from the Repository Manager and orchestrating operations with the Static Analyzer. It processes repository information and generates refined responses.",
       "referenced_source_code": [],
       "assigned_files": [],
       "can_expand": true
     },
     {
       "name": "Static Analyzer",
-      "description": "Performs various static analysis tasks on source code provided by the `Agent Orchestrator`. It processes code to identify patterns, build graphs, and extract structural information, which is then returned for further agent-based processing.",
+      "description": "Performs various static analysis tasks on source code provided by the Agent Orchestrator. It processes code to identify patterns, build graphs, and extract structural information. Recent internal refinements within scanner.py have enhanced its capabilities in these areas.",
       "referenced_source_code": [],
       "assigned_files": [],
       "can_expand": true
@@ -120,32 +50,32 @@
   ],
   "components_relations": [
     {
-      "relation": "uses",
-      "src_name": "Repository Manager",
-      "dst_name": "Repository Operations Handler"
-    },
-    {
-      "relation": "uses",
-      "src_name": "Repository Manager",
-      "dst_name": "Git Diff Extractor"
-    },
-    {
-      "relation": "depends on",
-      "src_name": "Git Diff Extractor",
-      "dst_name": "Repository Operations Handler"
-    },
-    {
-      "relation": "consumes",
+      "relation": "initiates repository-related tasks by consuming services from",
       "src_name": "Agent Orchestrator",
       "dst_name": "Repository Manager"
     },
     {
-      "relation": "orchestrates",
+      "relation": "delegates low-level Git operations to",
+      "src_name": "Repository Manager",
+      "dst_name": "Repository Operations Handler"
+    },
+    {
+      "relation": "utilizes to obtain and process code differences",
+      "src_name": "Repository Manager",
+      "dst_name": "Git Diff Extractor"
+    },
+    {
+      "relation": "relies on for underlying repository access and operations to perform diffs",
+      "src_name": "Git Diff Extractor",
+      "dst_name": "Repository Operations Handler"
+    },
+    {
+      "relation": "orchestrates to perform code analysis tasks",
       "src_name": "Agent Orchestrator",
       "dst_name": "Static Analyzer"
     },
     {
-      "relation": "provides results to",
+      "relation": "provides analysis results back to for further processing and response generation",
       "src_name": "Static Analyzer",
       "dst_name": "Agent Orchestrator"
     }

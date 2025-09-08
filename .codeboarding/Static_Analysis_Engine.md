@@ -5,26 +5,26 @@ graph LR
     TypeScriptClient["TypeScriptClient"]
     StaticAnalysisResults["StaticAnalysisResults"]
     Unclassified["Unclassified"]
-    ProjectScanner -- "provides input to" --> LSPClient
-    ProjectScanner -- "provides input to" --> TypeScriptClient
-    LSPClient -- "populates" --> StaticAnalysisResults
+    Unclassified["Unclassified"]
+    ProjectScanner -- "provides configuration and language details to" --> LSPClient
+    LSPClient -- "orchestrates analysis for" --> StaticAnalysisResults
     TypeScriptClient -- "extends" --> LSPClient
-    TypeScriptClient -- "populates" --> StaticAnalysisResults
+    TypeScriptClient -- "orchestrates analysis for" --> StaticAnalysisResults
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The static analysis subsystem is designed to systematically extract comprehensive code intelligence from a project. It starts with the `ProjectScanner` component, which is responsible for initial project introspection and file identification. The identified files are then handed over to language-specific analysis clients, primarily the `LSPClient` and its specialized extension, `TypeScriptClient`. These clients leverage the Language Server Protocol to perform deep static analysis, generating detailed insights into the codebase, such as call graphs, class hierarchies, and symbol references. All the generated analysis data is then consolidated and managed by the `StaticAnalysisResults` component, which acts as a central, language-agnostic repository for structured analysis outcomes, making them readily available for subsequent processing and consumption by other parts of the system.
+The static analysis subsystem orchestrates the extraction of comprehensive code insights. It begins with the `ProjectScanner`, which identifies programming languages and their associated LSP server configurations using an external scanning tool. This initial data is then consumed by the `LSPClient`, a generic component responsible for managing communication with Language Server Protocol servers. For specific languages like TypeScript, the `TypeScriptClient` extends `LSPClient` to handle language-specific configurations. Both `LSPClient` and `TypeScriptClient` perform detailed static analysis, extracting symbols, call graphs, and class hierarchies, and then populate the `StaticAnalysisResults` component, which serves as the central repository for all aggregated analysis data.
 
 ### ProjectScanner
-Initiates the static analysis process by scanning the project repository. It identifies relevant source files, determines programming languages used, and extracts basic project metadata. This component acts as the initial data gatherer, preparing the input for more detailed LSP-based analysis.
+Initiates the static analysis process by leveraging the external `tokei` tool to scan the project repository. It identifies programming languages used, their code distribution, and relevant file suffixes. Crucially, it also determines the appropriate Language Server Protocol (LSP) server commands for each detected language, preparing a structured list of `ProgrammingLanguage` objects. This component acts as the initial data gatherer, providing the necessary configuration and language-specific details for subsequent LSP-based analysis.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py#L13-L66" target="_blank" rel="noopener noreferrer">`ProjectScanner`:13-66</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py#L13-L82" target="_blank" rel="noopener noreferrer">`ProjectScanner`:13-82</a>
 
 
 ### LSPClient
@@ -53,6 +53,12 @@ This central component acts as a repository for all aggregated static analysis r
 
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/analysis_result.py#L6-L171" target="_blank" rel="noopener noreferrer">`StaticAnalysisResults`:6-171</a>
 
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)

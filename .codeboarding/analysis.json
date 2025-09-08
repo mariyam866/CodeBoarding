@@ -31,7 +31,7 @@
       "assigned_files": [
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py"
       ],
-      "can_expand": true
+      "can_expand": false
     },
     {
       "name": "Orchestration Engine",
@@ -253,6 +253,13 @@
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/logging_config.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     }
   ],

@@ -1,19 +1,18 @@
 {
-  "description": "The static analysis subsystem is designed to systematically extract comprehensive code intelligence from a project. It starts with the `ProjectScanner` component, which is responsible for initial project introspection and file identification. The identified files are then handed over to language-specific analysis clients, primarily the `LSPClient` and its specialized extension, `TypeScriptClient`. These clients leverage the Language Server Protocol to perform deep static analysis, generating detailed insights into the codebase, such as call graphs, class hierarchies, and symbol references. All the generated analysis data is then consolidated and managed by the `StaticAnalysisResults` component, which acts as a central, language-agnostic repository for structured analysis outcomes, making them readily available for subsequent processing and consumption by other parts of the system.",
+  "description": "The static analysis subsystem orchestrates the extraction of comprehensive code insights. It begins with the `ProjectScanner`, which identifies programming languages and their associated LSP server configurations using an external scanning tool. This initial data is then consumed by the `LSPClient`, a generic component responsible for managing communication with Language Server Protocol servers. For specific languages like TypeScript, the `TypeScriptClient` extends `LSPClient` to handle language-specific configurations. Both `LSPClient` and `TypeScriptClient` perform detailed static analysis, extracting symbols, call graphs, and class hierarchies, and then populate the `StaticAnalysisResults` component, which serves as the central repository for all aggregated analysis data.",
   "components": [
     {
       "name": "ProjectScanner",
-      "description": "Initiates the static analysis process by scanning the project repository. It identifies relevant source files, determines programming languages used, and extracts basic project metadata. This component acts as the initial data gatherer, preparing the input for more detailed LSP-based analysis.",
+      "description": "Initiates the static analysis process by leveraging the external `tokei` tool to scan the project repository. It identifies programming languages used, their code distribution, and relevant file suffixes. Crucially, it also determines the appropriate Language Server Protocol (LSP) server commands for each detected language, preparing a structured list of `ProgrammingLanguage` objects. This component acts as the initial data gatherer, providing the necessary configuration and language-specific details for subsequent LSP-based analysis.",
       "referenced_source_code": [
         {
           "qualified_name": "ProjectScanner",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
           "reference_start_line": 13,
-          "reference_end_line": 66
+          "reference_end_line": 82
         }
       ],
       "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/programming_language.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py"
       ],
       "can_expand": true
@@ -62,7 +61,6 @@
         }
       ],
       "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/graph.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/analysis_result.py"
       ],
       "can_expand": true
@@ -72,25 +70,29 @@
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
       "referenced_source_code": [],
       "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/programming_language.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/graph.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/__init__.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     }
   ],
   "components_relations": [
     {
-      "relation": "provides input to",
+      "relation": "provides configuration and language details to",
       "src_name": "ProjectScanner",
       "dst_name": "LSPClient"
     },
     {
-      "relation": "provides input to",
-      "src_name": "ProjectScanner",
-      "dst_name": "TypeScriptClient"
-    },
-    {
-      "relation": "populates",
+      "relation": "orchestrates analysis for",
       "src_name": "LSPClient",
       "dst_name": "StaticAnalysisResults"
     },
@@ -100,7 +102,7 @@
       "dst_name": "LSPClient"
     },
     {
-      "relation": "populates",
+      "relation": "orchestrates analysis for",
       "src_name": "TypeScriptClient",
       "dst_name": "StaticAnalysisResults"
     }

@@ -8,6 +8,7 @@ graph LR
     AI_Interpretation_Layer["AI Interpretation Layer"]
     Output_Generation_Engine["Output Generation Engine"]
     Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
     API_Service -- "Initiates Job" --> Job_Database
     API_Service -- "Triggers Analysis" --> Orchestration_Engine
     Orchestration_Engine -- "Manages Job State" --> Job_Database
@@ -20,7 +21,7 @@ graph LR
     AI_Interpretation_Layer -- "Queries Diff" --> Repository_Manager
     Orchestration_Engine -- "Passes Enhanced Insights for Generation" --> Output_Generation_Engine
     Output_Generation_Engine -- "Delivers Documentation" --> API_Service
-    click Job_Database href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Job_Database.md" "Details"
+    click API_Service href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/API_Service.md" "Details"
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
     click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
     click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
@@ -34,7 +35,7 @@ graph LR
 
 The CodeBoarding system operates through a robust, multi-layered architecture designed for comprehensive code analysis and documentation generation. The API Service serves as the primary external interface, initiating jobs and managing user interactions. All job lifecycle and status information is persistently stored and managed by the Job Database. The Orchestration Engine acts as the central coordinator, driving the entire documentation pipeline. It interacts with the Repository Manager to retrieve source code and then dispatches requests to the Static Analysis Engine. The Static Analysis Engine performs deep, language-specific analysis, now providing richer and more detailed structural information. This enhanced data is then fed by the Orchestration Engine to the AI Interpretation Layer. This layer, comprising specialized AI agents, performs sophisticated interpretation, generating enhanced high-level architectural insights, and may query the Repository Manager for diff analysis. Finally, the Orchestration Engine passes these refined insights to the Output Generation Engine, which transforms them into various documentation formats with enhanced capabilities, including integration with GitHub Actions, before delivering the final output back through the API Service. This updated architecture reflects significant internal enhancements in analysis depth and output quality, particularly within the AI interpretation and static analysis components.
 
-### API Service
+### API Service [[Expand]](./API_Service.md)
 The external interface for CodeBoarding, handling user requests, job initiation, and status retrieval.
 
 
@@ -43,7 +44,7 @@ The external interface for CodeBoarding, handling user requests, job initiation,
 - `local_app`
 
 
-### Job Database [[Expand]](./Job_Database.md)
+### Job Database
 Persistent storage for managing the lifecycle, status, and results of all documentation generation jobs.
 
 
@@ -111,6 +112,12 @@ Transforms the final, validated architectural insights into various human-readab
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/sphinx.py" target="_blank" rel="noopener noreferrer">`sphinx`</a>
 - `github_action`
 
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)

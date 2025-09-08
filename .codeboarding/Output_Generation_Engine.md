@@ -1,5 +1,6 @@
 ```mermaid
 graph LR
+    Static_Analysis_Engine["Static Analysis Engine"]
     Output_Generation_Engine["Output Generation Engine"]
     HTMLGenerator["HTMLGenerator"]
     MarkdownGenerator["MarkdownGenerator"]
@@ -8,6 +9,7 @@ graph LR
     GitHubActionOutputFormatter["GitHubActionOutputFormatter"]
     HTML_Template_Populator["HTML Template Populator"]
     Unclassified["Unclassified"]
+    Static_Analysis_Engine -- "provides insights to" --> Output_Generation_Engine
     Output_Generation_Engine -- "orchestrates" --> HTMLGenerator
     Output_Generation_Engine -- "orchestrates" --> MarkdownGenerator
     Output_Generation_Engine -- "orchestrates" --> MDXGenerator
@@ -17,6 +19,7 @@ graph LR
     GitHubActionOutputFormatter -- "uses" --> HTMLGenerator
     GitHubActionOutputFormatter -- "uses" --> MarkdownGenerator
     GitHubActionOutputFormatter -- "uses" --> MDXGenerator
+    click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
     click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
 ```
 
@@ -24,10 +27,16 @@ graph LR
 
 ## Details
 
-The Output Generation Engine subsystem is responsible for transforming processed architectural insights into various documentation formats. It orchestrates specialized generators for HTML, Markdown, MDX, and Sphinx, ensuring that the insights are presented in a structured and accessible manner. The GitHubActionOutputFormatter then adapts these outputs for seamless integration into GitHub Actions workflows. This modular design allows for flexible and extensible documentation generation across different platforms and tools.
+The system's architecture is centered around the generation of comprehensive architectural documentation from source code. The process begins with the Static Analysis Engine, which meticulously scans the codebase to extract raw architectural insights. These insights are then fed into the Output Generation Engine, the central orchestrator that manages the overall documentation workflow. The Output Generation Engine dispatches the insights to various specialized generators: HTMLGenerator, MarkdownGenerator, MDXGenerator, and SphinxGenerator, each responsible for producing documentation in its respective format. The HTML Template Populator further refines the HTML output by integrating generated data into predefined templates. Additionally, the GitHubActionOutputFormatter ensures that the generated documentation is appropriately formatted for seamless integration into GitHub Actions workflows, leveraging the capabilities of the other generators. This structured approach ensures accurate, consistent, and versatile architectural documentation.
+
+### Static Analysis Engine [[Expand]](./Static_Analysis_Engine.md)
+This foundational component is responsible for scanning the source code, performing static analysis, and generating the initial architectural insights. It extracts critical data, identifies relationships, and prepares the raw information that downstream components will consume to generate documentation.
+
+
+**Related Classes/Methods**: _None_
 
 ### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
-The primary component responsible for orchestrating the overall process of generating documentation in various formats. It handles repository cloning, initiates the analysis generation, and dispatches the actual documentation generation to specific format generators based on the desired output.
+The primary component responsible for orchestrating the overall process of generating documentation in various formats. It consumes architectural insights from the `Static Analysis Engine`, handles repository cloning, initiates the analysis generation, and dispatches the actual documentation generation to specific format generators based on the desired output.
 
 
 **Related Classes/Methods**:

@@ -13,11 +13,13 @@ graph LR
     Orchestration_Engine -- "manages" --> Job_Database
     Orchestration_Engine -- "delegates to" --> Repository_Manager
     Orchestration_Engine -- "delegates to" --> Static_Analysis_Engine
+    Static_Analysis_Engine -- "provides analysis to" --> AI_Interpretation_Layer
+    AI_Interpretation_Layer -- "informs" --> Diagram_Generation_Service
+    AI_Interpretation_Layer -- "provides content to" --> Output_Generation_Engine
+    Orchestration_Engine -- "coordinates" --> Diagram_Generation_Service
+    Orchestration_Engine -- "coordinates" --> Output_Generation_Engine
     Orchestration_Engine -- "delegates to" --> AI_Interpretation_Layer
-    Orchestration_Engine -- "delegates to" --> Diagram_Generation_Service
-    Orchestration_Engine -- "delegates to" --> Output_Generation_Engine
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
-    click Job_Database href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Job_Database.md" "Details"
     click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
     click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
     click AI_Interpretation_Layer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Layer.md" "Details"
@@ -28,19 +30,15 @@ graph LR
 
 ## Details
 
-The component analysis is being refined to address the feedback regarding the `Orchestration Engine` and missing destination components. The `Orchestration Engine`'s role is central to the documentation generation pipeline, and its implementation details are crucial for accurate representation.
+The system is orchestrated by the `Orchestration Engine`, which manages the end-to-end process of generating documentation. This engine interacts with `External Interfaces` to initiate jobs and persists job status in the `Job Database`. For code analysis, it delegates to the `Repository Manager` to access source code, which is then fed into the `Static Analysis Engine`. The `Static Analysis Engine` performs in-depth structural and semantic analysis, with recent updates significantly enhancing its internal logic and capabilities for extracting richer code insights. The results from static analysis are then passed to the `AI Interpretation Layer` for generating high-level insights and content. Subsequently, the `Diagram Generation Service` creates visual representations, and the `Output Generation Engine` compiles the final documentation. The CodeBoarding system is structured around an `Orchestration Engine` that manages the entire documentation generation workflow. This engine is initiated via `External Interfaces` and maintains job states in a `Job Database`. It delegates core tasks to specialized components: the `Repository Manager` for code retrieval, and the `Static Analysis Engine` for in-depth code analysis. The `Static Analysis Engine`, recently enhanced for more sophisticated analysis, feeds its findings to the `AI Interpretation Layer`. This layer processes the analysis to generate documentation content and insights, which are then used by the `Diagram Generation Service` for visual representations and the `Output Generation Engine` for final documentation production.
 
 ### Orchestration Engine [[Expand]](./Orchestration_Engine.md)
 The central component responsible for managing the documentation generation pipeline, including job status and delegating the core generation process to other pipeline stages.
 
 
-**Related Classes/Methods**:
+**Related Classes/Methods**: _None_
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L92-L129" target="_blank" rel="noopener noreferrer">`local_app.generate_onboarding`:92-129</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/demo.py#L78-L97" target="_blank" rel="noopener noreferrer">`demo.generate_docs_remote`:78-97</a>
-
-
-### Job Database [[Expand]](./Job_Database.md)
+### Job Database
 Manages the persistence and status of documentation generation jobs.
 
 
@@ -59,7 +57,7 @@ Manages access and retrieval of code repositories for analysis within the docume
 **Related Classes/Methods**: _None_
 
 ### Static Analysis Engine [[Expand]](./Static_Analysis_Engine.md)
-Performs static code analysis to extract structural and semantic information from source code.
+Performs advanced static code analysis to extract detailed structural and semantic information from source code. Recent enhancements have refined its internal logic, potentially leading to improved accuracy, performance, or the ability to analyze new language constructs and complex patterns.
 
 
 **Related Classes/Methods**: _None_

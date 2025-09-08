@@ -6,12 +6,12 @@ graph LR
     Agent_Orchestrator["Agent Orchestrator"]
     Static_Analyzer["Static Analyzer"]
     Unclassified["Unclassified"]
-    Repository_Manager -- "uses" --> Repository_Operations_Handler
-    Repository_Manager -- "uses" --> Git_Diff_Extractor
-    Git_Diff_Extractor -- "depends on" --> Repository_Operations_Handler
-    Agent_Orchestrator -- "consumes" --> Repository_Manager
-    Agent_Orchestrator -- "orchestrates" --> Static_Analyzer
-    Static_Analyzer -- "provides results to" --> Agent_Orchestrator
+    Agent_Orchestrator -- "initiates repository-related tasks by consuming services from" --> Repository_Manager
+    Repository_Manager -- "delegates low-level Git operations to" --> Repository_Operations_Handler
+    Repository_Manager -- "utilizes to obtain and process code differences" --> Git_Diff_Extractor
+    Git_Diff_Extractor -- "relies on for underlying repository access and operations to perform diffs" --> Repository_Operations_Handler
+    Agent_Orchestrator -- "orchestrates to perform code analysis tasks" --> Static_Analyzer
+    Static_Analyzer -- "provides analysis results back to for further processing and response generation" --> Agent_Orchestrator
     click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
 ```
 
@@ -19,51 +19,34 @@ graph LR
 
 ## Details
 
-The system's architecture is centered around the `Repository Manager`, which provides foundational access to source code repositories through its `Repository Operations Handler` and `Git Diff Extractor` sub-components. Building upon this foundation, the `Agent Orchestrator` acts as the primary intelligence layer, consuming repository data to drive complex processing workflows. It leverages the `Static Analyzer` to perform in-depth code analysis, receiving structured results that inform its decision-making and response generation. This integrated approach allows for sophisticated analysis and intelligent interaction with the codebase, with the `Agent Orchestrator` serving as the central coordinator for both repository interactions and static analysis.
+The system's architecture is centered around the Agent Orchestrator, which manages the overall agent-based processing workflow. It interacts with the Repository Manager to handle all source code repository operations, including cloning, checking out, and extracting code differences. The Repository Manager in turn delegates specific tasks to the Repository Operations Handler for low-level Git commands and the Git Diff Extractor for detailed code change analysis. Once repository data is prepared, the Agent Orchestrator orchestrates the Static Analyzer to perform in-depth static analysis, identifying code patterns, building graphs, and extracting structural information. The Static Analyzer then returns its findings to the Agent Orchestrator, which uses these results to generate refined responses. This modular design ensures clear separation of concerns, with the Static Analyzer's internal mechanisms recently enhanced to provide more robust analysis capabilities.
 
 ### Repository Manager [[Expand]](./Repository_Manager.md)
-This is the top-level component responsible for orchestrating all interactions with source code repositories. It provides a unified interface for the rest of the system to access repository functionalities, including cloning, checking out versions, and initiating diff operations. It acts as a facade, delegating specific tasks to its sub-components.
+Orchestrates all interactions with source code repositories, providing a unified interface for cloning, checking out versions, and initiating diff operations. It delegates specific tasks to its sub-components.
 
 
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils" target="_blank" rel="noopener noreferrer">`repo_utils`</a>
-- `repo_utils.git_diff`
-
+**Related Classes/Methods**: _None_
 
 ### Repository Operations Handler
-Manages the fundamental, low-level operations related to local Git repositories. This includes cloning repositories from remote URLs, sanitizing repository URLs, verifying the existence of remote repositories, checking out specific branches or commits, and retrieving essential repository metadata (e.g., current commit hash, branch name). It also handles authentication tokens and the uploading of generated materials.
+Manages fundamental, low-level operations related to local Git repositories, including cloning, checking out, sanitizing URLs, verifying remotes, and retrieving essential repository metadata.
 
 
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.clone_repository`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.checkout_repo`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.sanitize_repo_url`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.remote_repo_exists`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.get_git_commit_hash`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.get_branch`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.upload_onboarding_materials`</a>
-
+**Related Classes/Methods**: _None_
 
 ### Git Diff Extractor
-Focuses specifically on extracting and processing differences between various versions of the codebase within a Git repository. It identifies changes at the file and line level (additions, deletions, modifications) and structures this information for further analysis by other components of the system.
+Focuses on extracting and processing file and line-level differences between codebase versions within a Git repository, structuring this information for further analysis.
 
 
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/git_diff.py" target="_blank" rel="noopener noreferrer">`repo_utils.git_diff.git_diff`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/git_diff.py#L9-L24" target="_blank" rel="noopener noreferrer">`repo_utils.git_diff.FileChange`:9-24</a>
-
+**Related Classes/Methods**: _None_
 
 ### Agent Orchestrator
-Manages the overall agent-based processing logic, consuming data from the `Repository Manager` and orchestrating operations with the `Static Analyzer`. It is responsible for complex task execution, processing repository information, and generating refined responses based on analysis.
+Manages the overall agent-based processing logic, consuming data from the Repository Manager and orchestrating operations with the Static Analyzer. It processes repository information and generates refined responses.
 
 
 **Related Classes/Methods**: _None_
 
 ### Static Analyzer
-Performs various static analysis tasks on source code provided by the `Agent Orchestrator`. It processes code to identify patterns, build graphs, and extract structural information, which is then returned for further agent-based processing.
+Performs various static analysis tasks on source code provided by the Agent Orchestrator. It processes code to identify patterns, build graphs, and extract structural information. Recent internal refinements within scanner.py have enhanced its capabilities in these areas.
 
 
 **Related Classes/Methods**: _None_
