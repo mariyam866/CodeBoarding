@@ -103,18 +103,50 @@ async def generate_onboarding(job_id: str):
 
                 # run generation
                 repo_name = extract_repo_name(job["repo_url"])
-                await run_in_threadpool(
+                generated_repo_name = await run_in_threadpool(
                     generate_docs_remote,
                     repo_url=job["repo_url"],
                     temp_repo_folder=temp_repo_folder,
                 )
 
-                # format result URL
-                result_url = (
-                    f"https://github.com/CodeBoarding/"
-                    f"GeneratedOnBoardings/blob/main/{repo_name}/on_boarding.md"
-                )
-                update_job(job_id, result=result_url, status=JobStatus.COMPLETED)
+                # Process the generated files from temp_repo_folder
+                docs_content = {}
+                # Files are generated in the temp_repo_folder, not the returned repo_name
+                analysis_files_json = list(temp_repo_folder.glob("*.json"))
+                analysis_files_md = list(temp_repo_folder.glob("*.md"))
+
+                logger.info(f"Found {len(analysis_files_json)} JSON files and {len(analysis_files_md)} MD files in {temp_repo_folder}")
+
+                for file in analysis_files_json:
+                    try:
+                        with open(file, 'r', encoding='utf-8') as f:
+                            content = f.read().strip()
+                            if content:  # Only add non-empty files
+                                docs_content[file.name] = content
+                                logger.info(f"Added JSON file: {file.name}")
+                    except Exception as e:
+                        logger.warning(f"Failed to read JSON file {file}: {e}")
+
+                for file in analysis_files_md:
+                    try:
+                        with open(file, 'r', encoding='utf-8') as f:
+                            content = f.read().strip()
+                            if content:  # Only add non-empty files
+                                docs_content[file.name] = content
+                                logger.info(f"Added MD file: {file.name}")
+                    except Exception as e:
+                        logger.warning(f"Failed to read MD file {file}: {e}")
+
+                if not docs_content:
+                    logger.warning("No documentation files generated for: %s", job["repo_url"])
+                    update_job(job_id, status=JobStatus.FAILED, error="No documentation files were generated")
+                    return
+
+                # Store result as JSON string in the result field
+                import json
+                result = json.dumps({"files": docs_content})
+                update_job(job_id, result=result, status=JobStatus.COMPLETED)
+                logger.info("Successfully generated %d doc files for %s (job: %s)", len(docs_content), job["repo_url"], job_id)
 
             except RepoDontExistError:
                 url = job.get("repo_url", "unknown") if job else "unknown"
@@ -167,7 +199,37 @@ async def get_job(job_id: str):
     job = fetch_job(job_id)
     if not job:
         raise HTTPException(404, detail="Job not found")
-    return job
+    
+    response_data = {
+        "job_id": job["id"],
+        "status": job["status"],
+        "created_at": job["created_at"],
+        "started_at": job["started_at"],
+        "finished_at": job["finished_at"],
+        "repo_url": job["repo_url"]
+    }
+
+    if job["status"] == JobStatus.COMPLETED:
+        if job.get("result"):
+            # Check if result is a JSON string containing files
+            try:
+                import json
+                result_data = json.loads(job["result"])
+                if "files" in result_data:
+                    response_data["files"] = result_data["files"]
+                else:
+                    response_data["result"] = job["result"]
+            except (json.JSONDecodeError, TypeError):
+                response_data["result"] = job["result"]
+        else:
+            response_data["result"] = {"message": "Job completed but no result available"}
+    elif job["status"] == JobStatus.FAILED:
+        if job.get("error"):
+            response_data["error"] = job["error"]
+        else:
+            response_data["error"] = "Job failed with unknown error"
+
+    return JSONResponse(content=response_data)
 
 
 class DocsGenerationRequest(BaseModel):

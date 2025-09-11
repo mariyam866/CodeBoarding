@@ -2,7 +2,7 @@ VSCODE_CONFIG = {
     "lsp_servers": {
         "python": {
             "name": "Pyright Language Server",
-            "command": ["pyright-langserver", "--stdio"],
+            "command": ["py-lsp", "--stdio"],
             "languages": ["python"],
             "file_extensions": [".py", ".pyi"],
             "install_commands": "pip install pyright"
