@@ -20,7 +20,7 @@ graph LR
     Orchestration_Engine -- "coordinates" --> Output_Generation_Engine
     Orchestration_Engine -- "delegates to" --> AI_Interpretation_Layer
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
-    click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
+    click Job_Database href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Job_Database.md" "Details"
     click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
     click AI_Interpretation_Layer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Layer.md" "Details"
     click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
@@ -38,7 +38,7 @@ The central component responsible for managing the documentation generation pipe
 
 **Related Classes/Methods**: _None_
 
-### Job Database
+### Job Database [[Expand]](./Job_Database.md)
 Manages the persistence and status of documentation generation jobs.
 
 
@@ -50,7 +50,7 @@ Provides API endpoints for interacting with the documentation generation system.
 
 **Related Classes/Methods**: _None_
 
-### Repository Manager [[Expand]](./Repository_Manager.md)
+### Repository Manager
 Manages access and retrieval of code repositories for analysis within the documentation generation pipeline.
 
 

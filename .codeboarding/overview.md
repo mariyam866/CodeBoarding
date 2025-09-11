@@ -9,6 +9,7 @@ graph LR
     Output_Generation_Engine["Output Generation Engine"]
     Unclassified["Unclassified"]
     Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
     API_Service -- "Initiates Job" --> Job_Database
     API_Service -- "Triggers Analysis" --> Orchestration_Engine
     Orchestration_Engine -- "Manages Job State" --> Job_Database
@@ -22,8 +23,8 @@ graph LR
     Orchestration_Engine -- "Passes Enhanced Insights for Generation" --> Output_Generation_Engine
     Output_Generation_Engine -- "Delivers Documentation" --> API_Service
     click API_Service href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/API_Service.md" "Details"
+    click Job_Database href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Job_Database.md" "Details"
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
-    click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
     click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
     click AI_Interpretation_Layer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Layer.md" "Details"
     click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
@@ -44,7 +45,7 @@ The external interface for CodeBoarding, handling user requests, job initiation,
 - `local_app`
 
 
-### Job Database
+### Job Database [[Expand]](./Job_Database.md)
 Persistent storage for managing the lifecycle, status, and results of all documentation generation jobs.
 
 
@@ -62,7 +63,7 @@ The central control unit that manages the entire documentation generation pipeli
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_generator`</a>
 
 
-### Repository Manager [[Expand]](./Repository_Manager.md)
+### Repository Manager
 Manages all interactions with source code repositories, including cloning, fetching, and extracting version differences.
 
 
@@ -112,6 +113,12 @@ Transforms the final, validated architectural insights into various human-readab
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/sphinx.py" target="_blank" rel="noopener noreferrer">`sphinx`</a>
 - `github_action`
 
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)

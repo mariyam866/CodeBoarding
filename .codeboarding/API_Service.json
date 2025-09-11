@@ -11,11 +11,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Job Creation Endpoints",
@@ -33,9 +29,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Job Status Retrieval Endpoints",
@@ -59,9 +53,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "assigned_files": [],
-      "can_expand": false
+      ]
     },
     {
       "name": "Job Processing Background Task",
@@ -79,9 +71,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Job Data Model",
@@ -105,16 +95,12 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "assigned_files": [],
-      "can_expand": false
+      ]
     },
     {
       "name": "DuckDB CRUD Operations",
       "description": "Handles persistent job management by interacting with the DuckDB database for storing, retrieving, and updating job records.",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": true
+      "referenced_source_code": []
     },
     {
       "name": "Diagram Generator",
@@ -126,9 +112,7 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Output Generation Engine",
@@ -140,16 +124,12 @@
           "reference_start_line": 0,
           "reference_end_line": 0
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [
