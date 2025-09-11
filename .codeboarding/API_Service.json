@@ -1,5 +1,5 @@
 {
-  "description": "The system is built around a FastAPI Application that serves as the central entry point for all client interactions. It exposes Job Creation Endpoints for initiating new code analysis and documentation generation tasks, and Job Status Retrieval Endpoints for monitoring their progress and fetching results. All job-related data is managed persistently through DuckDB CRUD Operations. When a job is created, the Job Creation Endpoints initiate a Job Processing Background Task to handle the heavy computational work asynchronously. This background task interacts with the DuckDB CRUD Operations to update job statuses and store results. Depending on the job type, it may also invoke the Diagram Generator for visual documentation or the Output Generation Engine for other analysis outputs. The Job Data Model ensures consistent data structures and validation across the entire system.",
+  "description": "The CodeBoarding application is structured around a FastAPI Application that serves as the central orchestrator for all API interactions. This core component routes incoming requests to Job Creation Endpoints for initiating new code analysis and documentation generation tasks, and to Job Status Retrieval Endpoints for clients to monitor the progress and retrieve results of their submitted jobs. All data related to jobs, requests, and responses is consistently defined and validated by the Job Data Model. Persistent storage and retrieval of job records are handled by DuckDB CRUD Operations. Intensive computational work, such as code analysis and documentation generation, is asynchronously managed by the Job Processing Background Task. This background task coordinates the execution of these operations, updating job statuses, and leveraging specialized components like the Diagram Generator for visual outputs and the Output Generation Engine for other forms of analysis results. Recent significant updates to the core application logic in local_app.py have expanded the capabilities and refined the interactions within these central components, introducing new flows and enhancing existing functionalities.",
   "components": [
     {
       "name": "FastAPI Application",
@@ -8,99 +8,113 @@
         {
           "qualified_name": "local_app.py:app",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
-      ]
+      ],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py"
+      ],
+      "can_expand": true
     },
     {
       "name": "Job Creation Endpoints",
-      "description": "Provides the API endpoints for users to submit new code analysis and documentation generation requests, validating input and initiating the job lifecycle.",
+      "description": "Provides the API endpoints for users to submit new code analysis and documentation generation requests, validating input and initiating the job lifecycle. Recent changes in `local_app.py` suggest an expansion of its capabilities, potentially introducing new job types or more complex submission logic.",
       "referenced_source_code": [
         {
           "qualified_name": "local_app.py:start_generation_job",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "local_app.py:start_docs_generation_job",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "Job Status Retrieval Endpoints",
-      "description": "Offers API endpoints for clients to query the current status, progress, and results of previously submitted jobs.",
+      "description": "Offers API endpoints for clients to query the current status, progress, and results of previously submitted jobs. This component likely provides more detailed status information or filtering capabilities due to recent updates.",
       "referenced_source_code": [
         {
           "qualified_name": "local_app.py:get_job",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "local_app.py:get_github_action_status",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "local_app.py:list_jobs",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": false
     },
     {
       "name": "Job Processing Background Task",
-      "description": "Asynchronously executes the core job logic, offloading heavy computation from the main API thread to ensure responsiveness. It coordinates the actual analysis and generation steps.",
+      "description": "Asynchronously executes the core job logic, offloading heavy computation from the main API thread to ensure responsiveness. It coordinates the actual analysis and generation steps, and its internal logic or the types of tasks it handles have become more complex due to recent changes.",
       "referenced_source_code": [
         {
           "qualified_name": "local_app.py:generate_onboarding",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "local_app.py:process_docs_generation_job",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "Job Data Model",
-      "description": "Defines the data structures (e.g., Pydantic models) for jobs and incoming documentation generation requests, ensuring data consistency and validation across the API.",
+      "description": "Defines the data structures (e.g., Pydantic models) for jobs, incoming requests, and API responses, ensuring data consistency and validation across the application. Updates to `local_app.py` likely involved modifications or additions to these models to support new features.",
       "referenced_source_code": [
         {
           "qualified_name": "local_app.py:JobStatus",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "local_app.py:DocsGenerationRequest",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         },
         {
           "qualified_name": "local_app.py:make_job",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": false
     },
     {
       "name": "DuckDB CRUD Operations",
-      "description": "Handles persistent job management by interacting with the DuckDB database for storing, retrieving, and updating job records.",
-      "referenced_source_code": []
+      "description": "Handles persistent job management by interacting with the DuckDB database for storing, retrieving, and updating job records, ensuring data integrity throughout the job lifecycle.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "Diagram Generator",
@@ -109,27 +123,33 @@
         {
           "qualified_name": "demo.py:generate_docs_remote",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "Output Generation Engine",
-      "description": "A component responsible for generating various analysis outputs, potentially triggered by external events like GitHub Actions, beyond just diagrams.",
+      "description": "A broader component responsible for generating various analysis outputs, potentially triggered by external events like GitHub Actions, beyond just diagrams.",
       "referenced_source_code": [
         {
           "qualified_name": "github_action.py:generate_analysis",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
-          "reference_start_line": 0,
-          "reference_end_line": 0
+          "reference_start_line": 1,
+          "reference_end_line": 1
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": []
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     }
   ],
   "components_relations": [
@@ -144,9 +164,9 @@
       "dst_name": "Job Status Retrieval Endpoints"
     },
     {
-      "relation": "Interacts with to save new job details",
+      "relation": "Uses",
       "src_name": "Job Creation Endpoints",
-      "dst_name": "DuckDB CRUD Operations"
+      "dst_name": "Job Data Model"
     },
     {
       "relation": "Initiates",
@@ -154,34 +174,34 @@
       "dst_name": "Job Processing Background Task"
     },
     {
-      "relation": "Uses for input validation and data structuring",
-      "src_name": "Job Creation Endpoints",
-      "dst_name": "Job Data Model"
-    },
-    {
-      "relation": "Interacts with to fetch job data",
-      "src_name": "Job Status Retrieval Endpoints",
-      "dst_name": "DuckDB CRUD Operations"
-    },
-    {
-      "relation": "Uses for output structuring",
+      "relation": "Uses",
       "src_name": "Job Status Retrieval Endpoints",
       "dst_name": "Job Data Model"
     },
     {
-      "relation": "Interacts with to update job status and store results",
-      "src_name": "Job Processing Background Task",
-      "dst_name": "DuckDB CRUD Operations"
-    },
-    {
-      "relation": "Calls to produce diagrams",
+      "relation": "Calls",
       "src_name": "Job Processing Background Task",
       "dst_name": "Diagram Generator"
     },
     {
-      "relation": "Calls for other analysis outputs",
+      "relation": "Calls",
       "src_name": "Job Processing Background Task",
       "dst_name": "Output Generation Engine"
+    },
+    {
+      "relation": "Persists data for",
+      "src_name": "DuckDB CRUD Operations",
+      "dst_name": "Job Creation Endpoints"
+    },
+    {
+      "relation": "Provides data to",
+      "src_name": "DuckDB CRUD Operations",
+      "dst_name": "Job Status Retrieval Endpoints"
+    },
+    {
+      "relation": "Updates",
+      "src_name": "Job Processing Background Task",
+      "dst_name": "DuckDB CRUD Operations"
     }
   ]
 }

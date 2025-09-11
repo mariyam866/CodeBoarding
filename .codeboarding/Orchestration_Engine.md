@@ -6,7 +6,7 @@ graph LR
     Repository_Manager["Repository Manager"]
     Static_Analysis_Engine["Static Analysis Engine"]
     AI_Interpretation_Layer["AI Interpretation Layer"]
-    Diagram_Generation_Service["Diagram Generation Service"]
+    Diagram_Generator["Diagram Generator"]
     Output_Generation_Engine["Output Generation Engine"]
     Unclassified["Unclassified"]
     External_Interfaces -- "triggers" --> Orchestration_Engine
@@ -14,13 +14,12 @@ graph LR
     Orchestration_Engine -- "delegates to" --> Repository_Manager
     Orchestration_Engine -- "delegates to" --> Static_Analysis_Engine
     Static_Analysis_Engine -- "provides analysis to" --> AI_Interpretation_Layer
-    AI_Interpretation_Layer -- "informs" --> Diagram_Generation_Service
+    AI_Interpretation_Layer -- "informs" --> Diagram_Generator
     AI_Interpretation_Layer -- "provides content to" --> Output_Generation_Engine
-    Orchestration_Engine -- "coordinates" --> Diagram_Generation_Service
+    Orchestration_Engine -- "coordinates" --> Diagram_Generator
     Orchestration_Engine -- "coordinates" --> Output_Generation_Engine
     Orchestration_Engine -- "delegates to" --> AI_Interpretation_Layer
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
-    click Job_Database href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Job_Database.md" "Details"
     click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
     click AI_Interpretation_Layer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Layer.md" "Details"
     click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
@@ -30,55 +29,79 @@ graph LR
 
 ## Details
 
-The system is orchestrated by the `Orchestration Engine`, which manages the end-to-end process of generating documentation. This engine interacts with `External Interfaces` to initiate jobs and persists job status in the `Job Database`. For code analysis, it delegates to the `Repository Manager` to access source code, which is then fed into the `Static Analysis Engine`. The `Static Analysis Engine` performs in-depth structural and semantic analysis, with recent updates significantly enhancing its internal logic and capabilities for extracting richer code insights. The results from static analysis are then passed to the `AI Interpretation Layer` for generating high-level insights and content. Subsequently, the `Diagram Generation Service` creates visual representations, and the `Output Generation Engine` compiles the final documentation. The CodeBoarding system is structured around an `Orchestration Engine` that manages the entire documentation generation workflow. This engine is initiated via `External Interfaces` and maintains job states in a `Job Database`. It delegates core tasks to specialized components: the `Repository Manager` for code retrieval, and the `Static Analysis Engine` for in-depth code analysis. The `Static Analysis Engine`, recently enhanced for more sophisticated analysis, feeds its findings to the `AI Interpretation Layer`. This layer processes the analysis to generate documentation content and insights, which are then used by the `Diagram Generation Service` for visual representations and the `Output Generation Engine` for final documentation production.
+The CodeBoarding system is structured around an Orchestration Engine that manages the entire documentation generation workflow. This engine is initiated via External Interfaces and maintains job states in a Job Database. It delegates core tasks to specialized components: the Repository Manager for code retrieval, and the Static Analysis Engine for in-depth code analysis. The Static Analysis Engine feeds its findings to the AI Interpretation Layer. This layer processes the analysis to generate documentation content and insights, which are then used by the Diagram Generator for visual representations and the Output Generation Engine for final documentation production.
 
 ### Orchestration Engine [[Expand]](./Orchestration_Engine.md)
-The central component responsible for managing the documentation generation pipeline, including job status and delegating the core generation process to other pipeline stages.
+The central control unit that manages the entire documentation generation pipeline, coordinating all analysis and generation stages. It initiates and oversees analysis jobs, and acts as the central coordinator, directing the flow of data and control between other components.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
 
-### Job Database [[Expand]](./Job_Database.md)
-Manages the persistence and status of documentation generation jobs.
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/./.codeboarding/Orchestration_Engine.json" target="_blank" rel="noopener noreferrer">`Orchestration Engine`</a>
 
 
-**Related Classes/Methods**: _None_
+### Job Database
+Manages and persists the state and metadata of ongoing analysis jobs.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/./.codeboarding/Job_Database.json" target="_blank" rel="noopener noreferrer">`Job Database`</a>
+
 
 ### External Interfaces
-Provides API endpoints for interacting with the documentation generation system.
+Provides API endpoints for interacting with the documentation generation system, triggering the Orchestration Engine.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/./.codeboarding/Orchestration_Engine.json" target="_blank" rel="noopener noreferrer">`External Interfaces`</a>
+
 
 ### Repository Manager
 Manages access and retrieval of code repositories for analysis within the documentation generation pipeline.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/./.codeboarding/Orchestration_Engine.json" target="_blank" rel="noopener noreferrer">`Repository Manager`</a>
+
 
 ### Static Analysis Engine [[Expand]](./Static_Analysis_Engine.md)
-Performs advanced static code analysis to extract detailed structural and semantic information from source code. Recent enhancements have refined its internal logic, potentially leading to improved accuracy, performance, or the ability to analyze new language constructs and complex patterns.
+Performs advanced static code analysis to extract detailed structural and semantic information from source code.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/./.codeboarding/Static_Analysis_Engine.json" target="_blank" rel="noopener noreferrer">`Static Analysis Engine`</a>
+
 
 ### AI Interpretation Layer [[Expand]](./AI_Interpretation_Layer.md)
 Interprets analysis results and generates insights using AI models for documentation content.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
 
-### Diagram Generation Service
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/./.codeboarding/AI_Interpretation_Layer.json" target="_blank" rel="noopener noreferrer">`AI Interpretation Layer`</a>
+
+
+### Diagram Generator
 Generates visual diagrams based on the interpreted code structure and relationships.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/./.codeboarding/Orchestration_Engine.json" target="_blank" rel="noopener noreferrer">`Diagram Generator`</a>
+
 
 ### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
 Formats and produces the final documentation output in various formats.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/./.codeboarding/Output_Generation_Engine.json" target="_blank" rel="noopener noreferrer">`Output Generation Engine`</a>
+
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)

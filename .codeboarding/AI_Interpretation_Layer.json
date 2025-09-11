@@ -1,6 +1,36 @@
 {
-  "description": "This graph represents the core functionality of a LangChain-based application that processes user queries, retrieves relevant documents, and generates responses. The main flow involves receiving a query, embedding it, searching a vector store, retrieving documents, and then using a language model to synthesize an answer based on the query and retrieved information. Its purpose is to provide an intelligent question-answering system over a corpus of documents.",
+  "description": "The `local_app.py` file, identified as the `Application Orchestrator`, plays a central role in managing the application's core logic and flow. It acts as the entry point for user queries and coordinates the sequence of operations involving the `QueryProcessor`, `VectorStore`, `DocumentRetriever`, and `ResponseGenerator`. The significant changes in `local_app.py` indicate a revised workflow, potentially introducing new features or altering how existing components interact. The orchestrator is responsible for passing the user query to the `QueryProcessor` for embedding, then directing the `DocumentRetriever` to fetch relevant information from the `VectorStore`, and finally, providing the gathered context to the `ResponseGenerator` to formulate a response. The system's architecture is centered around an `Application Orchestrator` (inferred from `local_app.py`) that manages the end-to-end processing of user queries. Upon receiving a query, the `Application Orchestrator` first engages the `QueryProcessor` to embed the query. Subsequently, it directs the `DocumentRetriever` to query the `VectorStore` for relevant documents based on the embedded query. Once documents are retrieved, the `Application Orchestrator` forwards both the original query and the retrieved documents to the `ResponseGenerator` to formulate a coherent natural language response. This response is then returned to the `Application Orchestrator` for delivery to the user, establishing a clear, sequential flow for information processing and response generation.",
   "components": [
+    {
+      "name": "Application Orchestrator",
+      "description": "Manages the overall application flow, coordinating interactions between `QueryProcessor`, `DocumentRetriever`, and `ResponseGenerator`. It receives user queries and delivers final responses.",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/details_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/validator_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/abstraction_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/planner_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/meta_agent.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent_responses.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/prompts.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_source.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file_structure.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/external_deps.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_packages.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_cfg.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/get_method_invocations.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_git_diff.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/utils.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_structure.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_docs.py"
+      ],
+      "can_expand": true
+    },
     {
       "name": "QueryProcessor",
       "description": "Handles incoming user queries, embeds them, and prepares them for similarity search.",
@@ -11,7 +41,9 @@
           "reference_start_line": 100,
           "reference_end_line": 110
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "VectorStore",
@@ -23,7 +55,9 @@
           "reference_start_line": 200,
           "reference_end_line": 250
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "DocumentRetriever",
@@ -35,7 +69,9 @@
           "reference_start_line": 50,
           "reference_end_line": 70
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "ResponseGenerator",
@@ -43,38 +79,57 @@
       "referenced_source_code": [
         {
           "qualified_name": "langchain_core.language_models.llms.BaseLLM:invoke",
-          "reference_file": "I cannot identify the reference file without the list of files you are referring to. Please provide the list of files so I can proceed with the analysis.",
+          "reference_file": "langchain_core.language_models.llms.BaseLLM.invoke",
           "reference_start_line": 150,
           "reference_end_line": 180
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": false
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": []
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     }
   ],
   "components_relations": [
     {
-      "relation": "sends query to",
+      "relation": "initiates",
+      "src_name": "Application Orchestrator",
+      "dst_name": "QueryProcessor"
+    },
+    {
+      "relation": "embeds query for",
       "src_name": "QueryProcessor",
       "dst_name": "VectorStore"
     },
     {
-      "relation": "retrieves from",
+      "relation": "requests retrieval from",
+      "src_name": "Application Orchestrator",
+      "dst_name": "DocumentRetriever"
+    },
+    {
+      "relation": "queries",
       "src_name": "DocumentRetriever",
       "dst_name": "VectorStore"
     },
     {
-      "relation": "sends documents to",
+      "relation": "provides documents to",
       "src_name": "DocumentRetriever",
+      "dst_name": "Application Orchestrator"
+    },
+    {
+      "relation": "sends context to",
+      "src_name": "Application Orchestrator",
       "dst_name": "ResponseGenerator"
     },
     {
-      "relation": "sends query and documents to",
-      "src_name": "QueryProcessor",
-      "dst_name": "ResponseGenerator"
+      "relation": "returns response to",
+      "src_name": "ResponseGenerator",
+      "dst_name": "Application Orchestrator"
     }
   ]
 }

@@ -8,10 +8,9 @@ graph LR
     AI_Interpretation_Layer["AI Interpretation Layer"]
     Output_Generation_Engine["Output Generation Engine"]
     Unclassified["Unclassified"]
-    Unclassified["Unclassified"]
-    Unclassified["Unclassified"]
     API_Service -- "Initiates Job" --> Job_Database
     API_Service -- "Triggers Analysis" --> Orchestration_Engine
+    API_Service -- "Requests GitHub Action Job" --> Orchestration_Engine
     Orchestration_Engine -- "Manages Job State" --> Job_Database
     Orchestration_Engine -- "Requests Code" --> Repository_Manager
     Repository_Manager -- "Provides Code" --> Orchestration_Engine
@@ -22,8 +21,8 @@ graph LR
     AI_Interpretation_Layer -- "Queries Diff" --> Repository_Manager
     Orchestration_Engine -- "Passes Enhanced Insights for Generation" --> Output_Generation_Engine
     Output_Generation_Engine -- "Delivers Documentation" --> API_Service
+    Output_Generation_Engine -- "Provides GitHub Action Output" --> API_Service
     click API_Service href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/API_Service.md" "Details"
-    click Job_Database href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Job_Database.md" "Details"
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
     click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
     click AI_Interpretation_Layer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Layer.md" "Details"
@@ -34,24 +33,24 @@ graph LR
 
 ## Details
 
-The CodeBoarding system operates through a robust, multi-layered architecture designed for comprehensive code analysis and documentation generation. The API Service serves as the primary external interface, initiating jobs and managing user interactions. All job lifecycle and status information is persistently stored and managed by the Job Database. The Orchestration Engine acts as the central coordinator, driving the entire documentation pipeline. It interacts with the Repository Manager to retrieve source code and then dispatches requests to the Static Analysis Engine. The Static Analysis Engine performs deep, language-specific analysis, now providing richer and more detailed structural information. This enhanced data is then fed by the Orchestration Engine to the AI Interpretation Layer. This layer, comprising specialized AI agents, performs sophisticated interpretation, generating enhanced high-level architectural insights, and may query the Repository Manager for diff analysis. Finally, the Orchestration Engine passes these refined insights to the Output Generation Engine, which transforms them into various documentation formats with enhanced capabilities, including integration with GitHub Actions, before delivering the final output back through the API Service. This updated architecture reflects significant internal enhancements in analysis depth and output quality, particularly within the AI interpretation and static analysis components.
+CodeBoarding's architecture is centered around an `API Service` that acts as the primary external interface, now with expanded capabilities to handle both direct user requests and automated documentation generation via GitHub Actions. This service initiates jobs, which are then managed by the `Job Database` for persistent storage of job status and results. The `Orchestration Engine` is the core control unit, coordinating the entire documentation generation pipeline. It interacts with the `Repository Manager` to fetch and manage source code, and with the `Static Analysis Engine` to perform deep code analysis. The resulting rich analysis data is then fed to the `AI Interpretation Layer`, a collection of specialized AI agents that generate high-level architectural insights. Finally, the `Output Generation Engine` transforms these insights into various documentation formats, delivering them back to the `API Service` for user consumption or GitHub Action integration. This modular design ensures clear separation of concerns and facilitates efficient processing of documentation generation requests.
 
 ### API Service [[Expand]](./API_Service.md)
-The external interface for CodeBoarding, handling user requests, job initiation, and status retrieval.
+The external interface for CodeBoarding, handling user requests, job initiation, status retrieval, and now specifically integrating with GitHub Actions for automated documentation generation.
 
 
 **Related Classes/Methods**:
 
-- `local_app`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py" target="_blank" rel="noopener noreferrer">`local_app`</a>
 
 
-### Job Database [[Expand]](./Job_Database.md)
+### Job Database
 Persistent storage for managing the lifecycle, status, and results of all documentation generation jobs.
 
 
 **Related Classes/Methods**:
 
-- `duckdb_crud`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/duckdb_crud.py" target="_blank" rel="noopener noreferrer">`duckdb_crud`</a>
 
 
 ### Orchestration Engine [[Expand]](./Orchestration_Engine.md)
@@ -79,7 +78,7 @@ Performs deep, language-specific analysis of source code to extract richer, more
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py#L13-L66" target="_blank" rel="noopener noreferrer">`scanner`:13-66</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py#L13-L82" target="_blank" rel="noopener noreferrer">`scanner`:13-82</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/typescript_client.py#L10-L214" target="_blank" rel="noopener noreferrer">`client`:10-214</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/abstraction_agent.py" target="_blank" rel="noopener noreferrer">`analysis_result`</a>
 
@@ -111,20 +110,8 @@ Transforms the final, validated architectural insights into various human-readab
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/github_action.py#L20-L34" target="_blank" rel="noopener noreferrer">`markdown`:20-34</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/github_action.py#L54-L68" target="_blank" rel="noopener noreferrer">`mdx`:54-68</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/sphinx.py" target="_blank" rel="noopener noreferrer">`sphinx`</a>
-- `github_action`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/github_action.py" target="_blank" rel="noopener noreferrer">`github_action`</a>
 
-
-### Unclassified
-Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
-
-
-**Related Classes/Methods**: _None_
-
-### Unclassified
-Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
-
-
-**Related Classes/Methods**: _None_
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)

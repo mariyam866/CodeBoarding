@@ -1,15 +1,15 @@
 {
-  "description": "The CodeBoarding system operates through a robust, multi-layered architecture designed for comprehensive code analysis and documentation generation. The API Service serves as the primary external interface, initiating jobs and managing user interactions. All job lifecycle and status information is persistently stored and managed by the Job Database. The Orchestration Engine acts as the central coordinator, driving the entire documentation pipeline. It interacts with the Repository Manager to retrieve source code and then dispatches requests to the Static Analysis Engine. The Static Analysis Engine performs deep, language-specific analysis, now providing richer and more detailed structural information. This enhanced data is then fed by the Orchestration Engine to the AI Interpretation Layer. This layer, comprising specialized AI agents, performs sophisticated interpretation, generating enhanced high-level architectural insights, and may query the Repository Manager for diff analysis. Finally, the Orchestration Engine passes these refined insights to the Output Generation Engine, which transforms them into various documentation formats with enhanced capabilities, including integration with GitHub Actions, before delivering the final output back through the API Service. This updated architecture reflects significant internal enhancements in analysis depth and output quality, particularly within the AI interpretation and static analysis components.",
+  "description": "CodeBoarding's architecture is centered around an `API Service` that acts as the primary external interface, now with expanded capabilities to handle both direct user requests and automated documentation generation via GitHub Actions. This service initiates jobs, which are then managed by the `Job Database` for persistent storage of job status and results. The `Orchestration Engine` is the core control unit, coordinating the entire documentation generation pipeline. It interacts with the `Repository Manager` to fetch and manage source code, and with the `Static Analysis Engine` to perform deep code analysis. The resulting rich analysis data is then fed to the `AI Interpretation Layer`, a collection of specialized AI agents that generate high-level architectural insights. Finally, the `Output Generation Engine` transforms these insights into various documentation formats, delivering them back to the `API Service` for user consumption or GitHub Action integration. This modular design ensures clear separation of concerns and facilitates efficient processing of documentation generation requests.",
   "components": [
     {
       "name": "API Service",
-      "description": "The external interface for CodeBoarding, handling user requests, job initiation, and status retrieval.",
+      "description": "The external interface for CodeBoarding, handling user requests, job initiation, status retrieval, and now specifically integrating with GitHub Actions for automated documentation generation.",
       "referenced_source_code": [
         {
           "qualified_name": "local_app",
-          "reference_file": "local_app.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
         }
       ],
       "assigned_files": [
@@ -23,15 +23,15 @@
       "referenced_source_code": [
         {
           "qualified_name": "duckdb_crud",
-          "reference_file": "duckdb_crud.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
         }
       ],
       "assigned_files": [
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py"
       ],
-      "can_expand": true
+      "can_expand": false
     },
     {
       "name": "Orchestration Engine",
@@ -40,13 +40,15 @@
         {
           "qualified_name": "diagram_generator",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "reference_start_line": 0,
+          "reference_end_line": 0
         }
       ],
       "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/analysis_json.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/__init__.py"
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/version.py"
       ],
       "can_expand": true
     },
@@ -82,7 +84,7 @@
           "qualified_name": "scanner",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
           "reference_start_line": 13,
-          "reference_end_line": 66
+          "reference_end_line": 82
         },
         {
           "qualified_name": "client",
@@ -146,8 +148,8 @@
         {
           "qualified_name": "diff_analyzer",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "reference_start_line": 0,
+          "reference_end_line": 0
         },
         {
           "qualified_name": "agent",
@@ -158,8 +160,8 @@
         {
           "qualified_name": "agent_responses",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent_responses.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "reference_start_line": 0,
+          "reference_end_line": 0
         },
         {
           "qualified_name": "prompts",
@@ -190,8 +192,7 @@
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/utils.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_structure.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_docs.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/analysis_json.py"
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_docs.py"
       ],
       "can_expand": true
     },
@@ -220,14 +221,14 @@
         {
           "qualified_name": "sphinx",
           "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/sphinx.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "reference_start_line": 0,
+          "reference_end_line": 0
         },
         {
           "qualified_name": "github_action",
-          "reference_file": "github_action.py",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
+          "reference_start_line": 0,
+          "reference_end_line": 0
         }
       ],
       "assigned_files": [
@@ -250,23 +251,8 @@
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/vscode_runnable.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/utils.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/logging_config.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/version.py"
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/logging_config.py"
       ],
-      "can_expand": false
-    },
-    {
-      "name": "Unclassified",
-      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": false
-    },
-    {
-      "name": "Unclassified",
-      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [],
       "can_expand": false
     }
   ],
@@ -278,6 +264,11 @@
     },
     {
       "relation": "Triggers Analysis",
+      "src_name": "API Service",
+      "dst_name": "Orchestration Engine"
+    },
+    {
+      "relation": "Requests GitHub Action Job",
       "src_name": "API Service",
       "dst_name": "Orchestration Engine"
     },
@@ -328,6 +319,11 @@
     },
     {
       "relation": "Delivers Documentation",
+      "src_name": "Output Generation Engine",
+      "dst_name": "API Service"
+    },
+    {
+      "relation": "Provides GitHub Action Output",
       "src_name": "Output Generation Engine",
       "dst_name": "API Service"
     }

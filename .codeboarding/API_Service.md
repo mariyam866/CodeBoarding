@@ -11,14 +11,14 @@ graph LR
     Unclassified["Unclassified"]
     FastAPI_Application -- "Orchestrates" --> Job_Creation_Endpoints
     FastAPI_Application -- "Orchestrates" --> Job_Status_Retrieval_Endpoints
-    Job_Creation_Endpoints -- "Interacts with to save new job details" --> DuckDB_CRUD_Operations
+    Job_Creation_Endpoints -- "Uses" --> Job_Data_Model
     Job_Creation_Endpoints -- "Initiates" --> Job_Processing_Background_Task
-    Job_Creation_Endpoints -- "Uses for input validation and data structuring" --> Job_Data_Model
-    Job_Status_Retrieval_Endpoints -- "Interacts with to fetch job data" --> DuckDB_CRUD_Operations
-    Job_Status_Retrieval_Endpoints -- "Uses for output structuring" --> Job_Data_Model
-    Job_Processing_Background_Task -- "Interacts with to update job status and store results" --> DuckDB_CRUD_Operations
-    Job_Processing_Background_Task -- "Calls to produce diagrams" --> Diagram_Generator
-    Job_Processing_Background_Task -- "Calls for other analysis outputs" --> Output_Generation_Engine
+    Job_Status_Retrieval_Endpoints -- "Uses" --> Job_Data_Model
+    Job_Processing_Background_Task -- "Calls" --> Diagram_Generator
+    Job_Processing_Background_Task -- "Calls" --> Output_Generation_Engine
+    DuckDB_CRUD_Operations -- "Persists data for" --> Job_Creation_Endpoints
+    DuckDB_CRUD_Operations -- "Provides data to" --> Job_Status_Retrieval_Endpoints
+    Job_Processing_Background_Task -- "Updates" --> DuckDB_CRUD_Operations
     click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
 ```
 
@@ -26,7 +26,7 @@ graph LR
 
 ## Details
 
-The system is built around a FastAPI Application that serves as the central entry point for all client interactions. It exposes Job Creation Endpoints for initiating new code analysis and documentation generation tasks, and Job Status Retrieval Endpoints for monitoring their progress and fetching results. All job-related data is managed persistently through DuckDB CRUD Operations. When a job is created, the Job Creation Endpoints initiate a Job Processing Background Task to handle the heavy computational work asynchronously. This background task interacts with the DuckDB CRUD Operations to update job statuses and store results. Depending on the job type, it may also invoke the Diagram Generator for visual documentation or the Output Generation Engine for other analysis outputs. The Job Data Model ensures consistent data structures and validation across the entire system.
+The CodeBoarding application is structured around a FastAPI Application that serves as the central orchestrator for all API interactions. This core component routes incoming requests to Job Creation Endpoints for initiating new code analysis and documentation generation tasks, and to Job Status Retrieval Endpoints for clients to monitor the progress and retrieve results of their submitted jobs. All data related to jobs, requests, and responses is consistently defined and validated by the Job Data Model. Persistent storage and retrieval of job records are handled by DuckDB CRUD Operations. Intensive computational work, such as code analysis and documentation generation, is asynchronously managed by the Job Processing Background Task. This background task coordinates the execution of these operations, updating job statuses, and leveraging specialized components like the Diagram Generator for visual outputs and the Output Generation Engine for other forms of analysis results. Recent significant updates to the core application logic in local_app.py have expanded the capabilities and refined the interactions within these central components, introducing new flows and enhancing existing functionalities.
 
 ### FastAPI Application
 The core web server instance, responsible for defining and managing all API routes, middleware, and overall request/response handling. It serves as the central orchestrator for all incoming API calls.
@@ -38,7 +38,7 @@ The core web server instance, responsible for defining and managing all API rout
 
 
 ### Job Creation Endpoints
-Provides the API endpoints for users to submit new code analysis and documentation generation requests, validating input and initiating the job lifecycle.
+Provides the API endpoints for users to submit new code analysis and documentation generation requests, validating input and initiating the job lifecycle. Recent changes in `local_app.py` suggest an expansion of its capabilities, potentially introducing new job types or more complex submission logic.
 
 
 **Related Classes/Methods**:
@@ -48,7 +48,7 @@ Provides the API endpoints for users to submit new code analysis and documentati
 
 
 ### Job Status Retrieval Endpoints
-Offers API endpoints for clients to query the current status, progress, and results of previously submitted jobs.
+Offers API endpoints for clients to query the current status, progress, and results of previously submitted jobs. This component likely provides more detailed status information or filtering capabilities due to recent updates.
 
 
 **Related Classes/Methods**:
@@ -59,7 +59,7 @@ Offers API endpoints for clients to query the current status, progress, and resu
 
 
 ### Job Processing Background Task
-Asynchronously executes the core job logic, offloading heavy computation from the main API thread to ensure responsiveness. It coordinates the actual analysis and generation steps.
+Asynchronously executes the core job logic, offloading heavy computation from the main API thread to ensure responsiveness. It coordinates the actual analysis and generation steps, and its internal logic or the types of tasks it handles have become more complex due to recent changes.
 
 
 **Related Classes/Methods**:
@@ -69,7 +69,7 @@ Asynchronously executes the core job logic, offloading heavy computation from th
 
 
 ### Job Data Model
-Defines the data structures (e.g., Pydantic models) for jobs and incoming documentation generation requests, ensuring data consistency and validation across the API.
+Defines the data structures (e.g., Pydantic models) for jobs, incoming requests, and API responses, ensuring data consistency and validation across the application. Updates to `local_app.py` likely involved modifications or additions to these models to support new features.
 
 
 **Related Classes/Methods**:
@@ -80,7 +80,7 @@ Defines the data structures (e.g., Pydantic models) for jobs and incoming docume
 
 
 ### DuckDB CRUD Operations
-Handles persistent job management by interacting with the DuckDB database for storing, retrieving, and updating job records.
+Handles persistent job management by interacting with the DuckDB database for storing, retrieving, and updating job records, ensuring data integrity throughout the job lifecycle.
 
 
 **Related Classes/Methods**: _None_
@@ -95,7 +95,7 @@ A specialized component responsible for generating architectural diagrams and ot
 
 
 ### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
-A component responsible for generating various analysis outputs, potentially triggered by external events like GitHub Actions, beyond just diagrams.
+A broader component responsible for generating various analysis outputs, potentially triggered by external events like GitHub Actions, beyond just diagrams.
 
 
 **Related Classes/Methods**:

@@ -1,66 +1,88 @@
 {
-  "description": "The system's architecture is centered around the generation of comprehensive architectural documentation from source code. The process begins with the Static Analysis Engine, which meticulously scans the codebase to extract raw architectural insights. These insights are then fed into the Output Generation Engine, the central orchestrator that manages the overall documentation workflow. The Output Generation Engine dispatches the insights to various specialized generators: HTMLGenerator, MarkdownGenerator, MDXGenerator, and SphinxGenerator, each responsible for producing documentation in its respective format. The HTML Template Populator further refines the HTML output by integrating generated data into predefined templates. Additionally, the GitHubActionOutputFormatter ensures that the generated documentation is appropriately formatted for seamless integration into GitHub Actions workflows, leveraging the capabilities of the other generators. This structured approach ensures accurate, consistent, and versatile architectural documentation.",
+  "description": "The system's architecture is centered around an API Gateway / Job Orchestrator that provides external access for initiating and managing documentation generation. This component interacts with a Job Management System to persist job states and results. Upon receiving a request, the API Gateway / Job Orchestrator triggers the Output Generation Engine, which orchestrates the entire documentation creation process. The Output Generation Engine first utilizes the Static Analysis Engine to extract architectural insights from the codebase. These insights are then passed to the Documentation Format Generators, a consolidated component responsible for producing documentation in various formats, including HTML, Markdown, MDX, and reStructuredText, and for integrating with platforms like GitHub Actions.",
   "components": [
     {
+      "name": "API Gateway / Job Orchestrator",
+      "description": "The `local_app.py` file reveals a FastAPI application that serves as an API Gateway and Job Orchestrator. It handles incoming requests to generate documentation, manages the lifecycle of these jobs (pending, running, completed, failed), and interacts with the `demo.py`'s `generate_docs_remote` function, which is part of the `Output Generation Engine`. It also uses `duckdb_crud` for persistent job storage and retrieval.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
+    },
+    {
+      "name": "Job Management System",
+      "description": "The 'Job Management System' provides persistence for job states and results.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
+    },
+    {
       "name": "Static Analysis Engine",
-      "description": "This foundational component is responsible for scanning the source code, performing static analysis, and generating the initial architectural insights. It extracts critical data, identifies relationships, and prepares the raw information that downstream components will consume to generate documentation.",
-      "referenced_source_code": []
+      "description": "The 'Output Generation Engine' first utilizes the **Static Analysis Engine** to extract architectural insights from the codebase.",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "Output Generation Engine",
-      "description": "The primary component responsible for orchestrating the overall process of generating documentation in various formats. It consumes architectural insights from the `Static Analysis Engine`, handles repository cloning, initiates the analysis generation, and dispatches the actual documentation generation to specific format generators based on the desired output.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "demo.py",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
-          "reference_start_line": 57,
-          "reference_end_line": 80
-        },
-        {
-          "qualified_name": "demo.py",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/demo.py",
-          "reference_start_line": 82,
-          "reference_end_line": 101
-        }
-      ]
+      "description": "The **Output Generation Engine**, which orchestrates the entire documentation creation process. The **Output Generation Engine** first utilizes the **Static Analysis Engine** to extract architectural insights from the codebase. These insights are then passed to the **Documentation Format Generators**...",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
-      "name": "HTMLGenerator",
-      "description": "This component is dedicated to converting the processed architectural insights into a structured HTML format. It handles the rendering of diagrams, text, and other elements into web-friendly documentation. It prepares data (e.g., Cytoscape.js compatible JSON) for interactive architectural diagrams.",
-      "referenced_source_code": []
-    },
-    {
-      "name": "MarkdownGenerator",
-      "description": "Responsible for generating documentation in standard Markdown format. This component ensures that architectural insights are presented in a widely compatible and easily readable text-based format, suitable for various platforms and tools. It includes embedded Mermaid diagrams and basic component details.",
-      "referenced_source_code": []
-    },
-    {
-      "name": "MDXGenerator",
-      "description": "This component extends Markdown generation by incorporating JSX capabilities, allowing for more dynamic and interactive documentation. It transforms insights into MDX, enabling the embedding of React components within the documentation, including Mermaid diagrams and frontmatter.",
-      "referenced_source_code": []
-    },
-    {
-      "name": "SphinxGenerator",
-      "description": "Focuses on generating documentation in reStructuredText (RST) format, specifically tailored for use with the Sphinx documentation generator. This component ensures compatibility with Sphinx's powerful features for technical documentation, including embedded Mermaid diagrams and structured component information.",
-      "referenced_source_code": []
-    },
-    {
-      "name": "GitHubActionOutputFormatter",
-      "description": "This component acts as an integration layer, specifically formatting and preparing the generated documentation for consumption within GitHub Actions workflows. It leverages the capabilities of the other generators (HTML, Markdown, MDX) to produce output suitable for GitHub's environment.",
-      "referenced_source_code": []
-    },
-    {
-      "name": "HTML Template Populator",
-      "description": "Integrates generated architectural data (like Cytoscape JSON and component-specific HTML snippets) into a predefined HTML template to produce the final, complete, and styled HTML output.",
-      "referenced_source_code": []
+      "name": "Documentation Format Generators",
+      "description": "These insights are then passed to the **Documentation Format Generators**, a consolidated component responsible for producing documentation in various formats, including HTML, Markdown, MDX, and reStructuredText, and for integrating with platforms like GitHub Actions.",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/sphinx.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/mdx.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/html.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/html_template.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/markdown.py"
+      ],
+      "can_expand": true
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": []
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     }
   ],
   "components_relations": [
+    {
+      "relation": "initiates",
+      "src_name": "API Gateway / Job Orchestrator",
+      "dst_name": "Job Management System"
+    },
+    {
+      "relation": "triggers",
+      "src_name": "API Gateway / Job Orchestrator",
+      "dst_name": "Output Generation Engine"
+    },
+    {
+      "relation": "retrieves status from",
+      "src_name": "API Gateway / Job Orchestrator",
+      "dst_name": "Job Management System"
+    },
+    {
+      "relation": "retrieves results from",
+      "src_name": "API Gateway / Job Orchestrator",
+      "dst_name": "Job Management System"
+    },
+    {
+      "relation": "stores data for",
+      "src_name": "Job Management System",
+      "dst_name": "API Gateway / Job Orchestrator"
+    },
+    {
+      "relation": "provides data to",
+      "src_name": "Job Management System",
+      "dst_name": "API Gateway / Job Orchestrator"
+    },
     {
       "relation": "provides insights to",
       "src_name": "Static Analysis Engine",
@@ -69,47 +91,17 @@
     {
       "relation": "orchestrates",
       "src_name": "Output Generation Engine",
-      "dst_name": "HTMLGenerator"
-    },
-    {
-      "relation": "orchestrates",
-      "src_name": "Output Generation Engine",
-      "dst_name": "MarkdownGenerator"
-    },
-    {
-      "relation": "orchestrates",
-      "src_name": "Output Generation Engine",
-      "dst_name": "MDXGenerator"
-    },
-    {
-      "relation": "orchestrates",
-      "src_name": "Output Generation Engine",
-      "dst_name": "SphinxGenerator"
+      "dst_name": "Documentation Format Generators"
     },
     {
       "relation": "uses",
       "src_name": "Output Generation Engine",
-      "dst_name": "GitHubActionOutputFormatter"
+      "dst_name": "Static Analysis Engine"
     },
     {
-      "relation": "provides data to",
-      "src_name": "HTMLGenerator",
-      "dst_name": "HTML Template Populator"
-    },
-    {
-      "relation": "uses",
-      "src_name": "GitHubActionOutputFormatter",
-      "dst_name": "HTMLGenerator"
-    },
-    {
-      "relation": "uses",
-      "src_name": "GitHubActionOutputFormatter",
-      "dst_name": "MarkdownGenerator"
-    },
-    {
-      "relation": "uses",
-      "src_name": "GitHubActionOutputFormatter",
-      "dst_name": "MDXGenerator"
+      "relation": "receives data from",
+      "src_name": "Documentation Format Generators",
+      "dst_name": "Output Generation Engine"
     }
   ]
 }
