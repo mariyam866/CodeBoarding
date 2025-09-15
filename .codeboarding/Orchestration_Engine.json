@@ -1,15 +1,33 @@
 {
-  "description": "The CodeBoarding system is structured around an Orchestration Engine that manages the entire documentation generation workflow. This engine is initiated via External Interfaces and maintains job states in a Job Database. It delegates core tasks to specialized components: the Repository Manager for code retrieval, and the Static Analysis Engine for in-depth code analysis. The Static Analysis Engine feeds its findings to the AI Interpretation Layer. This layer processes the analysis to generate documentation content and insights, which are then used by the Diagram Generator for visual representations and the Output Generation Engine for final documentation production.",
+  "description": "The CodeBoarding system is orchestrated by the Orchestration Engine, which serves as the central control unit for initiating and managing documentation generation jobs. External systems, such as VSCode and GitHub Actions, interact with the system through the External Integrations component, triggering the Orchestration Engine to begin a new analysis workflow. The Orchestration Engine relies on the Job Database to store and retrieve job-related information and status updates throughout the process. To access the codebase, the Orchestration Engine communicates with the Repository Manager, which handles tasks like cloning repositories and retrieving code differences. Once the code is available, the Orchestration Engine triggers the Static Analysis Engine to perform initial code analysis. Subsequently, it dispatches tasks to the AI Interpretation Layer (Agents) for deeper, AI-driven code understanding. For visual representations, the Orchestration Engine invokes the Diagram Analysis component to generate structured data for diagrams. Finally, the Output Generation Engine is responsible for formatting and producing the final documentation and diagrams in various desired formats.",
   "components": [
     {
       "name": "Orchestration Engine",
-      "description": "The central control unit that manages the entire documentation generation pipeline, coordinating all analysis and generation stages. It initiates and oversees analysis jobs, and acts as the central coordinator, directing the flow of data and control between other components.",
+      "description": "The central control subsystem responsible for initiating, managing, and coordinating all analysis and documentation generation jobs, acting as the primary orchestrator for the end-to-end workflow.",
       "referenced_source_code": [
         {
-          "qualified_name": "Orchestration Engine",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/./.codeboarding/Orchestration_Engine.json",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "qualified_name": "local_app.py:start_generation_job",
+          "reference_file": "",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "local_app.py:start_docs_generation_job",
+          "reference_file": "",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "local_app.py:process_docs_generation_job",
+          "reference_file": "local_app.py",
+          "reference_start_line": 302,
+          "reference_end_line": 349
+        },
+        {
+          "qualified_name": "diagram_analysis/diagram_generator.py:generate_analysis",
+          "reference_file": "diagram_analysis/diagram_generator.py",
+          "reference_start_line": 100,
+          "reference_end_line": 169
         }
       ],
       "assigned_files": [],
@@ -17,87 +35,72 @@
     },
     {
       "name": "Job Database",
-      "description": "Manages and persists the state and metadata of ongoing analysis jobs.",
+      "description": "Manages the storage and retrieval of job details, including status updates, for the documentation generation pipeline.",
       "referenced_source_code": [
         {
-          "qualified_name": "Job Database",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/./.codeboarding/Job_Database.json",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "qualified_name": "duckdb_crud.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
       "assigned_files": [],
       "can_expand": false
     },
     {
-      "name": "External Interfaces",
-      "description": "Provides API endpoints for interacting with the documentation generation system, triggering the Orchestration Engine.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "External Interfaces",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/./.codeboarding/Orchestration_Engine.json",
-          "reference_start_line": 1,
-          "reference_end_line": 1
-        }
-      ],
-      "assigned_files": [],
-      "can_expand": true
-    },
-    {
       "name": "Repository Manager",
-      "description": "Manages access and retrieval of code repositories for analysis within the documentation generation pipeline.",
+      "description": "Handles repository operations such as cloning code repositories and retrieving code differences for analysis.",
       "referenced_source_code": [
         {
-          "qualified_name": "Repository Manager",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/./.codeboarding/Orchestration_Engine.json",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "qualified_name": "repo_utils.git_diff.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/git_diff.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
       "assigned_files": [],
-      "can_expand": true
+      "can_expand": false
     },
     {
       "name": "Static Analysis Engine",
-      "description": "Performs advanced static code analysis to extract detailed structural and semantic information from source code.",
+      "description": "Performs static code analysis on the codebase.",
       "referenced_source_code": [
         {
-          "qualified_name": "Static Analysis Engine",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/./.codeboarding/Static_Analysis_Engine.json",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "qualified_name": "static_analyzer.scanner.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
       "assigned_files": [],
       "can_expand": true
     },
     {
-      "name": "AI Interpretation Layer",
-      "description": "Interprets analysis results and generates insights using AI models for documentation content.",
+      "name": "AI Interpretation Layer (Agents)",
+      "description": "Dispatches tasks to AI agents for advanced analysis and interpretation of code.",
       "referenced_source_code": [
         {
-          "qualified_name": "AI Interpretation Layer",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/./.codeboarding/AI_Interpretation_Layer.json",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "qualified_name": "agents.agent.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
       "assigned_files": [],
       "can_expand": true
     },
     {
-      "name": "Diagram Generator",
-      "description": "Generates visual diagrams based on the interpreted code structure and relationships.",
+      "name": "Diagram Analysis",
+      "description": "Generates structured analysis data specifically for creating diagrams.",
       "referenced_source_code": [
         {
-          "qualified_name": "Diagram Generator",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/./.codeboarding/Orchestration_Engine.json",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "qualified_name": "diagram_analysis.diagram_generator.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
       "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/./.codeboarding/Orchestration_Engine.json",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/__init__.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/analysis_json.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
@@ -107,17 +110,37 @@
     },
     {
       "name": "Output Generation Engine",
-      "description": "Formats and produces the final documentation output in various formats.",
+      "description": "Responsible for the final formatting and generation of documentation and diagrams in various formats.",
       "referenced_source_code": [
         {
-          "qualified_name": "Output Generation Engine",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/./.codeboarding/Output_Generation_Engine.json",
-          "reference_start_line": 1,
-          "reference_end_line": 1
+          "qualified_name": "output_generators.markdown.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/markdown.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
       "assigned_files": [],
       "can_expand": true
+    },
+    {
+      "name": "External Integrations",
+      "description": "Provides interfaces for external systems, such as VSCode and GitHub Actions, to trigger analysis workflows.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "github_action.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "vscode_runnable.py",
+          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/vscode_runnable.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [],
+      "can_expand": false
     },
     {
       "name": "Unclassified",
@@ -129,54 +152,39 @@
   ],
   "components_relations": [
     {
-      "relation": "triggers",
-      "src_name": "External Interfaces",
-      "dst_name": "Orchestration Engine"
-    },
-    {
-      "relation": "manages",
+      "relation": "interacts with",
       "src_name": "Orchestration Engine",
       "dst_name": "Job Database"
     },
     {
-      "relation": "delegates to",
+      "relation": "requests code from",
       "src_name": "Orchestration Engine",
       "dst_name": "Repository Manager"
     },
     {
-      "relation": "delegates to",
+      "relation": "triggers",
       "src_name": "Orchestration Engine",
       "dst_name": "Static Analysis Engine"
     },
     {
-      "relation": "provides analysis to",
-      "src_name": "Static Analysis Engine",
-      "dst_name": "AI Interpretation Layer"
-    },
-    {
-      "relation": "informs",
-      "src_name": "AI Interpretation Layer",
-      "dst_name": "Diagram Generator"
-    },
-    {
-      "relation": "provides content to",
-      "src_name": "AI Interpretation Layer",
-      "dst_name": "Output Generation Engine"
-    },
-    {
-      "relation": "coordinates",
+      "relation": "dispatches tasks to",
       "src_name": "Orchestration Engine",
-      "dst_name": "Diagram Generator"
+      "dst_name": "AI Interpretation Layer (Agents)"
     },
     {
-      "relation": "coordinates",
+      "relation": "invokes",
+      "src_name": "Orchestration Engine",
+      "dst_name": "Diagram Analysis"
+    },
+    {
+      "relation": "triggers",
       "src_name": "Orchestration Engine",
       "dst_name": "Output Generation Engine"
     },
     {
-      "relation": "delegates to",
-      "src_name": "Orchestration Engine",
-      "dst_name": "AI Interpretation Layer"
+      "relation": "triggers",
+      "src_name": "External Integrations",
+      "dst_name": "Orchestration Engine"
     }
   ]
 }

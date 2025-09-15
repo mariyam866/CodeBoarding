@@ -1,80 +1,81 @@
 ```mermaid
 graph LR
-    local_app_py["local_app.py"]
-    ProjectScanner["ProjectScanner"]
-    LSPClient["LSPClient"]
-    TypeScriptClient["TypeScriptClient"]
-    StaticAnalysisResults["StaticAnalysisResults"]
-    duckdb_crud["duckdb_crud"]
+    Document_Ingestion["Document Ingestion"]
+    Text_Splitter["Text Splitter"]
+    Vector_Store["Vector Store"]
+    Embeddings_Model["Embeddings Model"]
+    Language_Model_LLM_["Language Model (LLM)"]
+    Retrieval_Chain["Retrieval Chain"]
     Unclassified["Unclassified"]
-    local_app_py -- "initiates" --> ProjectScanner
-    ProjectScanner -- "configures" --> LSPClient
-    local_app_py -- "orchestrates" --> LSPClient
-    LSPClient -- "stores results in" --> StaticAnalysisResults
-    TypeScriptClient -- "extends" --> LSPClient
-    local_app_py -- "processes results from" --> StaticAnalysisResults
-    local_app_py -- "persists jobs via" --> duckdb_crud
+    Document_Ingestion -- "loads documents into" --> Text_Splitter
+    Text_Splitter -- "splits text for" --> Embeddings_Model
+    Embeddings_Model -- "generates embeddings for" --> Vector_Store
+    Vector_Store -- "stores embeddings from" --> Embeddings_Model
+    Vector_Store -- "retrieves context for" --> Retrieval_Chain
+    Retrieval_Chain -- "uses" --> Language_Model_LLM_
+    Language_Model_LLM_ -- "answers queries using" --> Retrieval_Chain
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The system operates as a FastAPI application, local_app.py, which serves as the central orchestrator for generating documentation and diagrams from GitHub repositories. It manages job lifecycles, from creation and status tracking to the actual execution of static analysis and documentation generation. The ProjectScanner initiates the analysis by identifying programming languages and their configurations. Subsequently, specialized LSPClient implementations (like TypeScriptClient) perform detailed static analysis, populating the StaticAnalysisResults with structured data. Finally, the local_app.py processes these results to generate the desired documentation and diagrams.
+This graph represents the core functionality of a document processing and question-answering system. The main flow involves ingesting documents, processing them into a searchable format, and then using a language model to answer user queries based on the ingested content. Its purpose is to provide an intelligent interface for users to retrieve information from a collection of documents.
 
-### local_app.py
-The core application component, responsible for exposing API endpoints for job management (creation, status retrieval) and orchestrating the entire documentation and diagram generation workflow. It handles repository cloning, triggers the static analysis process, and manages the storage and retrieval of generated results. It uses `duckdb_crud` for job persistence and `utils` for temporary folder management.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L165-L182" target="_blank" rel="noopener noreferrer">`start_generation_job`:165-182</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L92-L161" target="_blank" rel="noopener noreferrer">`generate_onboarding`:92-161</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L243-L293" target="_blank" rel="noopener noreferrer">`start_docs_generation_job`:243-293</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/local_app.py#L376-L440" target="_blank" rel="noopener noreferrer">`process_docs_generation_job`:376-440</a>
-
-
-### ProjectScanner
-Initiates the static analysis process by leveraging the external `tokei` tool to scan the project repository. It identifies programming languages used, their code distribution, and relevant file suffixes. Crucially, it also determines the appropriate Language Server Protocol (LSP) server commands for each detected language, preparing a structured list of `ProgrammingLanguage` objects. This component acts as the initial data gatherer, providing the necessary configuration and language-specific details for subsequent LSP-based analysis.
+### Document Ingestion
+Handles the loading and initial processing of various document types.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py#L13-L82" target="_blank" rel="noopener noreferrer">`ProjectScanner`:13-82</a>
+- `langchain_community.document_loaders.pdf.PyPDFLoader`
+- `langchain_community.document_loaders.csv_loader.CSVLoader`
 
 
-### LSPClient
-Serves as the generic Language Server Protocol client. It manages the communication lifecycle with an LSP server (initialization, sending requests, receiving responses, shutdown). It orchestrates the detailed static analysis for individual files and the entire workspace, extracting symbols, imports, call graphs, and class hierarchies. It populates the `StaticAnalysisResults` with its findings.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/client.py#L37-L924" target="_blank" rel="noopener noreferrer">`LSPClient`:37-924</a>
-
-
-### TypeScriptClient
-A specialized implementation of `LSPClient` tailored for TypeScript projects. It handles TypeScript-specific initialization parameters, workspace configuration (e.g., processing `tsconfig.json`), and file discovery, ensuring the LSP server is correctly set up for TypeScript analysis. This component exemplifies the extensibility of the static analysis engine for different programming languages and also populates `StaticAnalysisResults`.
+### Text Splitter
+Breaks down large documents into smaller, manageable chunks for efficient processing and embedding.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/lsp_client/typescript_client.py#L10-L214" target="_blank" rel="noopener noreferrer">`TypeScriptClient`:10-214</a>
+- `langchain.text_splitter.RecursiveCharacterTextSplitter`
 
 
-### StaticAnalysisResults
-This central component acts as a repository for all aggregated static analysis results across different programming languages. It collects and manages various types of analysis data, including class hierarchies, control flow graphs, package dependencies, and source code references, provided by the LSP clients. It offers methods to add and retrieve these structured results for downstream processing and consumption.
+### Vector Store
+Stores and retrieves document embeddings, enabling semantic search.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/analysis_result.py#L6-L171" target="_blank" rel="noopener noreferrer">`StaticAnalysisResults`:6-171</a>
+- `langchain_community.vectorstores.chroma.Chroma`
 
 
-### duckdb_crud
-A component responsible for persisting and retrieving job-related information, likely interacting with a DuckDB database.
+### Embeddings Model
+Generates numerical representations (embeddings) of text chunks.
 
 
-**Related Classes/Methods**: _None_
+**Related Classes/Methods**:
+
+- `langchain_community.embeddings.ollama.OllamaEmbeddings`
+
+
+### Language Model (LLM)
+Processes user queries and generates answers based on retrieved context.
+
+
+**Related Classes/Methods**:
+
+- `langchain_community.llms.ollama.Ollama`
+
+
+### Retrieval Chain
+Orchestrates the retrieval of relevant document chunks and passes them to the LLM for answer generation.
+
+
+**Related Classes/Methods**:
+
+- `langchain.chains.retrieval.create_retrieval_chain`
+
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)

@@ -1,108 +1,93 @@
 {
-  "description": "The system operates as a FastAPI application, local_app.py, which serves as the central orchestrator for generating documentation and diagrams from GitHub repositories. It manages job lifecycles, from creation and status tracking to the actual execution of static analysis and documentation generation. The ProjectScanner initiates the analysis by identifying programming languages and their configurations. Subsequently, specialized LSPClient implementations (like TypeScriptClient) perform detailed static analysis, populating the StaticAnalysisResults with structured data. Finally, the local_app.py processes these results to generate the desired documentation and diagrams.",
+  "description": "This graph represents the core functionality of a document processing and question-answering system. The main flow involves ingesting documents, processing them into a searchable format, and then using a language model to answer user queries based on the ingested content. Its purpose is to provide an intelligent interface for users to retrieve information from a collection of documents.",
   "components": [
     {
-      "name": "local_app.py",
-      "description": "The core application component, responsible for exposing API endpoints for job management (creation, status retrieval) and orchestrating the entire documentation and diagram generation workflow. It handles repository cloning, triggers the static analysis process, and manages the storage and retrieval of generated results. It uses `duckdb_crud` for job persistence and `utils` for temporary folder management.",
+      "name": "Document Ingestion",
+      "description": "Handles the loading and initial processing of various document types.",
       "referenced_source_code": [
         {
-          "qualified_name": "start_generation_job",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 165,
-          "reference_end_line": 182
+          "qualified_name": "langchain_community.document_loaders.pdf.PyPDFLoader",
+          "reference_file": "document_ingestion.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         },
         {
-          "qualified_name": "generate_onboarding",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 92,
-          "reference_end_line": 161
-        },
+          "qualified_name": "langchain_community.document_loaders.csv_loader.CSVLoader",
+          "reference_file": "document_ingestion.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [],
+      "can_expand": false
+    },
+    {
+      "name": "Text Splitter",
+      "description": "Breaks down large documents into smaller, manageable chunks for efficient processing and embedding.",
+      "referenced_source_code": [
         {
-          "qualified_name": "start_docs_generation_job",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 243,
-          "reference_end_line": 293
-        },
-        {
-          "qualified_name": "process_docs_generation_job",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
-          "reference_start_line": 376,
-          "reference_end_line": 440
+          "qualified_name": "langchain.text_splitter.RecursiveCharacterTextSplitter",
+          "reference_file": "text_processing.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
       "assigned_files": [],
       "can_expand": true
     },
     {
-      "name": "ProjectScanner",
-      "description": "Initiates the static analysis process by leveraging the external `tokei` tool to scan the project repository. It identifies programming languages used, their code distribution, and relevant file suffixes. Crucially, it also determines the appropriate Language Server Protocol (LSP) server commands for each detected language, preparing a structured list of `ProgrammingLanguage` objects. This component acts as the initial data gatherer, providing the necessary configuration and language-specific details for subsequent LSP-based analysis.",
+      "name": "Vector Store",
+      "description": "Stores and retrieves document embeddings, enabling semantic search.",
       "referenced_source_code": [
         {
-          "qualified_name": "ProjectScanner",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
-          "reference_start_line": 13,
-          "reference_end_line": 82
+          "qualified_name": "langchain_community.vectorstores.chroma.Chroma",
+          "reference_file": "vector_db.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
-      "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/programming_language.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py"
-      ],
+      "assigned_files": [],
       "can_expand": true
     },
     {
-      "name": "LSPClient",
-      "description": "Serves as the generic Language Server Protocol client. It manages the communication lifecycle with an LSP server (initialization, sending requests, receiving responses, shutdown). It orchestrates the detailed static analysis for individual files and the entire workspace, extracting symbols, imports, call graphs, and class hierarchies. It populates the `StaticAnalysisResults` with its findings.",
+      "name": "Embeddings Model",
+      "description": "Generates numerical representations (embeddings) of text chunks.",
       "referenced_source_code": [
         {
-          "qualified_name": "LSPClient",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py",
-          "reference_start_line": 37,
-          "reference_end_line": 924
+          "qualified_name": "langchain_community.embeddings.ollama.OllamaEmbeddings",
+          "reference_file": "embedding_model.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
-      "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py"
-      ],
-      "can_expand": true
+      "assigned_files": [],
+      "can_expand": false
     },
     {
-      "name": "TypeScriptClient",
-      "description": "A specialized implementation of `LSPClient` tailored for TypeScript projects. It handles TypeScript-specific initialization parameters, workspace configuration (e.g., processing `tsconfig.json`), and file discovery, ensuring the LSP server is correctly set up for TypeScript analysis. This component exemplifies the extensibility of the static analysis engine for different programming languages and also populates `StaticAnalysisResults`.",
+      "name": "Language Model (LLM)",
+      "description": "Processes user queries and generates answers based on retrieved context.",
       "referenced_source_code": [
         {
-          "qualified_name": "TypeScriptClient",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/typescript_client.py",
-          "reference_start_line": 10,
-          "reference_end_line": 214
+          "qualified_name": "langchain_community.llms.ollama.Ollama",
+          "reference_file": "llm_interface.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
-      "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/typescript_client.py"
-      ],
-      "can_expand": true
+      "assigned_files": [],
+      "can_expand": false
     },
     {
-      "name": "StaticAnalysisResults",
-      "description": "This central component acts as a repository for all aggregated static analysis results across different programming languages. It collects and manages various types of analysis data, including class hierarchies, control flow graphs, package dependencies, and source code references, provided by the LSP clients. It offers methods to add and retrieve these structured results for downstream processing and consumption.",
+      "name": "Retrieval Chain",
+      "description": "Orchestrates the retrieval of relevant document chunks and passes them to the LLM for answer generation.",
       "referenced_source_code": [
         {
-          "qualified_name": "StaticAnalysisResults",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/analysis_result.py",
-          "reference_start_line": 6,
-          "reference_end_line": 171
+          "qualified_name": "langchain.chains.retrieval.create_retrieval_chain",
+          "reference_file": "retrieval_chain.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
-      "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/graph.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/analysis_result.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "duckdb_crud",
-      "description": "A component responsible for persisting and retrieving job-related information, likely interacting with a DuckDB database.",
-      "referenced_source_code": [],
       "assigned_files": [],
       "can_expand": false
     },
@@ -111,47 +96,54 @@
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
       "referenced_source_code": [],
       "assigned_files": [
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/programming_language.py",
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/__init__.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/__init__.py"
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/reference_resolve_mixin.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/graph.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/analysis_result.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/__init__.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/typescript_client.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py"
       ],
       "can_expand": false
     }
   ],
   "components_relations": [
     {
-      "relation": "initiates",
-      "src_name": "local_app.py",
-      "dst_name": "ProjectScanner"
+      "relation": "loads documents into",
+      "src_name": "Document Ingestion",
+      "dst_name": "Text Splitter"
     },
     {
-      "relation": "configures",
-      "src_name": "ProjectScanner",
-      "dst_name": "LSPClient"
+      "relation": "splits text for",
+      "src_name": "Text Splitter",
+      "dst_name": "Embeddings Model"
     },
     {
-      "relation": "orchestrates",
-      "src_name": "local_app.py",
-      "dst_name": "LSPClient"
+      "relation": "generates embeddings for",
+      "src_name": "Embeddings Model",
+      "dst_name": "Vector Store"
     },
     {
-      "relation": "stores results in",
-      "src_name": "LSPClient",
-      "dst_name": "StaticAnalysisResults"
+      "relation": "stores embeddings from",
+      "src_name": "Vector Store",
+      "dst_name": "Embeddings Model"
     },
     {
-      "relation": "extends",
-      "src_name": "TypeScriptClient",
-      "dst_name": "LSPClient"
+      "relation": "retrieves context for",
+      "src_name": "Vector Store",
+      "dst_name": "Retrieval Chain"
     },
     {
-      "relation": "processes results from",
-      "src_name": "local_app.py",
-      "dst_name": "StaticAnalysisResults"
+      "relation": "uses",
+      "src_name": "Retrieval Chain",
+      "dst_name": "Language Model (LLM)"
     },
     {
-      "relation": "persists jobs via",
-      "src_name": "local_app.py",
-      "dst_name": "duckdb_crud"
+      "relation": "answers queries using",
+      "src_name": "Language Model (LLM)",
+      "dst_name": "Retrieval Chain"
     }
   ]
 }

@@ -1,37 +1,37 @@
 {
-  "description": "The system's architecture is centered around an API Gateway / Job Orchestrator that provides external access for initiating and managing documentation generation. This component interacts with a Job Management System to persist job states and results. Upon receiving a request, the API Gateway / Job Orchestrator triggers the Output Generation Engine, which orchestrates the entire documentation creation process. The Output Generation Engine first utilizes the Static Analysis Engine to extract architectural insights from the codebase. These insights are then passed to the Documentation Format Generators, a consolidated component responsible for producing documentation in various formats, including HTML, Markdown, MDX, and reStructuredText, and for integrating with platforms like GitHub Actions.",
+  "description": "The system is structured around a clear pipeline for automated documentation generation. The `API Gateway / Job Orchestrator` serves as the user-facing interface and job manager, delegating job persistence to the `Job Management System`. The core processing begins when the `Output Generation Engine` is triggered, which first consults the `Static Analysis Engine` for deep architectural insights, now significantly improved by robust reference resolution. These comprehensive insights then feed into the `Documentation Format Generators`, which, operating with a streamlined agent framework, produce the final documentation in various formats. This architecture ensures a robust, scalable, and adaptable system for extracting and presenting codebase knowledge.",
   "components": [
     {
       "name": "API Gateway / Job Orchestrator",
-      "description": "The `local_app.py` file reveals a FastAPI application that serves as an API Gateway and Job Orchestrator. It handles incoming requests to generate documentation, manages the lifecycle of these jobs (pending, running, completed, failed), and interacts with the `demo.py`'s `generate_docs_remote` function, which is part of the `Output Generation Engine`. It also uses `duckdb_crud` for persistent job storage and retrieval.",
+      "description": "This FastAPI application serves as the API Gateway and Job Orchestrator. It handles incoming requests for documentation generation, manages job lifecycles (pending, running, completed, failed), and interacts with the `Output Generation Engine`. It also uses the `Job Management System` for persistent job storage and retrieval.",
       "referenced_source_code": [],
       "assigned_files": [],
       "can_expand": true
     },
     {
       "name": "Job Management System",
-      "description": "The 'Job Management System' provides persistence for job states and results.",
+      "description": "The `Job Management System` provides persistence for job states and results, ensuring reliable tracking and retrieval of documentation generation tasks.",
       "referenced_source_code": [],
       "assigned_files": [],
       "can_expand": true
     },
     {
       "name": "Static Analysis Engine",
-      "description": "The 'Output Generation Engine' first utilizes the **Static Analysis Engine** to extract architectural insights from the codebase.",
+      "description": "The `Static Analysis Engine` extracts architectural insights from the codebase, now with enhanced capabilities in reference resolution, providing richer input for the documentation generation process.",
       "referenced_source_code": [],
       "assigned_files": [],
       "can_expand": true
     },
     {
       "name": "Output Generation Engine",
-      "description": "The **Output Generation Engine**, which orchestrates the entire documentation creation process. The **Output Generation Engine** first utilizes the **Static Analysis Engine** to extract architectural insights from the codebase. These insights are then passed to the **Documentation Format Generators**...",
+      "description": "The `Output Generation Engine` orchestrates the entire documentation creation process. It leverages the enhanced `Static Analysis Engine` for richer architectural insights and then passes these to the `Documentation Format Generators`. The refactoring of its internal agent framework streamlines how it defines and interacts with specialized agents for documentation generation.",
       "referenced_source_code": [],
       "assigned_files": [],
       "can_expand": true
     },
     {
       "name": "Documentation Format Generators",
-      "description": "These insights are then passed to the **Documentation Format Generators**, a consolidated component responsible for producing documentation in various formats, including HTML, Markdown, MDX, and reStructuredText, and for integrating with platforms like GitHub Actions.",
+      "description": "The `Documentation Format Generators` receive processed insights from the `Output Generation Engine` and are responsible for producing documentation in various formats (HTML, Markdown, MDX, reStructuredText) and integrating with platforms like GitHub Actions. Its internal agents benefit from the refactored agent framework, leading to potentially refined or simplified responsibilities.",
       "referenced_source_code": [],
       "assigned_files": [
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
@@ -43,6 +43,13 @@
         "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/markdown.py"
       ],
       "can_expand": true
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies).",
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     },
     {
       "name": "Unclassified",
@@ -64,29 +71,19 @@
       "dst_name": "Output Generation Engine"
     },
     {
-      "relation": "retrieves status from",
-      "src_name": "API Gateway / Job Orchestrator",
-      "dst_name": "Job Management System"
-    },
-    {
-      "relation": "retrieves results from",
-      "src_name": "API Gateway / Job Orchestrator",
-      "dst_name": "Job Management System"
-    },
-    {
-      "relation": "stores data for",
+      "relation": "manages job state for",
       "src_name": "Job Management System",
       "dst_name": "API Gateway / Job Orchestrator"
     },
     {
-      "relation": "provides data to",
-      "src_name": "Job Management System",
-      "dst_name": "API Gateway / Job Orchestrator"
-    },
-    {
-      "relation": "provides insights to",
+      "relation": "provides enhanced insights to",
       "src_name": "Static Analysis Engine",
       "dst_name": "Output Generation Engine"
+    },
+    {
+      "relation": "utilizes",
+      "src_name": "Output Generation Engine",
+      "dst_name": "Static Analysis Engine"
     },
     {
       "relation": "orchestrates",
@@ -94,12 +91,7 @@
       "dst_name": "Documentation Format Generators"
     },
     {
-      "relation": "uses",
-      "src_name": "Output Generation Engine",
-      "dst_name": "Static Analysis Engine"
-    },
-    {
-      "relation": "receives data from",
+      "relation": "receives insights from",
       "src_name": "Documentation Format Generators",
       "dst_name": "Output Generation Engine"
     }
