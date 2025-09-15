@@ -1,4 +1,5 @@
 import logging
+import os.path
 from pathlib import Path
 
 from langchain.prompts import PromptTemplate
@@ -85,8 +86,7 @@ class AbstractionAgent(CodeBoardingAgent):
             meta_context=meta_context_str,
             project_type=project_type
         )
-        analysis_result = self._parse_invoke(prompt, AnalysisInsights)
-        return self.fix_source_code_reference_lines(analysis_result)
+        return self._parse_invoke(prompt, AnalysisInsights)
 
     def apply_feedback(self, analysis: AnalysisInsights, feedback: ValidationInsights):
         """
@@ -98,7 +98,7 @@ class AbstractionAgent(CodeBoardingAgent):
         analysis = self._parse_invoke(prompt, AnalysisInsights)
         return self.fix_source_code_reference_lines(analysis)
 
-    def classify_files(self, analysis: AnalysisInsights) -> list[ComponentFiles]:
+    def classify_files(self, analysis: AnalysisInsights):
         """
         Classify files into components based on the analysis. It will modify directly the analysis object.
         This method assigns files to components based on their relevance.
@@ -129,10 +129,20 @@ class AbstractionAgent(CodeBoardingAgent):
                 continue
             comp.assigned_files.append(file.file_path)
 
-        return files
+        for comp in analysis.components:
+            files = []
+            for file in comp.assigned_files:
+                if os.path.exists(file):
+                    # relative path from the repo root
+                    rel_file = os.path.relpath(file, self.repo_dir)
+                    files.append(rel_file)
+                else:
+                    files.append(file)
+            comp.assigned_files = files
 
     def run(self):
         self.step_cfg()
         self.step_source()
         analysis = self.generate_analysis()
+        analysis = self.fix_source_code_reference_lines(analysis)
         return analysis

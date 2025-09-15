@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 from langchain_core.prompts import PromptTemplate
@@ -86,8 +87,7 @@ class DetailsAgent(CodeBoardingAgent):
             meta_context=meta_context_str,
             project_type=project_type
         )
-        analysis = self._parse_invoke(prompt, AnalysisInsights)
-        return self.fix_source_code_reference_lines(analysis)
+        return self._parse_invoke(prompt, AnalysisInsights)
 
     def apply_feedback(self, analysis: AnalysisInsights, feedback: ValidationInsights):
         """
@@ -99,17 +99,17 @@ class DetailsAgent(CodeBoardingAgent):
         analysis = self._parse_invoke(prompt, AnalysisInsights)
         return self.fix_source_code_reference_lines(analysis)
 
-    def run(self, cfg_str: str, component: Component):
+    def run(self, component: Component):
         """
         Run the details analysis for the given component.
         This method should execute the steps in order and return the final analysis.
         """
-        self.step_subcfg(cfg_str, component)
+        logger.info(f"Processing component: {component.name}")
+        self.step_subcfg(component)
         self.step_cfg(component)
         self.step_enhance_structure(component)
         analysis = self.step_analysis(component)
-
-        return analysis
+        return self.fix_source_code_reference_lines(analysis)
 
     def classify_files(self, component: Component, analysis: AnalysisInsights):
         """
@@ -139,3 +139,14 @@ class DetailsAgent(CodeBoardingAgent):
                 logger.warning(f"[DetailsAgent] File {file.component_name} not found in analysis")
                 continue
             comp.assigned_files.append(file.file_path)
+
+        for comp in analysis.components:
+            files = []
+            for file in comp.assigned_files:
+                if os.path.exists(file):
+                    # relative path from the repo root
+                    rel_file = os.path.relpath(file, self.repo_dir)
+                    files.append(rel_file)
+                else:
+                    files.append(file)
+            comp.assigned_files = files
