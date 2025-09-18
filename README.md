@@ -57,64 +57,19 @@ Setup the environment:
 
 ```bash
 uv venv --python 3.11
-uv pip sync requirements.txt
-```
-
-Language Scanning:
-
-MacOS:
-
-```bash
-brew install tokei
-```
-
-- Download `xcode` in the Appstore to compile in C++
-
-Linux:
-
-```bash
-# Alpine Linux (since 3.13)
-apk add tokei
-# Arch Linux
-pacman -S tokei
-# Cargo
-cargo install tokei
-# Conda
-conda install -c conda-forge tokei
-# Fedora
-sudo dnf install tokei
-# FreeBSD
-pkg install tokei
-# NetBSD
-pkgin install tokei
-# Nix/NixOS
-nix-env -i tokei
-# OpenSUSE
-sudo zypper install tokei
-# Void Linux
-sudo xbps-install tokei
-```
-
-Windows:
-
-```bash
-# Winget
-winget install XAMPPRocky.tokei
-# Scoop
-scoop install tokei
-```
-
-Installing langservers for different technologies:
-
-```bash
-pip install pyright # Python
-npm install --save typescript-language-server typescript # Typescript
+source .venv/bin/activate
+python setup.py
 ```
 
 > [!IMPORTANT]  
-> After installing the dependencies and servers you wanted to use, please update the configuration to use them. For e.g.
-`tokei` this means pointing to the executable.
-> This configuration can be found in the [static_analysis_config.yml](./static_analysis_config.yml) file.
+> The setup script installs a language server for Python and TypeScript/JavaScript. In order to successfully install
+> the TypeScript Language Server, you need to have `npm` installed. If `npm` is not found, the script will skip the
+> installation of the TypeScript Language Server and you will need to install it manually later if you want to analyze
+> TypeScript/JavaScript projects.
+
+
+Configure the environment variables in a `.env` file (you can copy from `.env.example`):
+The `python setup.py` command creates a `.env` file if it doesn't exist with a default value for `REPO_ROOT` and `ROOT_RESULT` as well as OLLAMA_BASE_URL for local LLM inference. If you want to use a different LLM provider, you need to set the corresponding API key in the `.env` file.
 
 ### Environment Variables
 
