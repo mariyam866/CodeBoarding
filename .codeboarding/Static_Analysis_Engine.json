@@ -17,9 +17,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": false
+      ]
     },
     {
       "name": "Text Splitter",
@@ -31,9 +29,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Vector Store",
@@ -45,9 +41,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Embeddings Model",
@@ -59,9 +53,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": false
+      ]
     },
     {
       "name": "Language Model (LLM)",
@@ -73,9 +65,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": false
+      ]
     },
     {
       "name": "Retrieval Chain",
@@ -87,26 +77,12 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": false
+      ]
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/programming_language.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/__init__.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/reference_resolve_mixin.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/graph.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/analysis_result.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/__init__.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/typescript_client.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/client.py"
-      ],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [

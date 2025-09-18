@@ -3,22 +3,19 @@ graph LR
     Orchestration_Engine["Orchestration Engine"]
     Job_Database["Job Database"]
     Repository_Manager["Repository Manager"]
-    Static_Analysis_Engine["Static Analysis Engine"]
-    AI_Interpretation_Layer_Agents_["AI Interpretation Layer (Agents)"]
-    Diagram_Analysis["Diagram Analysis"]
+    Analysis_Layer["Analysis Layer"]
     Output_Generation_Engine["Output Generation Engine"]
     External_Integrations["External Integrations"]
+    Build_and_Deployment_Infrastructure["Build and Deployment Infrastructure"]
     Unclassified["Unclassified"]
-    Orchestration_Engine -- "interacts with" --> Job_Database
-    Orchestration_Engine -- "requests code from" --> Repository_Manager
-    Orchestration_Engine -- "triggers" --> Static_Analysis_Engine
-    Orchestration_Engine -- "dispatches tasks to" --> AI_Interpretation_Layer_Agents_
-    Orchestration_Engine -- "invokes" --> Diagram_Analysis
-    Orchestration_Engine -- "triggers" --> Output_Generation_Engine
     External_Integrations -- "triggers" --> Orchestration_Engine
+    Orchestration_Engine -- "manages" --> Job_Database
+    Orchestration_Engine -- "retrieves code via" --> Repository_Manager
+    Orchestration_Engine -- "initiates" --> Analysis_Layer
+    Analysis_Layer -- "provides results to" --> Orchestration_Engine
+    Orchestration_Engine -- "directs output to" --> Output_Generation_Engine
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
-    click Job_Database href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Job_Database.md" "Details"
-    click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
+    click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
     click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
 ```
 
@@ -26,7 +23,7 @@ graph LR
 
 ## Details
 
-The CodeBoarding system is orchestrated by the Orchestration Engine, which serves as the central control unit for initiating and managing documentation generation jobs. External systems, such as VSCode and GitHub Actions, interact with the system through the External Integrations component, triggering the Orchestration Engine to begin a new analysis workflow. The Orchestration Engine relies on the Job Database to store and retrieve job-related information and status updates throughout the process. To access the codebase, the Orchestration Engine communicates with the Repository Manager, which handles tasks like cloning repositories and retrieving code differences. Once the code is available, the Orchestration Engine triggers the Static Analysis Engine to perform initial code analysis. Subsequently, it dispatches tasks to the AI Interpretation Layer (Agents) for deeper, AI-driven code understanding. For visual representations, the Orchestration Engine invokes the Diagram Analysis component to generate structured data for diagrams. Finally, the Output Generation Engine is responsible for formatting and producing the final documentation and diagrams in various desired formats.
+The system is designed around a central `Orchestration Engine` that coordinates the entire documentation and diagram generation process. This engine is activated by `External Integrations` and manages job states through the `Job Database`. It retrieves source code via the `Repository Manager` and then delegates complex code understanding to the `Analysis Layer`, which encompasses static analysis, AI interpretation, and diagram-specific data extraction. Once analysis is complete, the `Orchestration Engine` directs the `Output Generation Engine` to format and produce the final documentation and visual diagrams. Underlying this operational flow, the `Build and Deployment Infrastructure` ensures the project's proper assembly, dependency management, and distribution, providing the foundational support for all runtime components.
 
 ### Orchestration Engine [[Expand]](./Orchestration_Engine.md)
 The central control subsystem responsible for initiating, managing, and coordinating all analysis and documentation generation jobs, acting as the primary orchestrator for the end-to-end workflow.
@@ -34,53 +31,38 @@ The central control subsystem responsible for initiating, managing, and coordina
 
 **Related Classes/Methods**:
 
-- `local_app.py:process_docs_generation_job`:302-349
-- `diagram_analysis/diagram_generator.py:generate_analysis`:100-169
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainlocal_app.py" target="_blank" rel="noopener noreferrer">`local_app.py:start_generation_job`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainlocal_app.py" target="_blank" rel="noopener noreferrer">`local_app.py:start_docs_generation_job`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainlocal_app.py" target="_blank" rel="noopener noreferrer">`local_app.py:process_docs_generation_job`</a>
 
 
-### Job Database [[Expand]](./Job_Database.md)
+### Job Database
 Manages the storage and retrieval of job details, including status updates, for the documentation generation pipeline.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/duckdb_crud.py" target="_blank" rel="noopener noreferrer">`duckdb_crud.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainduckdb_crud.py" target="_blank" rel="noopener noreferrer">`duckdb_crud.py`</a>
 
 
-### Repository Manager
-Handles repository operations such as cloning code repositories and retrieving code differences for analysis.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/repo_utils/git_diff.py" target="_blank" rel="noopener noreferrer">`repo_utils.git_diff.py`</a>
-
-
-### Static Analysis Engine [[Expand]](./Static_Analysis_Engine.md)
-Performs static code analysis on the codebase.
+### Repository Manager [[Expand]](./Repository_Manager.md)
+Handles repository operations suchs as cloning code repositories and retrieving code differences for analysis.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer.scanner.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainrepo_utils/git_diff.py" target="_blank" rel="noopener noreferrer">`repo_utils.git_diff.py`</a>
 
 
-### AI Interpretation Layer (Agents)
-Dispatches tasks to AI agents for advanced analysis and interpretation of code.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/agents/agent.py" target="_blank" rel="noopener noreferrer">`agents.agent.py`</a>
-
-
-### Diagram Analysis
-Generates structured analysis data specifically for creating diagrams.
+### Analysis Layer
+Performs comprehensive code analysis, encompassing static code analysis, AI-driven interpretation, and specialized data extraction for diagram generation.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/diagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_analysis.diagram_generator.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer.scanner.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/agent.py" target="_blank" rel="noopener noreferrer">`agents.agent.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maindiagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_analysis/diagram_generator.py:generate_analysis`</a>
 
 
 ### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
@@ -89,7 +71,7 @@ Responsible for the final formatting and generation of documentation and diagram
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/output_generators/markdown.py" target="_blank" rel="noopener noreferrer">`output_generators.markdown.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainoutput_generators/markdown.py" target="_blank" rel="noopener noreferrer">`output_generators.markdown.py`</a>
 
 
 ### External Integrations
@@ -98,8 +80,17 @@ Provides interfaces for external systems, such as VSCode and GitHub Actions, to 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/github_action.py" target="_blank" rel="noopener noreferrer">`github_action.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/vscode_runnable.py" target="_blank" rel="noopener noreferrer">`vscode_runnable.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maingithub_action.py" target="_blank" rel="noopener noreferrer">`github_action.py`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainvscode_runnable.py" target="_blank" rel="noopener noreferrer">`vscode_runnable.py`</a>
+
+
+### Build and Deployment Infrastructure
+Encompasses the project's packaging, dependency management, and build processes, defining how the system is assembled, distributed, and integrated. This component underpins the operational readiness of all other components.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainsetup.py" target="_blank" rel="noopener noreferrer">`setup.py`</a>
 
 
 ### Unclassified

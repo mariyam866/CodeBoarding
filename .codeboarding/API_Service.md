@@ -24,7 +24,7 @@ Serves as the primary local interface for CodeBoarding, enabling local users and
 
 **Related Classes/Methods**:
 
-- `local_app.LocalApp`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainlocal_app.py" target="_blank" rel="noopener noreferrer">`local_app.LocalApp`</a>
 
 
 ### diagram_analysis.diagram_generator
@@ -33,7 +33,7 @@ Orchestrates the comprehensive code analysis and diagram generation workflow, in
 
 **Related Classes/Methods**:
 
-- `diagram_analysis.diagram_generator`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maindiagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_analysis.diagram_generator`</a>
 
 
 ### duckdb_crud.DuckDBCRUD
@@ -42,7 +42,7 @@ Manages persistent storage and retrieval of analysis job metadata and status, cr
 
 **Related Classes/Methods**:
 
-- `duckdb_crud.DuckDBCRUD`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainduckdb_crud.py" target="_blank" rel="noopener noreferrer">`duckdb_crud.DuckDBCRUD`</a>
 
 
 ### repo_utils.RepoUtils
@@ -51,7 +51,7 @@ Provides repository-related operations such as cloning or fetching diffs, potent
 
 **Related Classes/Methods**:
 
-- `repo_utils.RepoUtils`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainrepo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.RepoUtils`</a>
 
 
 ### vscode_runnable.VSCodeRunnable
@@ -60,7 +60,7 @@ An external client that consumes services provided by the `local_app.LocalApp` f
 
 **Related Classes/Methods**:
 
-- `vscode_runnable.VSCodeRunnable`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainvscode_runnable.py" target="_blank" rel="noopener noreferrer">`vscode_runnable.VSCodeRunnable`</a>
 
 
 ### Unclassified

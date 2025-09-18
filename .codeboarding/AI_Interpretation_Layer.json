@@ -11,32 +11,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/__init__.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/details_agent.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/validator_agent.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/abstraction_agent.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/planner_agent.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/meta_agent.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent_responses.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/prompts.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_source.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file_structure.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/__init__.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/external_deps.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_packages.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_cfg.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/get_method_invocations.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_git_diff.y",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_file.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/utils.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_structure.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_docs.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "QueryProcessor",
@@ -48,9 +23,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "VectorStore",
@@ -62,9 +35,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "DocumentRetriever",
@@ -76,9 +47,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "ResponseGenerator",
@@ -90,9 +59,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Unclassified",
@@ -104,16 +71,12 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": true
+      "referenced_source_code": []
     }
   ],
   "components_relations": [

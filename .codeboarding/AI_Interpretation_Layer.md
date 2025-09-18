@@ -28,7 +28,7 @@ Manages the overall application flow, coordinating interactions between `QueryPr
 
 **Related Classes/Methods**:
 
-- `agents.agent`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/agent.py" target="_blank" rel="noopener noreferrer">`agents.agent`</a>
 
 
 ### QueryProcessor
@@ -70,7 +70,7 @@ Component for unclassified files, external libraries, and utility functions, inc
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main/static_analyzer/reference_resolve_mixin.py" target="_blank" rel="noopener noreferrer">`static_analyzer.reference_resolve_mixin`</a>
+- `static_analyzer.reference_resolve_mixin`
 
 
 ### Unclassified
