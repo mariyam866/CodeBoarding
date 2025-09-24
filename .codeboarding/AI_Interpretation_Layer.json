@@ -1,9 +1,9 @@
 {
-  "description": "The recent architectural changes primarily involve a significant refactoring of core agent logic and an enhancement of static analysis capabilities. The refactoring in `agents/agent.py` suggests a simplification or re-organization of how agents are defined and interact, directly impacting the `Application Orchestrator`'s role in coordinating agents and the `QueryProcessor`'s utilization of agent logic. Concurrently, the `static_analyzer/reference_resolve_mixin.py` has been substantially expanded, bolstering the system's static analysis features within the `Unclassified` component. While this enhancement offers new potential, its direct integration into the primary data flow of `QueryProcessor` or `ResponseGenerator` is currently a potential rather than a confirmed critical interaction. The system's architecture is centered around an `Application Orchestrator` that manages the overall flow from user query to generated response. The `QueryProcessor` handles initial query processing and embedding, preparing data for the `VectorStore`, which serves as the central repository for document embeddings. The `DocumentRetriever` interfaces with the `VectorStore` to fetch relevant information, which is then passed to the `ResponseGenerator` for natural language output. Recent refactoring in core agent logic has streamlined how the `Application Orchestrator` coordinates agents and how the `QueryProcessor` utilizes agent-related functionalities. Additionally, the `Unclassified` component now encompasses significantly enhanced static analysis capabilities, offering potential for future integration into core processing pathways.",
+  "description": "The system operates around an `Application Orchestrator` that manages the overall flow from user query to response. User queries are initially processed by the `QueryProcessor`, which embeds them for efficient retrieval from the `VectorStore`. The `DocumentRetriever` then fetches relevant documents, which are passed back to the `Application Orchestrator`. A key architectural enhancement is the introduction of the `PromptFactory`, which centralizes and standardizes the generation of prompts for various agents and language models. The `Application Orchestrator` and `ResponseGenerator` both leverage the `PromptFactory` to obtain optimized prompts, enabling the `ResponseGenerator` to craft natural language responses based on the query and retrieved documents, including specialized prompts for models like Gemini Flash. This structured prompt management significantly refines how the system interacts with large language models, ensuring consistency and adaptability.",
   "components": [
     {
       "name": "Application Orchestrator",
-      "description": "Manages the overall application flow, coordinating interactions between `QueryProcessor`, `DocumentRetriever`, and `ResponseGenerator`. It receives user queries and delivers final responses, adapting its agent coordination mechanisms due to recent core agent logic refactoring.",
+      "description": "Manages the overall application flow, coordinating interactions between `QueryProcessor`, `DocumentRetriever`, `ResponseGenerator`, and now leveraging the `PromptFactory` for agent prompt generation. It receives user queries and delivers final responses, adapting its agent coordination mechanisms due to recent core agent logic refactoring and the new prompt management system.",
       "referenced_source_code": [
         {
           "qualified_name": "agents.agent",
@@ -11,19 +11,45 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [
+        "../../agents/__init__.py",
+        "../../agents/diff_analyzer.py",
+        "../../agents/details_agent.py",
+        "../../agents/validator_agent.py",
+        "../../agents/abstraction_agent.py",
+        "../../agents/planner_agent.py",
+        "../../agents/meta_agent.py",
+        "../../agents/agent_responses.py",
+        "../../agents/agent.py",
+        "../../agents/tools/read_source.py",
+        "../../agents/tools/read_file_structure.py",
+        "../../agents/tools/__init__.py",
+        "../../agents/tools/external_deps.py",
+        "../../agents/tools/read_packages.py",
+        "../../agents/tools/read_cfg.py",
+        "../../agents/tools/get_method_invocations.py",
+        "../../agents/tools/read_git_diff.py",
+        "../../agents/tools/read_file.py",
+        "../../agents/tools/utils.py",
+        "../../agents/tools/read_structure.py",
+        "../../agents/tools/read_docs.py"
+      ],
+      "can_expand": true
     },
     {
       "name": "QueryProcessor",
-      "description": "Handles incoming user queries, embeds them, and prepares them for similarity search, now utilizing a potentially streamlined agent logic due to recent refactoring.",
+      "description": "Handles incoming user queries, embeds them, and prepares them for similarity search, potentially utilizing refined prompts from the `PromptFactory` for enhanced query understanding.",
       "referenced_source_code": [
         {
           "qualified_name": "langchain_core.embeddings.Embeddings:embed_query",
-          "reference_file": "",
+          "reference_file": ".",
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "VectorStore",
@@ -35,7 +61,9 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "DocumentRetriever",
@@ -43,40 +71,53 @@
       "referenced_source_code": [
         {
           "qualified_name": "langchain_core.retrievers.BaseRetriever:get_relevant_documents",
-          "reference_file": "",
+          "reference_file": ".",
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "ResponseGenerator",
-      "description": "Generates a natural language response using a large language model based on the query and retrieved documents.",
+      "description": "Generates a natural language response using a large language model based on the query and retrieved documents, now significantly enhanced by leveraging structured prompts from the `PromptFactory`, including specialized prompts for models like Gemini Flash.",
       "referenced_source_code": [
         {
           "qualified_name": "langchain_core.language_models.llms.BaseLLM:invoke",
-          "reference_file": "",
+          "reference_file": ".",
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
-      "name": "Unclassified",
-      "description": "Component for unclassified files, external libraries, and utility functions, including significantly enhanced static analysis capabilities for reference resolution.",
+      "name": "PromptFactory",
+      "description": "Centralizes the creation and management of prompts for various agents and language models. It provides a structured and standardized approach to prompt generation, including an expanded library of prompts, notably for Gemini Flash, ensuring consistent and optimized interactions with LLMs.",
       "referenced_source_code": [
         {
-          "qualified_name": "static_analyzer.reference_resolve_mixin",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/reference_resolve_mixin.py",
-          "reference_start_line": null,
-          "reference_end_line": null
+          "qualified_name": "prompt_factory.PromptFactory",
+          "reference_file": "agents/prompts/prompt_factory.py",
+          "reference_start_line": 27,
+          "reference_end_line": 77
         }
-      ]
+      ],
+      "assigned_files": [
+        "agents/prompts/__init__.py",
+        "agents/prompts/gemini_flash_prompts_bidirectional.py",
+        "agents/prompts/prompt_factory.py",
+        "agents/prompts/gemini_flash_prompts_unidirectional.py"
+      ],
+      "can_expand": true
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": []
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     }
   ],
   "components_relations": [
@@ -84,6 +125,11 @@
       "relation": "initiates",
       "src_name": "Application Orchestrator",
       "dst_name": "QueryProcessor"
+    },
+    {
+      "relation": "requests prompts from",
+      "src_name": "Application Orchestrator",
+      "dst_name": "PromptFactory"
     },
     {
       "relation": "embeds query for",
@@ -109,6 +155,11 @@
       "relation": "sends context to",
       "src_name": "Application Orchestrator",
       "dst_name": "ResponseGenerator"
+    },
+    {
+      "relation": "utilizes prompts from",
+      "src_name": "ResponseGenerator",
+      "dst_name": "PromptFactory"
     },
     {
       "relation": "returns response to",

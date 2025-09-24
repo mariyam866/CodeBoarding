@@ -1,5 +1,5 @@
 {
-  "description": "The CodeBoarding system's local architecture is centered around the `local_app.LocalApp`, which acts as the primary interface for users and the VS Code extension. The `vscode_runnable.VSCodeRunnable` component represents the external VS Code extension, initiating analysis jobs through `local_app.LocalApp`. Upon receiving a request, `local_app.LocalApp` orchestrates the `diagram_analysis.diagram_generator` to perform the core code analysis and diagram generation. Throughout this process, `local_app.LocalApp` interacts with `duckdb_crud.DuckDBCRUD` for managing and persisting analysis job metadata and status. Additionally, `repo_utils.RepoUtils` provides essential repository-related functionalities, such as code fetching, which `local_app.LocalApp` utilizes to prepare the codebase for analysis. This structure ensures a clear separation of concerns, with `local_app.LocalApp` coordinating the workflow, `diagram_analysis.diagram_generator` handling the core logic, `duckdb_crud.DuckDBCRUD` managing data persistence, and `repo_utils.RepoUtils` providing foundational repository operations.",
+  "description": "The CodeBoarding platform is orchestrated by `local_app.LocalApp`, which serves as the primary interface for users and the VS Code extension (`vscode_runnable.VSCodeRunnable`). `local_app.LocalApp` initiates and manages analysis jobs, leveraging `duckdb_crud.DuckDBCRUD` for persistent storage of job metadata and `repo_utils.RepoUtils` for repository operations. The core analysis and diagram generation workflow is handled by `diagram_analysis.diagram_generator`. A significant internal enhancement is the `agents.prompts.PromptFactory`, which centralizes and dynamically manages prompts for the various agents utilized by `diagram_analysis.diagram_generator` when interacting with LLMs, ensuring modularity and configurability in prompt management. This structured approach to prompt handling is crucial for the system's interaction with LLMs, which underpins the `diagram_analysis.diagram_generator`'s function.",
   "components": [
     {
       "name": "local_app.LocalApp",
@@ -11,11 +11,15 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [
+        "../../local_app.py"
+      ],
+      "can_expand": true
     },
     {
       "name": "diagram_analysis.diagram_generator",
-      "description": "Orchestrates the comprehensive code analysis and diagram generation workflow, initiated by the `local_app.LocalApp`. It's responsible for the core value proposition of the platform.",
+      "description": "Orchestrates the comprehensive code analysis and diagram generation workflow, initiated by the `local_app.LocalApp`. It's responsible for the core value proposition of the platform, leveraging various agents and LLMs for analysis.",
       "referenced_source_code": [
         {
           "qualified_name": "diagram_analysis.diagram_generator",
@@ -23,7 +27,23 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
+    },
+    {
+      "name": "agents.prompts.PromptFactory",
+      "description": "Manages the dynamic selection and retrieval of prompts used by various agents for interacting with Large Language Models (LLMs). It centralizes prompt definitions, enhancing modularity, configurability, and maintainability of LLM interactions.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "agents.prompts.prompt_factory.PromptFactory",
+          "reference_file": "agents/prompts/prompt_factory.py",
+          "reference_start_line": 27,
+          "reference_end_line": 77
+        }
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "duckdb_crud.DuckDBCRUD",
@@ -35,7 +55,9 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": false
     },
     {
       "name": "repo_utils.RepoUtils",
@@ -47,7 +69,9 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "vscode_runnable.VSCodeRunnable",
@@ -59,12 +83,16 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": []
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     }
   ],
   "components_relations": [
@@ -87,6 +115,16 @@
       "relation": "utilizes",
       "src_name": "local_app.LocalApp",
       "dst_name": "repo_utils.RepoUtils"
+    },
+    {
+      "relation": "utilizes agents which obtain prompts from",
+      "src_name": "diagram_analysis.diagram_generator",
+      "dst_name": "agents.prompts.PromptFactory"
+    },
+    {
+      "relation": "provides prompts to",
+      "src_name": "agents.prompts.PromptFactory",
+      "dst_name": "diagram_analysis.diagram_generator"
     }
   ]
 }

@@ -5,14 +5,16 @@ graph LR
     VectorStore["VectorStore"]
     DocumentRetriever["DocumentRetriever"]
     ResponseGenerator["ResponseGenerator"]
-    Unclassified["Unclassified"]
+    PromptFactory["PromptFactory"]
     Unclassified["Unclassified"]
     Application_Orchestrator -- "initiates" --> QueryProcessor
+    Application_Orchestrator -- "requests prompts from" --> PromptFactory
     QueryProcessor -- "embeds query for" --> VectorStore
     Application_Orchestrator -- "requests retrieval from" --> DocumentRetriever
     DocumentRetriever -- "queries" --> VectorStore
     DocumentRetriever -- "provides documents to" --> Application_Orchestrator
     Application_Orchestrator -- "sends context to" --> ResponseGenerator
+    ResponseGenerator -- "utilizes prompts from" --> PromptFactory
     ResponseGenerator -- "returns response to" --> Application_Orchestrator
 ```
 
@@ -20,10 +22,10 @@ graph LR
 
 ## Details
 
-The recent architectural changes primarily involve a significant refactoring of core agent logic and an enhancement of static analysis capabilities. The refactoring in `agents/agent.py` suggests a simplification or re-organization of how agents are defined and interact, directly impacting the `Application Orchestrator`'s role in coordinating agents and the `QueryProcessor`'s utilization of agent logic. Concurrently, the `static_analyzer/reference_resolve_mixin.py` has been substantially expanded, bolstering the system's static analysis features within the `Unclassified` component. While this enhancement offers new potential, its direct integration into the primary data flow of `QueryProcessor` or `ResponseGenerator` is currently a potential rather than a confirmed critical interaction. The system's architecture is centered around an `Application Orchestrator` that manages the overall flow from user query to generated response. The `QueryProcessor` handles initial query processing and embedding, preparing data for the `VectorStore`, which serves as the central repository for document embeddings. The `DocumentRetriever` interfaces with the `VectorStore` to fetch relevant information, which is then passed to the `ResponseGenerator` for natural language output. Recent refactoring in core agent logic has streamlined how the `Application Orchestrator` coordinates agents and how the `QueryProcessor` utilizes agent-related functionalities. Additionally, the `Unclassified` component now encompasses significantly enhanced static analysis capabilities, offering potential for future integration into core processing pathways.
+The system operates around an `Application Orchestrator` that manages the overall flow from user query to response. User queries are initially processed by the `QueryProcessor`, which embeds them for efficient retrieval from the `VectorStore`. The `DocumentRetriever` then fetches relevant documents, which are passed back to the `Application Orchestrator`. A key architectural enhancement is the introduction of the `PromptFactory`, which centralizes and standardizes the generation of prompts for various agents and language models. The `Application Orchestrator` and `ResponseGenerator` both leverage the `PromptFactory` to obtain optimized prompts, enabling the `ResponseGenerator` to craft natural language responses based on the query and retrieved documents, including specialized prompts for models like Gemini Flash. This structured prompt management significantly refines how the system interacts with large language models, ensuring consistency and adaptability.
 
 ### Application Orchestrator
-Manages the overall application flow, coordinating interactions between `QueryProcessor`, `DocumentRetriever`, and `ResponseGenerator`. It receives user queries and delivers final responses, adapting its agent coordination mechanisms due to recent core agent logic refactoring.
+Manages the overall application flow, coordinating interactions between `QueryProcessor`, `DocumentRetriever`, `ResponseGenerator`, and now leveraging the `PromptFactory` for agent prompt generation. It receives user queries and delivers final responses, adapting its agent coordination mechanisms due to recent core agent logic refactoring and the new prompt management system.
 
 
 **Related Classes/Methods**:
@@ -32,11 +34,12 @@ Manages the overall application flow, coordinating interactions between `QueryPr
 
 
 ### QueryProcessor
-Handles incoming user queries, embeds them, and prepares them for similarity search, now utilizing a potentially streamlined agent logic due to recent refactoring.
+Handles incoming user queries, embeds them, and prepares them for similarity search, potentially utilizing refined prompts from the `PromptFactory` for enhanced query understanding.
 
 
 **Related Classes/Methods**:
 
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main." target="_blank" rel="noopener noreferrer">`langchain_core.embeddings.Embeddings:embed_query`</a>
 
 
 ### VectorStore
@@ -54,23 +57,25 @@ Retrieves relevant documents from the vector store.
 
 **Related Classes/Methods**:
 
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main." target="_blank" rel="noopener noreferrer">`langchain_core.retrievers.BaseRetriever:get_relevant_documents`</a>
 
 
 ### ResponseGenerator
-Generates a natural language response using a large language model based on the query and retrieved documents.
+Generates a natural language response using a large language model based on the query and retrieved documents, now significantly enhanced by leveraging structured prompts from the `PromptFactory`, including specialized prompts for models like Gemini Flash.
 
 
 **Related Classes/Methods**:
 
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/main." target="_blank" rel="noopener noreferrer">`langchain_core.language_models.llms.BaseLLM:invoke`</a>
 
 
-### Unclassified
-Component for unclassified files, external libraries, and utility functions, including significantly enhanced static analysis capabilities for reference resolution.
+### PromptFactory
+Centralizes the creation and management of prompts for various agents and language models. It provides a structured and standardized approach to prompt generation, including an expanded library of prompts, notably for Gemini Flash, ensuring consistent and optimized interactions with LLMs.
 
 
 **Related Classes/Methods**:
 
-- `static_analyzer.reference_resolve_mixin`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/prompts/prompt_factory.py#L27-L77" target="_blank" rel="noopener noreferrer">`prompt_factory.PromptFactory`:27-77</a>
 
 
 ### Unclassified

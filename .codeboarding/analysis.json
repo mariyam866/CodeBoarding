@@ -1,5 +1,5 @@
 {
-  "description": "The CodeBoarding architecture is designed for automated documentation generation, centered around an `Orchestration Engine` that manages the entire pipeline. User interactions are handled by the `API Service`, which initiates jobs stored in the `Job Database`. The `Repository Manager` provides source code and versioning information for analysis. The `Static Analysis Engine` performs deep, language-specific code analysis, now significantly enhanced with reference resolution capabilities, to extract comprehensive structural data. This detailed information is then processed by the `AI Interpretation Layer`, a suite of specialized AI agents operating on a refined and more robust framework, to generate high-level architectural insights. Finally, the `Output Generation Engine` transforms these insights into various documentation formats, including outputs for GitHub Actions, which are then delivered back to the user via the `API Service`.",
+  "description": "The CodeBoarding project is structured around a robust pipeline for automated software documentation and diagram generation. At its core, the system processes source code through static analysis, interprets the results using specialized AI agents, and then generates various output formats. The recent architectural enhancements significantly bolster the `AI Interpretation Layer`, particularly in how it manages and applies prompts for interacting with diverse AI models. The main flow begins with the `API Service` receiving user requests, which are then managed by the `Orchestration Engine`. This engine coordinates the entire process, from fetching code via the `Repository Manager` to performing `Static Analysis`. The results of this analysis, now enriched with reference resolution, are fed into the `AI Interpretation Layer`. This layer, comprising multiple AI agents, interprets the data to produce high-level architectural insights. A key update here is the introduction of a sophisticated `Prompt Management System` within this layer, centralizing prompt creation and enabling support for various language models and prompting strategies. Finally, these insights are passed to the `Output Generation Engine` to produce documentation in desired formats, which can then be delivered back via the `API Service` or integrated with external systems like GitHub Actions.",
   "components": [
     {
       "name": "API Service",
@@ -7,7 +7,7 @@
       "referenced_source_code": [
         {
           "qualified_name": "local_app",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/local_app.py",
+          "reference_file": "local_app.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
@@ -23,7 +23,7 @@
       "referenced_source_code": [
         {
           "qualified_name": "duckdb_crud",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/duckdb_crud.py",
+          "reference_file": "duckdb_crud.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
@@ -39,7 +39,7 @@
       "referenced_source_code": [
         {
           "qualified_name": "diagram_generator",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_file": "diagram_analysis/diagram_generator.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
@@ -47,7 +47,8 @@
       "assigned_files": [
         "diagram_analysis/__init__.py",
         "diagram_analysis/analysis_json.py",
-        "diagram_analysis/diagram_generator.py"
+        "diagram_analysis/diagram_generator.py",
+        "diagram_analysis/version.py"
       ],
       "can_expand": true
     },
@@ -57,13 +58,13 @@
       "referenced_source_code": [
         {
           "qualified_name": "__init__",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
+          "reference_file": "agents/diff_analyzer.py",
           "reference_start_line": 21,
           "reference_end_line": 32
         },
         {
           "qualified_name": "git_diff",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/repo_utils/git_diff.py",
+          "reference_file": "repo_utils/git_diff.py",
           "reference_start_line": 27,
           "reference_end_line": 76
         }
@@ -81,30 +82,31 @@
       "referenced_source_code": [
         {
           "qualified_name": "scanner",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/scanner.py",
+          "reference_file": "static_analyzer/scanner.py",
           "reference_start_line": 13,
           "reference_end_line": 82
         },
         {
           "qualified_name": "client",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/lsp_client/typescript_client.py",
+          "reference_file": "static_analyzer/lsp_client/typescript_client.py",
           "reference_start_line": 10,
           "reference_end_line": 214
         },
         {
           "qualified_name": "analysis_result",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/abstraction_agent.py",
+          "reference_file": "agents/abstraction_agent.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
           "qualified_name": "reference_resolve_mixin",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/static_analyzer/reference_resolve_mixin.py",
+          "reference_file": "static_analyzer/reference_resolve_mixin.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
       ],
       "assigned_files": [
+        "vscode_constants.py",
         "static_analyzer/programming_language.py",
         "static_analyzer/__init__.py",
         "static_analyzer/reference_resolve_mixin.py",
@@ -119,59 +121,59 @@
     },
     {
       "name": "AI Interpretation Layer",
-      "description": "A collection of specialized AI agents that perform sophisticated interpretation of static analysis data, generating enhanced high-level architectural insights, including detailed abstractions, refined planning, robust validation, and comprehensive diff analysis, now operating on a **streamlined and more robust underlying agent framework**.",
+      "description": "A collection of specialized AI agents that perform sophisticated interpretation of static analysis data, generating enhanced high-level architectural insights, including detailed abstractions, refined planning, robust validation, and comprehensive diff analysis. This layer now features a **significantly enhanced prompt management system**, utilizing a `prompt_factory` for structured prompt definition, selection, and application, supporting various language models (e.g., Gemini Flash) and prompting strategies.",
       "referenced_source_code": [
         {
           "qualified_name": "meta_agent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_file": "diagram_analysis/diagram_generator.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
           "qualified_name": "abstraction_agent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/abstraction_agent.py",
+          "reference_file": "agents/abstraction_agent.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
           "qualified_name": "details_agent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/details_agent.py",
+          "reference_file": "agents/details_agent.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
           "qualified_name": "planner_agent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_file": "diagram_analysis/diagram_generator.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
           "qualified_name": "validator_agent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/diagram_analysis/diagram_generator.py",
+          "reference_file": "diagram_analysis/diagram_generator.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
           "qualified_name": "diff_analyzer",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/diff_analyzer.py",
+          "reference_file": "agents/diff_analyzer.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
           "qualified_name": "agent",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent.py",
+          "reference_file": "agents/agent.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
           "qualified_name": "agent_responses",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/agent_responses.py",
+          "reference_file": "agents/agent_responses.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
           "qualified_name": "prompts",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/details_agent.py",
+          "reference_file": "agents/details_agent.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
@@ -185,7 +187,6 @@
         "agents/planner_agent.py",
         "agents/meta_agent.py",
         "agents/agent_responses.py",
-        "agents/prompts.py",
         "agents/agent.py",
         "agents/tools/read_source.py",
         "agents/tools/read_file_structure.py",
@@ -198,7 +199,11 @@
         "agents/tools/read_file.py",
         "agents/tools/utils.py",
         "agents/tools/read_structure.py",
-        "agents/tools/read_docs.py"
+        "agents/tools/read_docs.py",
+        "agents/prompts/__init__.py",
+        "agents/prompts/gemini_flash_prompts_bidirectional.py",
+        "agents/prompts/prompt_factory.py",
+        "agents/prompts/gemini_flash_prompts_unidirectional.py"
       ],
       "can_expand": true
     },
@@ -208,31 +213,31 @@
       "referenced_source_code": [
         {
           "qualified_name": "html",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
+          "reference_file": "github_action.py",
           "reference_start_line": 37,
           "reference_end_line": 51
         },
         {
           "qualified_name": "markdown",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
+          "reference_file": "github_action.py",
           "reference_start_line": 20,
           "reference_end_line": 34
         },
         {
           "qualified_name": "mdx",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
+          "reference_file": "github_action.py",
           "reference_start_line": 54,
           "reference_end_line": 68
         },
         {
           "qualified_name": "sphinx",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/output_generators/sphinx.py",
+          "reference_file": "output_generators/sphinx.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
           "qualified_name": "github_action",
-          "reference_file": "/home/ubuntu/CodeBoarding/repo/CodeBoarding/github_action.py",
+          "reference_file": "github_action.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
@@ -253,21 +258,12 @@
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
       "referenced_source_code": [],
       "assigned_files": [
-        "vscode_constants.py",
         "vscode_runnable.py",
         "utils.py",
         "setup.py",
         "demo.py",
-        "logging_config.py",
-        "diagram_analysis/version.py"
+        "logging_config.py"
       ],
-      "can_expand": false
-    },
-    {
-      "name": "Unclassified",
-      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [],
       "can_expand": false
     }
   ],

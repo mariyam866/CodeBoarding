@@ -1,80 +1,45 @@
 ```mermaid
 graph LR
-    Document_Ingestion["Document Ingestion"]
-    Text_Splitter["Text Splitter"]
-    Vector_Store["Vector Store"]
-    Embeddings_Model["Embeddings Model"]
-    Language_Model_LLM_["Language Model (LLM)"]
-    Retrieval_Chain["Retrieval Chain"]
+    Code_Scanner_Parser["Code Scanner/Parser"]
+    LSP_Client_Manager["LSP Client Manager"]
+    Reference_Resolution_Module["Reference Resolution Module"]
     Unclassified["Unclassified"]
-    Document_Ingestion -- "loads documents into" --> Text_Splitter
-    Text_Splitter -- "splits text for" --> Embeddings_Model
-    Embeddings_Model -- "generates embeddings for" --> Vector_Store
-    Vector_Store -- "stores embeddings from" --> Embeddings_Model
-    Vector_Store -- "retrieves context for" --> Retrieval_Chain
-    Retrieval_Chain -- "uses" --> Language_Model_LLM_
-    Language_Model_LLM_ -- "answers queries using" --> Retrieval_Chain
+    Code_Scanner_Parser -- "sends requests to" --> LSP_Client_Manager
+    Code_Scanner_Parser -- "provides parsed structures to" --> Reference_Resolution_Module
+    LSP_Client_Manager -- "delivers analysis to" --> Reference_Resolution_Module
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-This graph represents the core functionality of a document processing and question-answering system. The main flow involves ingesting documents, processing them into a searchable format, and then using a language model to answer user queries based on the ingested content. Its purpose is to provide an intelligent interface for users to retrieve information from a collection of documents.
+The static analysis subsystem is composed of three central components: the `Code Scanner/Parser`, the `LSP Client Manager`, and the `Reference Resolution Module`. The `Code Scanner/Parser` initiates the analysis by ingesting and structuring source code, performing language-agnostic parsing. It then interacts with the `LSP Client Manager` to leverage language-specific analysis capabilities provided by external Language Server Protocol (LSP) servers. Both the parsed structures from the `Code Scanner/Parser` and the detailed analysis from the `LSP Client Manager` feed into the `Reference Resolution Module`. This module is responsible for identifying and resolving code references, thereby establishing a comprehensive understanding of the codebase's structural interactions. This architecture ensures a modular and extensible approach to static code analysis, separating initial parsing from language-specific and reference resolution concerns.
 
-### Document Ingestion
-Handles the loading and initial processing of various document types.
-
-
-**Related Classes/Methods**:
-
-- `langchain_community.document_loaders.pdf.PyPDFLoader`
-- `langchain_community.document_loaders.csv_loader.CSVLoader`
-
-
-### Text Splitter
-Breaks down large documents into smaller, manageable chunks for efficient processing and embedding.
+### Code Scanner/Parser
+Responsible for the initial ingestion and parsing of source code, breaking it down into a structured format suitable for further analysis. It handles language-agnostic lexical and syntactic analysis, potentially delegating language-specific parsing to specialized clients.
 
 
 **Related Classes/Methods**:
 
-- `langchain.text_splitter.RecursiveCharacterTextSplitter`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer/scanner.py`</a>
 
 
-### Vector Store
-Stores and retrieves document embeddings, enabling semantic search.
-
-
-**Related Classes/Methods**:
-
-- `langchain_community.vectorstores.chroma.Chroma`
-
-
-### Embeddings Model
-Generates numerical representations (embeddings) of text chunks.
+### LSP Client Manager
+Manages communication with Language Server Protocol (LSP) servers for various programming languages. It acts as an intermediary, sending code analysis requests to external language servers and receiving detailed, language-specific structural information (e.g., ASTs, symbol tables, type information). The `LSPClient` serves as the foundational abstract class for all language-specific LSP client implementations, defining the core communication protocol and lifecycle management.
 
 
 **Related Classes/Methods**:
 
-- `langchain_community.embeddings.ollama.OllamaEmbeddings`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/lsp_client/typescript_client.py" target="_blank" rel="noopener noreferrer">`static_analyzer.lsp_client.client.LSPClient`</a>
 
 
-### Language Model (LLM)
-Processes user queries and generates answers based on retrieved context.
-
-
-**Related Classes/Methods**:
-
-- `langchain_community.llms.ollama.Ollama`
-
-
-### Retrieval Chain
-Orchestrates the retrieval of relevant document chunks and passes them to the LLM for answer generation.
+### Reference Resolution Module
+Focuses on identifying and resolving code references within the parsed source code. It links declarations to their usages, providing a comprehensive understanding of how different parts of the codebase interact at a structural level. The `ReferenceResolverMixin` provides the core logic and orchestration for various reference resolution strategies, including exact, loose, file path, and LLM-based matching.
 
 
 **Related Classes/Methods**:
 
-- `langchain.chains.retrieval.create_retrieval_chain`
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/reference_resolve_mixin.py" target="_blank" rel="noopener noreferrer">`static_analyzer.reference_resolve_mixin.ReferenceResolverMixin`</a>
 
 
 ### Unclassified

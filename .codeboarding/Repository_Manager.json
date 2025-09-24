@@ -1,12 +1,12 @@
 {
-  "description": "The core of the subsystem revolves around the `Diff Analyzing Agent`, which acts as the central orchestrator for analyzing code changes. Initiated by an external `Orchestration Engine`, the `Diff Analyzing Agent` delegates the task of generating raw diff data to the `Diff Generator`. The `Diff Generator`, in turn, interacts with the `Repository Access Layer` to retrieve the necessary version control information. Once the diff data is processed and analyzed by the `Diff Analyzing Agent`, the resulting insights and updates are then transmitted to the `Static Analysis Engine` for further, more in-depth code examination. This architecture ensures a clear separation of concerns, with dedicated components for managing the analysis workflow, generating diffs, and interacting with the repository.",
+  "description": "The system's core functionality revolves around analyzing code changes. The `Git Operations Utility` serves as the foundational layer, providing raw repository data and diffs to the `Diff Analyzer`. The `Diff Analyzer` then processes this raw information, transforming it into structured code artifacts and contextual data. These processed outputs are subsequently routed to two distinct downstream components: the `Static Analysis Engine` for identifying code quality and security issues, and the `AI Interpretation Layer` for advanced, AI-driven insights and recommendations based on the code changes. This architecture ensures a clear separation of concerns, with the `Diff Analyzer` acting as a central hub for preparing data for specialized analysis.",
   "components": [
     {
-      "name": "Diff Analyzing Agent",
-      "description": "This component is responsible for orchestrating the analysis of code differences within a repository. It retrieves diff data, filters it for relevance, and uses an internal agent to generate insights and determine the degree of update required for existing analyses or components. It acts as the primary interface for initiating and managing diff-based analysis.",
+      "name": "Diff Analyzer",
+      "description": "Orchestrates the process of identifying, analyzing, and preparing code differences from repositories. It leverages lower-level Git utilities to fetch raw data and then processes it into a usable format for subsequent analysis stages.",
       "referenced_source_code": [
         {
-          "qualified_name": "DiffAnalyzingAgent",
+          "qualified_name": "agents.diff_analyzer:__init__",
           "reference_file": "agents/diff_analyzer.py",
           "reference_start_line": null,
           "reference_end_line": null
@@ -16,94 +16,41 @@
       "can_expand": true
     },
     {
-      "name": "Diff Generator",
-      "description": "This component specializes in computing and extracting detailed differences between various versions or branches of source code within a repository. It directly interacts with the underlying version control system to obtain raw diff information.",
+      "name": "Git Operations Utility",
+      "description": "Provides low-level, atomic functionalities for interacting directly with Git repositories. This includes operations such as cloning repositories, fetching updates, and generating detailed version differences (diffs). It abstracts the complexities of Git commands.",
       "referenced_source_code": [
         {
-          "qualified_name": "get_git_diff",
-          "reference_file": "repo_utils/git_diff.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "assigned_files": [],
-      "can_expand": false
-    },
-    {
-      "name": "Repository Access Layer",
-      "description": "This component handles the direct, low-level interactions with the underlying version control system (e.g., Git). It encapsulates the specifics of executing VCS commands and managing local repository copies, providing the raw data for diff generation.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "get_git_diff",
+          "qualified_name": "repo_utils.git_diff:git_diff",
           "reference_file": "repo_utils/git_diff.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
       ],
       "assigned_files": [
-        "../../repo_utils/git_diff.py"
+        "../../repo_utils/__init__.py",
+        "../../repo_utils/git_diff.py",
+        "../../repo_utils/errors.py"
       ],
       "can_expand": false
-    },
-    {
-      "name": "Orchestration Engine",
-      "description": "This external component initiates and manages the overall code analysis workflow. It sends instructions to the `Diff Analyzing Agent` to start or update analyses.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "Orchestration Engine",
-          "reference_file": "example.txt",
-          "reference_start_line": 1,
-          "reference_end_line": 10
-        }
-      ],
-      "assigned_files": [],
-      "can_expand": true
-    },
-    {
-      "name": "Static Analysis Engine",
-      "description": "This external component receives and processes data from the `Diff Analyzing Agent`, likely performing deeper static code analysis based on the identified changes.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "Static Analysis Engine",
-          "reference_file": "",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "assigned_files": [],
-      "can_expand": true
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
       "referenced_source_code": [],
-      "assigned_files": [
-        "../../repo_utils/__init__.py",
-        "../../repo_utils/errors.py"
-      ],
+      "assigned_files": [],
       "can_expand": false
     }
   ],
   "components_relations": [
     {
-      "relation": "initiates analysis in",
-      "src_name": "Orchestration Engine",
-      "dst_name": "Diff Analyzing Agent"
+      "relation": "depends on and invokes",
+      "src_name": "Diff Analyzer",
+      "dst_name": "Git Operations Utility"
     },
     {
-      "relation": "requests diff data from",
-      "src_name": "Diff Analyzing Agent",
-      "dst_name": "Diff Generator"
-    },
-    {
-      "relation": "retrieves changes from",
-      "src_name": "Diff Generator",
-      "dst_name": "Repository Access Layer"
-    },
-    {
-      "relation": "sends analysis data to",
-      "src_name": "Diff Analyzing Agent",
-      "dst_name": "Static Analysis Engine"
+      "relation": "provides raw repository data and diff outputs to",
+      "src_name": "Git Operations Utility",
+      "dst_name": "Diff Analyzer"
     }
   ]
 }

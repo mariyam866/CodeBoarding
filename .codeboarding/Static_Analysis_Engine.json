@@ -1,125 +1,85 @@
 {
-  "description": "This graph represents the core functionality of a document processing and question-answering system. The main flow involves ingesting documents, processing them into a searchable format, and then using a language model to answer user queries based on the ingested content. Its purpose is to provide an intelligent interface for users to retrieve information from a collection of documents.",
+  "description": "The static analysis subsystem is composed of three central components: the `Code Scanner/Parser`, the `LSP Client Manager`, and the `Reference Resolution Module`. The `Code Scanner/Parser` initiates the analysis by ingesting and structuring source code, performing language-agnostic parsing. It then interacts with the `LSP Client Manager` to leverage language-specific analysis capabilities provided by external Language Server Protocol (LSP) servers. Both the parsed structures from the `Code Scanner/Parser` and the detailed analysis from the `LSP Client Manager` feed into the `Reference Resolution Module`. This module is responsible for identifying and resolving code references, thereby establishing a comprehensive understanding of the codebase's structural interactions. This architecture ensures a modular and extensible approach to static code analysis, separating initial parsing from language-specific and reference resolution concerns.",
   "components": [
     {
-      "name": "Document Ingestion",
-      "description": "Handles the loading and initial processing of various document types.",
+      "name": "Code Scanner/Parser",
+      "description": "Responsible for the initial ingestion and parsing of source code, breaking it down into a structured format suitable for further analysis. It handles language-agnostic lexical and syntactic analysis, potentially delegating language-specific parsing to specialized clients.",
       "referenced_source_code": [
         {
-          "qualified_name": "langchain_community.document_loaders.pdf.PyPDFLoader",
-          "reference_file": "document_ingestion.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        },
-        {
-          "qualified_name": "langchain_community.document_loaders.csv_loader.CSVLoader",
-          "reference_file": "document_ingestion.py",
+          "qualified_name": "static_analyzer/scanner.py",
+          "reference_file": "static_analyzer/scanner.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [
+        "../../static_analyzer/scanner.py"
+      ],
+      "can_expand": true
     },
     {
-      "name": "Text Splitter",
-      "description": "Breaks down large documents into smaller, manageable chunks for efficient processing and embedding.",
+      "name": "LSP Client Manager",
+      "description": "Manages communication with Language Server Protocol (LSP) servers for various programming languages. It acts as an intermediary, sending code analysis requests to external language servers and receiving detailed, language-specific structural information (e.g., ASTs, symbol tables, type information). The `LSPClient` serves as the foundational abstract class for all language-specific LSP client implementations, defining the core communication protocol and lifecycle management.",
       "referenced_source_code": [
         {
-          "qualified_name": "langchain.text_splitter.RecursiveCharacterTextSplitter",
-          "reference_file": "text_processing.py",
+          "qualified_name": "static_analyzer.lsp_client.client.LSPClient",
+          "reference_file": "static_analyzer/lsp_client/typescript_client.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [
+        "../../static_analyzer/lsp_client/client.py",
+        "../../static_analyzer/lsp_client/typescript_client.py",
+        "../../static_analyzer/programming_language.py"
+      ],
+      "can_expand": true
     },
     {
-      "name": "Vector Store",
-      "description": "Stores and retrieves document embeddings, enabling semantic search.",
+      "name": "Reference Resolution Module",
+      "description": "Focuses on identifying and resolving code references within the parsed source code. It links declarations to their usages, providing a comprehensive understanding of how different parts of the codebase interact at a structural level. The `ReferenceResolverMixin` provides the core logic and orchestration for various reference resolution strategies, including exact, loose, file path, and LLM-based matching.",
       "referenced_source_code": [
         {
-          "qualified_name": "langchain_community.vectorstores.chroma.Chroma",
-          "reference_file": "vector_db.py",
+          "qualified_name": "static_analyzer.reference_resolve_mixin.ReferenceResolverMixin",
+          "reference_file": "static_analyzer/reference_resolve_mixin.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
-    },
-    {
-      "name": "Embeddings Model",
-      "description": "Generates numerical representations (embeddings) of text chunks.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "langchain_community.embeddings.ollama.OllamaEmbeddings",
-          "reference_file": "embedding_model.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ]
-    },
-    {
-      "name": "Language Model (LLM)",
-      "description": "Processes user queries and generates answers based on retrieved context.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "langchain_community.llms.ollama.Ollama",
-          "reference_file": "llm_interface.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ]
-    },
-    {
-      "name": "Retrieval Chain",
-      "description": "Orchestrates the retrieval of relevant document chunks and passes them to the LLM for answer generation.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "langchain.chains.retrieval.create_retrieval_chain",
-          "reference_file": "retrieval_chain.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ]
+      ],
+      "assigned_files": [
+        "../../static_analyzer/reference_resolve_mixin.py"
+      ],
+      "can_expand": true
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": []
+      "referenced_source_code": [],
+      "assigned_files": [
+        "../../vscode_constants.py",
+        "../../static_analyzer/__init__.py",
+        "../../static_analyzer/graph.py",
+        "../../static_analyzer/analysis_result.py",
+        "../../static_analyzer/lsp_client/__init__.py"
+      ],
+      "can_expand": false
     }
   ],
   "components_relations": [
     {
-      "relation": "loads documents into",
-      "src_name": "Document Ingestion",
-      "dst_name": "Text Splitter"
+      "relation": "sends requests to",
+      "src_name": "Code Scanner/Parser",
+      "dst_name": "LSP Client Manager"
     },
     {
-      "relation": "splits text for",
-      "src_name": "Text Splitter",
-      "dst_name": "Embeddings Model"
+      "relation": "provides parsed structures to",
+      "src_name": "Code Scanner/Parser",
+      "dst_name": "Reference Resolution Module"
     },
     {
-      "relation": "generates embeddings for",
-      "src_name": "Embeddings Model",
-      "dst_name": "Vector Store"
-    },
-    {
-      "relation": "stores embeddings from",
-      "src_name": "Vector Store",
-      "dst_name": "Embeddings Model"
-    },
-    {
-      "relation": "retrieves context for",
-      "src_name": "Vector Store",
-      "dst_name": "Retrieval Chain"
-    },
-    {
-      "relation": "uses",
-      "src_name": "Retrieval Chain",
-      "dst_name": "Language Model (LLM)"
-    },
-    {
-      "relation": "answers queries using",
-      "src_name": "Language Model (LLM)",
-      "dst_name": "Retrieval Chain"
+      "relation": "delivers analysis to",
+      "src_name": "LSP Client Manager",
+      "dst_name": "Reference Resolution Module"
     }
   ]
 }
