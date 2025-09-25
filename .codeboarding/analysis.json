@@ -106,7 +106,6 @@
         }
       ],
       "assigned_files": [
-        "vscode_constants.py",
         "static_analyzer/programming_language.py",
         "static_analyzer/__init__.py",
         "static_analyzer/reference_resolve_mixin.py",
@@ -195,7 +194,7 @@
         "agents/tools/read_packages.py",
         "agents/tools/read_cfg.py",
         "agents/tools/get_method_invocations.py",
-        "agents/tools/read_git_diff.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_git_diff.y",
         "agents/tools/read_file.py",
         "agents/tools/utils.py",
         "agents/tools/read_structure.py",
@@ -258,12 +257,20 @@
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
       "referenced_source_code": [],
       "assigned_files": [
+        "vscode_constants.py",
         "vscode_runnable.py",
         "utils.py",
         "setup.py",
         "demo.py",
         "logging_config.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     }
   ],

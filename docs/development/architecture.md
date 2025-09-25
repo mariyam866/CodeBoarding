@@ -197,6 +197,7 @@ graph LR
     Orchestration_Engine -- "directs output to" --> Output_Generation_Engine
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
     click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
+    click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
@@ -248,7 +249,7 @@ Performs comprehensive code analysis, encompassing static code analysis, AI-driv
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/prompts/prompt_factory.py" target="_blank" rel="noopener noreferrer">`agents.prompts.prompt_factory.py`</a>
 
 
-### Output Generation Engine
+### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
 Responsible for the final formatting and generation of documentation and diagrams in various formats.
 
 
@@ -274,6 +275,76 @@ Encompasses the project's packaging, dependency management, and build processes,
 **Related Classes/Methods**:
 
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainsetup.py" target="_blank" rel="noopener noreferrer">`setup.py`</a>
+
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
+
+
+
+### [FAQ](https://github.com/CodeBoarding/GeneratedOnBoardings/tree/main?tab=readme-ov-file#faq)
+
+
+```mermaid
+graph LR
+    Output_Generation_Orchestrator["Output Generation Orchestrator"]
+    Content_Formatters["Content Formatters"]
+    Sphinx_Generator["Sphinx Generator"]
+    GitHub_Actions_Environment["GitHub Actions Environment"]
+    Unclassified["Unclassified"]
+    Orchestration_Engine -- "sends validated insights to" --> Output_Generation_Orchestrator
+    Output_Generation_Orchestrator -- "sends generated output status/references to" --> Orchestration_Engine
+    Output_Generation_Orchestrator -- "requests output generation from" --> Content_Formatters
+    Content_Formatters -- "provides generated output to" --> Output_Generation_Orchestrator
+    Output_Generation_Orchestrator -- "requests output generation from" --> Sphinx_Generator
+    Sphinx_Generator -- "provides generated Sphinx output to" --> Output_Generation_Orchestrator
+    Output_Generation_Orchestrator -- "produces outputs for" --> GitHub_Actions_Environment
+    GitHub_Actions_Environment -- "provides execution context to" --> Output_Generation_Orchestrator
+```
+
+[![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
+
+## Details
+
+This subsystem, primarily driven by the Output Generation Orchestrator within a GitHub Actions Environment, is responsible for transforming validated architectural insights into various documentation formats. An external Orchestration Engine initiates this process by providing the necessary insights. The orchestrator then intelligently delegates content generation to internal Content Formatters for standard formats like Markdown, HTML, and MDX, and to a specialized Sphinx Generator for comprehensive technical documentation. Upon completion, the orchestrator provides the generated outputs to the GitHub Actions Environment for deployment or publishing, and communicates the status back to the Orchestration Engine.
+
+### Output Generation Orchestrator
+The central component responsible for receiving validated architectural insights, determining the required output formats, coordinating the invocation of specific format generators, and managing the generated outputs within the GitHub Actions environment.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maingithub_action.py" target="_blank" rel="noopener noreferrer">`github_action`</a>
+
+
+### Content Formatters
+A collection of internal functions or modules within the orchestrator responsible for transforming architectural insights into various documentation formats such as Markdown, HTML, and MDX.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maingithub_action.py#L20-L68" target="_blank" rel="noopener noreferrer">`github_action`:20-68</a>
+
+
+### Sphinx Generator
+A dedicated component that produces documentation artifacts compatible with the Sphinx documentation generator, commonly used for comprehensive technical project documentation.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainoutput_generators/sphinx.py" target="_blank" rel="noopener noreferrer">`output_generators.sphinx`</a>
+
+
+### GitHub Actions Environment
+The runtime environment provided by GitHub Actions, which hosts the Output Generation Orchestrator. It manages the execution context, handles inputs and outputs, and facilitates subsequent deployment or publishing of the generated documentation.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maingithub_action.py" target="_blank" rel="noopener noreferrer">`github_action`</a>
 
 
 ### Unclassified
@@ -333,46 +404,56 @@ Component for all unclassified files and utility functions (Utility functions/Ex
 
 ```mermaid
 graph LR
-    Code_Scanner_Parser["Code Scanner/Parser"]
-    LSP_Client_Manager["LSP Client Manager"]
-    Reference_Resolution_Module["Reference Resolution Module"]
+    Scanner["Scanner"]
+    LSP_Client["LSP Client"]
+    Reference_Resolution_Mixin["Reference Resolution Mixin"]
+    Analysis_Result_Emitter["Analysis Result Emitter"]
     Unclassified["Unclassified"]
-    Code_Scanner_Parser -- "sends requests to" --> LSP_Client_Manager
-    Code_Scanner_Parser -- "provides parsed structures to" --> Reference_Resolution_Module
-    LSP_Client_Manager -- "delivers analysis to" --> Reference_Resolution_Module
+    Scanner -- "provides raw structural data to" --> Reference_Resolution_Mixin
+    LSP_Client -- "provides enriched language-specific data to" --> Reference_Resolution_Mixin
+    Reference_Resolution_Mixin -- "provides fully resolved reference data to" --> Analysis_Result_Emitter
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The static analysis subsystem is composed of three central components: the `Code Scanner/Parser`, the `LSP Client Manager`, and the `Reference Resolution Module`. The `Code Scanner/Parser` initiates the analysis by ingesting and structuring source code, performing language-agnostic parsing. It then interacts with the `LSP Client Manager` to leverage language-specific analysis capabilities provided by external Language Server Protocol (LSP) servers. Both the parsed structures from the `Code Scanner/Parser` and the detailed analysis from the `LSP Client Manager` feed into the `Reference Resolution Module`. This module is responsible for identifying and resolving code references, thereby establishing a comprehensive understanding of the codebase's structural interactions. This architecture ensures a modular and extensible approach to static code analysis, separating initial parsing from language-specific and reference resolution concerns.
+The Static Analysis Engine subsystem is designed to process source code and generate detailed structural analysis results. It begins with the `Scanner` component, which performs initial parsing and lexical analysis to produce a raw structural representation, such as an Abstract Syntax Tree (AST). Concurrently, the `LSP Client` integrates with Language Server Protocol servers to gather enriched language-specific data, including symbol information and type definitions. Both the raw structural data from the `Scanner` and the enriched data from the `LSP Client` are fed into the `Reference Resolution Mixin`. This central component is responsible for linking declarations to their usages, identifying call sites, and constructing a comprehensive code graph. Finally, the `Analysis Result Emitter` component acts as the output interface, packaging and emitting the fully resolved structural analysis results for consumption by downstream systems. This architecture ensures a robust and detailed understanding of the codebase's structure and interdependencies.
 
-### Code Scanner/Parser
-Responsible for the initial ingestion and parsing of source code, breaking it down into a structured format suitable for further analysis. It handles language-agnostic lexical and syntactic analysis, potentially delegating language-specific parsing to specialized clients.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer/scanner.py`</a>
-
-
-### LSP Client Manager
-Manages communication with Language Server Protocol (LSP) servers for various programming languages. It acts as an intermediary, sending code analysis requests to external language servers and receiving detailed, language-specific structural information (e.g., ASTs, symbol tables, type information). The `LSPClient` serves as the foundational abstract class for all language-specific LSP client implementations, defining the core communication protocol and lifecycle management.
+### Scanner
+This is the foundational component responsible for the initial parsing and lexical analysis of source code. It generates a basic structural representation, such as an Abstract Syntax Tree (AST), which serves as the raw input for further analysis stages.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/lsp_client/typescript_client.py" target="_blank" rel="noopener noreferrer">`static_analyzer.lsp_client.client.LSPClient`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`Scanner`</a>
 
 
-### Reference Resolution Module
-Focuses on identifying and resolving code references within the parsed source code. It links declarations to their usages, providing a comprehensive understanding of how different parts of the codebase interact at a structural level. The `ReferenceResolverMixin` provides the core logic and orchestration for various reference resolution strategies, including exact, loose, file path, and LLM-based matching.
+### LSP Client
+This component acts as an integration point with Language Server Protocol (LSP) servers. It enables the Static Analysis Engine to leverage language-specific intelligence, retrieving rich symbol information, type definitions, and other advanced structural details that are crucial for comprehensive analysis, especially for complex languages like TypeScript.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/reference_resolve_mixin.py" target="_blank" rel="noopener noreferrer">`static_analyzer.reference_resolve_mixin.ReferenceResolverMixin`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/lsp_client/typescript_client.py" target="_blank" rel="noopener noreferrer">`LSP Client`</a>
+
+
+### Reference Resolution Mixin
+A core logic component that takes the structural information provided by the `Scanner` and the enriched data from the `LSP Client` to perform comprehensive code reference resolution. Its primary responsibility is to link declarations to their usages, identify call sites, and build a detailed code graph, fulfilling the subsystem's explicit reference resolution capabilities.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/reference_resolve_mixin.py" target="_blank" rel="noopener noreferrer">`Reference Resolution Mixin`</a>
+
+
+### Analysis Result Emitter
+This component represents the output interface of the Static Analysis Engine. It is responsible for packaging and emitting the final, detailed structural analysis results, including all resolved references, to downstream components.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/analysis_result.py" target="_blank" rel="noopener noreferrer">`Analysis Result Emitter`</a>
 
 
 ### Unclassified
@@ -396,6 +477,7 @@ graph LR
     AI_Interpretation_Layer["AI Interpretation Layer"]
     Output_Generation_Engine["Output Generation Engine"]
     Unclassified["Unclassified"]
+    Unclassified["Unclassified"]
     API_Service -- "initiates jobs and triggers analysis within" --> Orchestration_Engine
     API_Service -- "requests GitHub Action jobs from" --> Orchestration_Engine
     Orchestration_Engine -- "manages job state in" --> Job_Database
@@ -414,6 +496,7 @@ graph LR
     click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
     click Static_Analysis_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Static_Analysis_Engine.md" "Details"
     click AI_Interpretation_Layer href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/AI_Interpretation_Layer.md" "Details"
+    click Output_Generation_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Output_Generation_Engine.md" "Details"
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
@@ -488,7 +571,7 @@ A collection of specialized AI agents that perform sophisticated interpretation 
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/details_agent.py" target="_blank" rel="noopener noreferrer">`prompts`</a>
 
 
-### Output Generation Engine
+### Output Generation Engine [[Expand]](./Output_Generation_Engine.md)
 Transforms the final, validated architectural insights into various human-readable and diagram-friendly documentation formats, with enhanced capabilities for specific output formats and external integrations like GitHub Actions.
 
 
@@ -500,6 +583,12 @@ Transforms the final, validated architectural insights into various human-readab
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainoutput_generators/sphinx.py" target="_blank" rel="noopener noreferrer">`sphinx`</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maingithub_action.py" target="_blank" rel="noopener noreferrer">`github_action`</a>
 
+
+### Unclassified
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+
+**Related Classes/Methods**: _None_
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)

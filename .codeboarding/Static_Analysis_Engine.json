@@ -1,12 +1,12 @@
 {
-  "description": "The static analysis subsystem is composed of three central components: the `Code Scanner/Parser`, the `LSP Client Manager`, and the `Reference Resolution Module`. The `Code Scanner/Parser` initiates the analysis by ingesting and structuring source code, performing language-agnostic parsing. It then interacts with the `LSP Client Manager` to leverage language-specific analysis capabilities provided by external Language Server Protocol (LSP) servers. Both the parsed structures from the `Code Scanner/Parser` and the detailed analysis from the `LSP Client Manager` feed into the `Reference Resolution Module`. This module is responsible for identifying and resolving code references, thereby establishing a comprehensive understanding of the codebase's structural interactions. This architecture ensures a modular and extensible approach to static code analysis, separating initial parsing from language-specific and reference resolution concerns.",
+  "description": "The Static Analysis Engine subsystem is designed to process source code and generate detailed structural analysis results. It begins with the `Scanner` component, which performs initial parsing and lexical analysis to produce a raw structural representation, such as an Abstract Syntax Tree (AST). Concurrently, the `LSP Client` integrates with Language Server Protocol servers to gather enriched language-specific data, including symbol information and type definitions. Both the raw structural data from the `Scanner` and the enriched data from the `LSP Client` are fed into the `Reference Resolution Mixin`. This central component is responsible for linking declarations to their usages, identifying call sites, and constructing a comprehensive code graph. Finally, the `Analysis Result Emitter` component acts as the output interface, packaging and emitting the fully resolved structural analysis results for consumption by downstream systems. This architecture ensures a robust and detailed understanding of the codebase's structure and interdependencies.",
   "components": [
     {
-      "name": "Code Scanner/Parser",
-      "description": "Responsible for the initial ingestion and parsing of source code, breaking it down into a structured format suitable for further analysis. It handles language-agnostic lexical and syntactic analysis, potentially delegating language-specific parsing to specialized clients.",
+      "name": "Scanner",
+      "description": "This is the foundational component responsible for the initial parsing and lexical analysis of source code. It generates a basic structural representation, such as an Abstract Syntax Tree (AST), which serves as the raw input for further analysis stages.",
       "referenced_source_code": [
         {
-          "qualified_name": "static_analyzer/scanner.py",
+          "qualified_name": "Scanner",
           "reference_file": "static_analyzer/scanner.py",
           "reference_start_line": null,
           "reference_end_line": null
@@ -18,29 +18,28 @@
       "can_expand": true
     },
     {
-      "name": "LSP Client Manager",
-      "description": "Manages communication with Language Server Protocol (LSP) servers for various programming languages. It acts as an intermediary, sending code analysis requests to external language servers and receiving detailed, language-specific structural information (e.g., ASTs, symbol tables, type information). The `LSPClient` serves as the foundational abstract class for all language-specific LSP client implementations, defining the core communication protocol and lifecycle management.",
+      "name": "LSP Client",
+      "description": "This component acts as an integration point with Language Server Protocol (LSP) servers. It enables the Static Analysis Engine to leverage language-specific intelligence, retrieving rich symbol information, type definitions, and other advanced structural details that are crucial for comprehensive analysis, especially for complex languages like TypeScript.",
       "referenced_source_code": [
         {
-          "qualified_name": "static_analyzer.lsp_client.client.LSPClient",
+          "qualified_name": "LSP Client",
           "reference_file": "static_analyzer/lsp_client/typescript_client.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
       ],
       "assigned_files": [
-        "../../static_analyzer/lsp_client/client.py",
         "../../static_analyzer/lsp_client/typescript_client.py",
-        "../../static_analyzer/programming_language.py"
+        "../../static_analyzer/lsp_client/client.py"
       ],
       "can_expand": true
     },
     {
-      "name": "Reference Resolution Module",
-      "description": "Focuses on identifying and resolving code references within the parsed source code. It links declarations to their usages, providing a comprehensive understanding of how different parts of the codebase interact at a structural level. The `ReferenceResolverMixin` provides the core logic and orchestration for various reference resolution strategies, including exact, loose, file path, and LLM-based matching.",
+      "name": "Reference Resolution Mixin",
+      "description": "A core logic component that takes the structural information provided by the `Scanner` and the enriched data from the `LSP Client` to perform comprehensive code reference resolution. Its primary responsibility is to link declarations to their usages, identify call sites, and build a detailed code graph, fulfilling the subsystem's explicit reference resolution capabilities.",
       "referenced_source_code": [
         {
-          "qualified_name": "static_analyzer.reference_resolve_mixin.ReferenceResolverMixin",
+          "qualified_name": "Reference Resolution Mixin",
           "reference_file": "static_analyzer/reference_resolve_mixin.py",
           "reference_start_line": null,
           "reference_end_line": null
@@ -52,14 +51,29 @@
       "can_expand": true
     },
     {
+      "name": "Analysis Result Emitter",
+      "description": "This component represents the output interface of the Static Analysis Engine. It is responsible for packaging and emitting the final, detailed structural analysis results, including all resolved references, to downstream components.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "Analysis Result Emitter",
+          "reference_file": "static_analyzer/analysis_result.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [
+        "../../static_analyzer/analysis_result.py"
+      ],
+      "can_expand": false
+    },
+    {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
       "referenced_source_code": [],
       "assigned_files": [
-        "../../vscode_constants.py",
+        "../../static_analyzer/programming_language.py",
         "../../static_analyzer/__init__.py",
         "../../static_analyzer/graph.py",
-        "../../static_analyzer/analysis_result.py",
         "../../static_analyzer/lsp_client/__init__.py"
       ],
       "can_expand": false
@@ -67,19 +81,19 @@
   ],
   "components_relations": [
     {
-      "relation": "sends requests to",
-      "src_name": "Code Scanner/Parser",
-      "dst_name": "LSP Client Manager"
+      "relation": "provides raw structural data to",
+      "src_name": "Scanner",
+      "dst_name": "Reference Resolution Mixin"
     },
     {
-      "relation": "provides parsed structures to",
-      "src_name": "Code Scanner/Parser",
-      "dst_name": "Reference Resolution Module"
+      "relation": "provides enriched language-specific data to",
+      "src_name": "LSP Client",
+      "dst_name": "Reference Resolution Mixin"
     },
     {
-      "relation": "delivers analysis to",
-      "src_name": "LSP Client Manager",
-      "dst_name": "Reference Resolution Module"
+      "relation": "provides fully resolved reference data to",
+      "src_name": "Reference Resolution Mixin",
+      "dst_name": "Analysis Result Emitter"
     }
   ]
 }

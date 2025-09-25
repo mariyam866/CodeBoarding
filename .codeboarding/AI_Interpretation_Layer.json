@@ -11,31 +11,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "../../agents/__init__.py",
-        "../../agents/diff_analyzer.py",
-        "../../agents/details_agent.py",
-        "../../agents/validator_agent.py",
-        "../../agents/abstraction_agent.py",
-        "../../agents/planner_agent.py",
-        "../../agents/meta_agent.py",
-        "../../agents/agent_responses.py",
-        "../../agents/agent.py",
-        "../../agents/tools/read_source.py",
-        "../../agents/tools/read_file_structure.py",
-        "../../agents/tools/__init__.py",
-        "../../agents/tools/external_deps.py",
-        "../../agents/tools/read_packages.py",
-        "../../agents/tools/read_cfg.py",
-        "../../agents/tools/get_method_invocations.py",
-        "../../agents/tools/read_git_diff.py",
-        "../../agents/tools/read_file.py",
-        "../../agents/tools/utils.py",
-        "../../agents/tools/read_structure.py",
-        "../../agents/tools/read_docs.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "QueryProcessor",
@@ -47,9 +23,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "VectorStore",
@@ -61,9 +35,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "DocumentRetriever",
@@ -75,9 +47,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "ResponseGenerator",
@@ -89,9 +59,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "PromptFactory",
@@ -103,21 +71,12 @@
           "reference_start_line": 27,
           "reference_end_line": 77
         }
-      ],
-      "assigned_files": [
-        "agents/prompts/__init__.py",
-        "agents/prompts/gemini_flash_prompts_bidirectional.py",
-        "agents/prompts/prompt_factory.py",
-        "agents/prompts/gemini_flash_prompts_unidirectional.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [
