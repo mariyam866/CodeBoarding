@@ -15,7 +15,7 @@ It’s designed to support onboarding, documentation, and comprehension for larg
 - Outputs interactive diagrams (Mermaid.js) for integration into docs, IDEs, CI/CD.
 
 📄 Existing visual generations: [GeneratedOnBoardings](https://github.com/CodeBoarding/GeneratedOnBoardings)  
-🌐 Try for your open-source project: [www.codeboarding.org/demo](https://www.codeboarding.org/demo)
+🌐 Try for your open-source project: [www.codeboarding.org/diagrams](https://www.codeboarding.org/diagrams)
 
 ## 🧩 How it works
 
