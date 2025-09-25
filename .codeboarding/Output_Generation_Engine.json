@@ -11,11 +11,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "../../github_action.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Content Formatters",
@@ -27,15 +23,7 @@
           "reference_start_line": 20,
           "reference_end_line": 68
         }
-      ],
-      "assigned_files": [
-        "../../output_generators/__init__.py",
-        "../../output_generators/mdx.py",
-        "../../output_generators/html.py",
-        "../../output_generators/html_template.py",
-        "../../output_generators/markdown.py"
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "Sphinx Generator",
@@ -47,11 +35,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "../../output_generators/sphinx.py"
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "GitHub Actions Environment",
@@ -63,16 +47,12 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": false
+      ]
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [
