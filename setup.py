@@ -63,7 +63,7 @@ def check_npm():
             result = subprocess.run(['npm', '--version'], capture_output=True, text=True, check=True)
             print(f"Step: npm check finished: success (version {result.stdout.strip()})")
             return True
-        except subprocess.CalledProcessError:
+        except:
             print("Step: npm check finished: failure - npm command failed. Skipping TypeScript Language Server installation.")
             return False
     else:
@@ -153,8 +153,8 @@ def download_binary_from_gdrive():
         "tokei": "1IKJSB7DHXAFZZQfwGOt6LypVUDlCQTLc"
     }
     win_files = {
-        "py-lsp": "1a8FaSGq27dyrN5yrKKMOWqfm3H8BK9Zf",
-        "tokei": "1IKJSB7DHXAFZZQfwGOt6LypVUDlCQTLc"
+        "py-lsp": "1XKRsteNhUpu2eGhkYqRhXDvJYGhBpV01",
+        "tokei": "15dKUK0bSZ1dUexbJpnx5WSv_Lqj1kyWK"
     }
     linux_files = {
         "py-lsp": "17XcohKWZKHv26DgRIdrxcPRMN0LKyt0i",
@@ -319,13 +319,13 @@ CACHING_DOCUMENTATION=false
 # NOTES
 # ============================================================================
 # 
-# 💡 Tip: Our experience has shown that using Google Gemini-2.5-Pro yields 
+# Tip: Our experience has shown that using Google Gemini-2.5-Pro yields 
 #         the best results for complex diagram generation tasks.
 #
-# 🔧 Configuration: After setup, verify paths in static_analysis_config.yml
+# Configuration: After setup, verify paths in static_analysis_config.yml
 #                   point to the correct executables for your system.
 #
-# 📚 Documentation: Visit https://codeboarding.org for more information
+# Documentation: Visit https://codeboarding.org for more information
 #
 """
     
