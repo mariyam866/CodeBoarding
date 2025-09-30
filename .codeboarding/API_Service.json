@@ -11,11 +11,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "../../local_app.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "diagram_analysis.diagram_generator",
@@ -27,9 +23,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "agents.prompts.PromptFactory",
@@ -41,9 +35,7 @@
           "reference_start_line": 29,
           "reference_end_line": 90
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "duckdb_crud.DuckDBCRUD",
@@ -55,9 +47,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": false
+      ]
     },
     {
       "name": "repo_utils.RepoUtils",
@@ -69,9 +59,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "vscode_runnable.VSCodeRunnable",
@@ -83,9 +71,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Unclassified",
@@ -97,16 +83,12 @@
           "reference_start_line": 1,
           "reference_end_line": 10
         }
-      ],
-      "assigned_files": [],
-      "can_expand": false
+      ]
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [
