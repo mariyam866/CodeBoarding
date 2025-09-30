@@ -70,7 +70,6 @@
         }
       ],
       "assigned_files": [
-        "agents/diff_analyzer.py",
         "repo_utils/__init__.py",
         "repo_utils/git_diff.py",
         "repo_utils/errors.py"
@@ -107,7 +106,6 @@
         }
       ],
       "assigned_files": [
-        "agents/abstraction_agent.py",
         "static_analyzer/programming_language.py",
         "static_analyzer/__init__.py",
         "static_analyzer/reference_resolve_mixin.py",
@@ -205,8 +203,10 @@
       ],
       "assigned_files": [
         "agents/__init__.py",
+        "agents/diff_analyzer.py",
         "agents/details_agent.py",
         "agents/validator_agent.py",
+        "agents/abstraction_agent.py",
         "agents/planner_agent.py",
         "agents/meta_agent.py",
         "agents/agent_responses.py",
@@ -289,6 +289,13 @@
         "demo.py",
         "logging_config.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     },
     {
