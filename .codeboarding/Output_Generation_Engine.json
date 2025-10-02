@@ -1,9 +1,9 @@
 {
-  "description": "The Output Generation Engine subsystem is responsible for transforming architectural analysis insights into various documentation formats. The Output Generation Orchestrator acts as the central control, initiating the analysis process and delegating output generation to format-specific components. It first interacts with the Repository Manager to prepare the code repository and then leverages the Diagram Generator Core to produce the Analysis Insights Data Model. These insights are then consumed by dedicated Markdown, HTML, MDX, and RST/Sphinx Output Components to render the final documentation. Common functionalities like name sanitization and file existence checks are provided by the Output Utility Functions.",
+  "description": "The system's architecture is centered around the Output Generation Orchestrator, which serves as the primary entry point for generating architectural documentation. This orchestrator first leverages the Repository Manager for repository setup and then initiates the Diagram Generator Core to perform static analysis and produce the Analysis Insights Data Model. Once insights are generated, the orchestrator dispatches tasks to the Output Generators component, which is responsible for transforming these insights into various documentation formats (Markdown, HTML, MDX, RST/Sphinx). The Output Generators component relies on Output Utility Functions for common formatting and data handling. The Unclassified component manages foundational project configurations, external dependencies, and environment-specific constants, supporting the overall system operations.",
   "components": [
     {
       "name": "Output Generation Orchestrator",
-      "description": "This component, primarily `github_action.py`, orchestrates the entire output generation process within a GitHub Actions context. It handles repository preparation, initial analysis, and dispatches generation tasks to format-specific functions based on the desired output extension. It serves as the primary entry point for the subsystem.",
+      "description": "This component, primarily `github_action.py`, orchestrates the entire output generation process within a GitHub Actions context. It handles repository preparation, initial analysis, and dispatches generation tasks to format-specific functions within the `Output Generators` component. It serves as the primary entry point for the subsystem.",
       "referenced_source_code": [
         {
           "qualified_name": "github_action.py",
@@ -31,13 +31,15 @@
         }
       ],
       "assigned_files": [
-        "../../github_action.py"
+        "../../github_action.py",
+        "../../repo_utils/__init__.py",
+        "../../diagram_analysis/diagram_generator.py"
       ],
       "can_expand": true
     },
     {
-      "name": "Markdown Output Component",
-      "description": "Responsible for generating documentation in Markdown format. It processes `AnalysisInsights` objects and applies Markdown-specific formatting rules, including the generation of Markdown files. This component encapsulates both the high-level generation logic and the specific formatting functions.",
+      "name": "Output Generators",
+      "description": "This component is responsible for generating documentation in various formats (Markdown, HTML, MDX, reStructuredText/Sphinx). It processes `AnalysisInsights` objects and applies format-specific rules, including the generation of corresponding output files. This component encapsulates the high-level generation logic and specific formatting functions for all supported output types.",
       "referenced_source_code": [
         {
           "qualified_name": "output_generators.markdown.generate_markdown_file",
@@ -46,56 +48,11 @@
           "reference_end_line": null
         },
         {
-          "qualified_name": "github_action.py",
-          "reference_file": "github_action.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        },
-        {
-          "qualified_name": "agents.agent_responses.AnalysisInsights",
-          "reference_file": "agents/agent_responses.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "assigned_files": [
-        "../../output_generators/markdown.py"
-      ],
-      "can_expand": false
-    },
-    {
-      "name": "HTML Output Component",
-      "description": "Responsible for generating documentation in HTML format. It processes `AnalysisInsights` objects and applies HTML-specific formatting rules, including the generation of HTML files. This component encapsulates both the high-level generation logic and the specific formatting functions.",
-      "referenced_source_code": [
-        {
           "qualified_name": "output_generators.html.generate_html_file",
           "reference_file": "output_generators/html.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
-        {
-          "qualified_name": "github_action.py",
-          "reference_file": "github_action.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        },
-        {
-          "qualified_name": "agents.agent_responses.AnalysisInsights",
-          "reference_file": "agents/agent_responses.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "assigned_files": [
-        "../../output_generators/html.py",
-        "../../output_generators/html_template.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "MDX Output Component",
-      "description": "Responsible for generating documentation in MDX format. It processes `AnalysisInsights` objects and applies MDX-specific formatting rules, including the generation of MDX files. This component encapsulates both the high-level generation logic and the specific formatting functions.",
-      "referenced_source_code": [
         {
           "qualified_name": "output_generators.mdx.generate_mdx_file",
           "reference_file": "output_generators/mdx.py",
@@ -103,52 +60,12 @@
           "reference_end_line": null
         },
         {
-          "qualified_name": "github_action.py",
-          "reference_file": "github_action.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        },
-        {
-          "qualified_name": "agents.agent_responses.AnalysisInsights",
-          "reference_file": "agents/agent_responses.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "assigned_files": [
-        "../../output_generators/mdx.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "RST/Sphinx Output Component",
-      "description": "Responsible for generating documentation in reStructuredText (RST) format, leveraging Sphinx conventions. It processes `AnalysisInsights` objects, generates Mermaid diagrams, and formats detailed component information into RST files. This component encapsulates both the high-level generation logic and the specific formatting functions.",
-      "referenced_source_code": [
-        {
           "qualified_name": "output_generators.sphinx.generate_rst_file",
           "reference_file": "output_generators/sphinx.py",
           "reference_start_line": null,
           "reference_end_line": null
         },
         {
-          "qualified_name": "github_action.py",
-          "reference_file": "github_action.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        },
-        {
-          "qualified_name": "output_generators.sanitize",
-          "reference_file": "output_generators/__init__.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        },
-        {
-          "qualified_name": "utils.contains_json",
-          "reference_file": "utils.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        },
-        {
           "qualified_name": "agents.agent_responses.AnalysisInsights",
           "reference_file": "agents/agent_responses.py",
           "reference_start_line": null,
@@ -156,7 +73,12 @@
         }
       ],
       "assigned_files": [
-        "../../output_generators/sphinx.py"
+        "../../output_generators/markdown.py",
+        "../../output_generators/html.py",
+        "../../output_generators/mdx.py",
+        "../../output_generators/sphinx.py",
+        "../../agents/agent_responses.py",
+        "../../output_generators/html_template.py"
       ],
       "can_expand": true
     },
@@ -177,7 +99,9 @@
           "reference_end_line": null
         }
       ],
-      "assigned_files": [],
+      "assigned_files": [
+        "../../repo_utils/__init__.py"
+      ],
       "can_expand": false
     },
     {
@@ -191,7 +115,9 @@
           "reference_end_line": null
         }
       ],
-      "assigned_files": [],
+      "assigned_files": [
+        "../../diagram_analysis/diagram_generator.py"
+      ],
       "can_expand": true
     },
     {
@@ -205,7 +131,9 @@
           "reference_end_line": null
         }
       ],
-      "assigned_files": [],
+      "assigned_files": [
+        "../../agents/agent_responses.py"
+      ],
       "can_expand": false
     },
     {
@@ -226,7 +154,31 @@
         }
       ],
       "assigned_files": [
-        "../../output_generators/__init__.py"
+        "../../output_generators/__init__.py",
+        "../../utils.py"
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "This component encompasses foundational project aspects, including packaging configuration (`setup.py`), external dependencies, and environment-specific constants (`vscode_constants.py`). It also serves as a catch-all for unclassified files and general utility functions not directly tied to core functional components.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "setup.py",
+          "reference_file": "setup.py",
+          "reference_start_line": 240,
+          "reference_end_line": 240
+        },
+        {
+          "qualified_name": "vscode_constants.py",
+          "reference_file": "vscode_constants.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [
+        "setup.py",
+        "../../vscode_constants.py"
       ],
       "can_expand": false
     },
@@ -252,22 +204,7 @@
     {
       "relation": "dispatches to",
       "src_name": "Output Generation Orchestrator",
-      "dst_name": "Markdown Output Component"
-    },
-    {
-      "relation": "dispatches to",
-      "src_name": "Output Generation Orchestrator",
-      "dst_name": "HTML Output Component"
-    },
-    {
-      "relation": "dispatches to",
-      "src_name": "Output Generation Orchestrator",
-      "dst_name": "MDX Output Component"
-    },
-    {
-      "relation": "dispatches to",
-      "src_name": "Output Generation Orchestrator",
-      "dst_name": "RST/Sphinx Output Component"
+      "dst_name": "Output Generators"
     },
     {
       "relation": "produces",
@@ -276,42 +213,12 @@
     },
     {
       "relation": "consumes",
-      "src_name": "Markdown Output Component",
-      "dst_name": "Analysis Insights Data Model"
-    },
-    {
-      "relation": "consumes",
-      "src_name": "HTML Output Component",
-      "dst_name": "Analysis Insights Data Model"
-    },
-    {
-      "relation": "consumes",
-      "src_name": "MDX Output Component",
-      "dst_name": "Analysis Insights Data Model"
-    },
-    {
-      "relation": "consumes",
-      "src_name": "RST/Sphinx Output Component",
+      "src_name": "Output Generators",
       "dst_name": "Analysis Insights Data Model"
     },
     {
       "relation": "utilizes",
-      "src_name": "Markdown Output Component",
-      "dst_name": "Output Utility Functions"
-    },
-    {
-      "relation": "utilizes",
-      "src_name": "HTML Output Component",
-      "dst_name": "Output Utility Functions"
-    },
-    {
-      "relation": "utilizes",
-      "src_name": "MDX Output Component",
-      "dst_name": "Output Utility Functions"
-    },
-    {
-      "relation": "utilizes",
-      "src_name": "RST/Sphinx Output Component",
+      "src_name": "Output Generators",
       "dst_name": "Output Utility Functions"
     }
   ]

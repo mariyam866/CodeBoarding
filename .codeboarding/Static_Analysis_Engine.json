@@ -11,11 +11,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "../../static_analyzer/scanner.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Reference Resolver",
@@ -27,11 +23,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "../../static_analyzer/reference_resolve_mixin.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "LSP Client (TypeScript)",
@@ -49,15 +41,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "../../vscode_constants.py",
-        "../../static_analyzer/__init__.py",
-        "../../static_analyzer/lsp_client/__init__.py",
-        "../../static_analyzer/lsp_client/typescript_client.py",
-        "../../static_analyzer/lsp_client/client.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Analysis Result Provider",
@@ -69,23 +53,12 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "../../static_analyzer/analysis_result.py",
-        "../../agents/abstraction_agent.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [
-        "../../vscode_runnable.py",
-        "../../static_analyzer/programming_language.py",
-        "../../static_analyzer/graph.py"
-      ],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [
