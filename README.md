@@ -53,10 +53,12 @@ graph LR
 
 ## 📌 Setup
 
+First, make you you have uv installed. Check official installation guide [Installing UV](https://docs.astral.sh/uv/getting-started/installation/).
+
 Setup the environment:
 
 ```bash
-uv venv --python 3.11
+uv sync --frozen
 source .venv/bin/activate
 python setup.py
 ```
