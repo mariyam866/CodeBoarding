@@ -1,16 +1,17 @@
 ```mermaid
 graph LR
     Output_Generation_Orchestrator["Output Generation Orchestrator"]
-    Output_Generators["Output Generators"]
     Repository_Manager["Repository Manager"]
     Diagram_Generator_Core["Diagram Generator Core"]
+    Static_Analyzer["Static Analyzer"]
     Analysis_Insights_Data_Model["Analysis Insights Data Model"]
+    Output_Generators["Output Generators"]
     Output_Utility_Functions["Output Utility Functions"]
-    Unclassified["Unclassified"]
     Unclassified["Unclassified"]
     Output_Generation_Orchestrator -- "initiates" --> Repository_Manager
     Output_Generation_Orchestrator -- "initiates" --> Diagram_Generator_Core
     Output_Generation_Orchestrator -- "dispatches to" --> Output_Generators
+    Diagram_Generator_Core -- "utilizes" --> Static_Analyzer
     Diagram_Generator_Core -- "produces" --> Analysis_Insights_Data_Model
     Output_Generators -- "consumes" --> Analysis_Insights_Data_Model
     Output_Generators -- "utilizes" --> Output_Utility_Functions
@@ -21,79 +22,69 @@ graph LR
 
 ## Details
 
-The system's architecture is centered around the Output Generation Orchestrator, which serves as the primary entry point for generating architectural documentation. This orchestrator first leverages the Repository Manager for repository setup and then initiates the Diagram Generator Core to perform static analysis and produce the Analysis Insights Data Model. Once insights are generated, the orchestrator dispatches tasks to the Output Generators component, which is responsible for transforming these insights into various documentation formats (Markdown, HTML, MDX, RST/Sphinx). The Output Generators component relies on Output Utility Functions for common formatting and data handling. The Unclassified component manages foundational project configurations, external dependencies, and environment-specific constants, supporting the overall system operations.
+The system's architecture is centered around an Output Generation Orchestrator that manages the end-to-end process of generating architectural documentation. This orchestrator first leverages a Repository Manager to prepare the target codebase. It then initiates the Diagram Generator Core, which performs the core architectural analysis. The Diagram Generator Core now integrates a dedicated Static Analyzer component to perform specialized static code analysis, such as scanning TypeScript configurations. The findings from this analysis are structured and stored within the Analysis Insights Data Model. Finally, the Output Generation Orchestrator dispatches these insights to the Output Generators, which, supported by Output Utility Functions, transform the analysis results into various documentation formats.
 
 ### Output Generation Orchestrator
-This component, primarily `github_action.py`, orchestrates the entire output generation process within a GitHub Actions context. It handles repository preparation, initial analysis, and dispatches generation tasks to format-specific functions within the `Output Generators` component. It serves as the primary entry point for the subsystem.
+Manages the end-to-end process of generating architectural documentation, initiating repository preparation, architectural analysis, and dispatching insights for documentation generation.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maingithub_action.py" target="_blank" rel="noopener noreferrer">`github_action.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainrepo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.clone_repository`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainrepo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.checkout_repo`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maindiagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_analysis.diagram_generator.DiagramGenerator`</a>
-
-
-### Output Generators
-This component is responsible for generating documentation in various formats (Markdown, HTML, MDX, reStructuredText/Sphinx). It processes `AnalysisInsights` objects and applies format-specific rules, including the generation of corresponding output files. This component encapsulates the high-level generation logic and specific formatting functions for all supported output types.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainoutput_generators/markdown.py" target="_blank" rel="noopener noreferrer">`output_generators.markdown.generate_markdown_file`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainoutput_generators/html.py" target="_blank" rel="noopener noreferrer">`output_generators.html.generate_html_file`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainoutput_generators/mdx.py" target="_blank" rel="noopener noreferrer">`output_generators.mdx.generate_mdx_file`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainoutput_generators/sphinx.py" target="_blank" rel="noopener noreferrer">`output_generators.sphinx.generate_rst_file`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/agent_responses.py" target="_blank" rel="noopener noreferrer">`agents.agent_responses.AnalysisInsights`</a>
+- `orchestrator.OutputGenerationOrchestrator`
 
 
 ### Repository Manager [[Expand]](./Repository_Manager.md)
-Manages repository operations such as cloning and checking out branches. It provides utilities for interacting with the Git repository.
+Prepares the target repository for analysis.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainrepo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.clone_repository`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainrepo_utils/__init__.py" target="_blank" rel="noopener noreferrer">`repo_utils.checkout_repo`</a>
+- `repository_manager.RepositoryManager`
 
 
 ### Diagram Generator Core
-The core component responsible for generating the architectural analysis and diagrams. It utilizes various agents to perform static analysis, abstract components, plan analysis, and validate insights.
+The central analytical component responsible for performing static analysis to generate architectural insights.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maindiagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_analysis.diagram_generator.DiagramGenerator`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maindiagram_analysis/diagram_generator.py#L25-L200" target="_blank" rel="noopener noreferrer">`diagram_generator_core.DiagramGeneratorCore`:25-200</a>
+
+
+### Static Analyzer
+Performs specialized static analysis, such as scanning TypeScript configuration files.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/reference_resolve_mixin.py#L1-L100" target="_blank" rel="noopener noreferrer">`static_analyzer.StaticAnalyzer`:1-100</a>
 
 
 ### Analysis Insights Data Model
-Defines the data structure for storing and representing the architectural analysis insights, including components, relationships, and referenced source code.
+Structures and stores the results of the architectural analysis.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/agent_responses.py" target="_blank" rel="noopener noreferrer">`agents.agent_responses.AnalysisInsights`</a>
+- `analysis_insights_model.AnalysisInsightsDataModel`
+
+
+### Output Generators
+Produces the final documentation in various formats using the structured analysis insights.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainoutput_generators/__init__.py" target="_blank" rel="noopener noreferrer">`output_generators.OutputGenerators`</a>
 
 
 ### Output Utility Functions
-Provides common utility functions used across different output generators, such as sanitizing names for diagram IDs and checking for the existence of analysis JSON files.
+Provides common formatting and utility tasks for the output generators.
 
 
 **Related Classes/Methods**:
 
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainoutput_generators/__init__.py" target="_blank" rel="noopener noreferrer">`output_generators.sanitize`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainutils.py" target="_blank" rel="noopener noreferrer">`utils.contains_json`</a>
-
-
-### Unclassified
-This component encompasses foundational project aspects, including packaging configuration (`setup.py`), external dependencies, and environment-specific constants (`vscode_constants.py`). It also serves as a catch-all for unclassified files and general utility functions not directly tied to core functional components.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainsetup.py" target="_blank" rel="noopener noreferrer">`setup.py`</a>
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainvscode_constants.py" target="_blank" rel="noopener noreferrer">`vscode_constants.py`</a>
+- `output_utils.OutputUtilityFunctions`
 
 
 ### Unclassified

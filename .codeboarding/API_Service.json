@@ -1,5 +1,5 @@
 {
-  "description": "The CodeBoarding system operates with an `API Service` as its entry point, handling user requests and initiating code analysis jobs. These jobs are managed by an `Orchestration Engine` which coordinates the entire workflow, from fetching code via the `Repository Manager` to executing the `Analysis Pipeline` (encompassing static analysis and AI interpretation). The `Job Database` maintains the state and metadata of all ongoing and completed jobs. Once the analysis is complete, the `Output Generation Engine` formats the results into user-consumable documentation and visualizations, which are then retrieved by the `API Service`. A `Configuration & Utilities` component provides essential services and settings across the entire system, ensuring consistent operation and reusability. This architecture supports an asynchronous, pipeline-driven approach to code documentation and analysis.",
+  "description": "The CodeBoarding system operates on a pipeline/event-driven and producer-consumer architectural pattern, centered around an `API Service` that handles user interactions and initiates analysis jobs. The `Orchestration Engine` coordinates these jobs, managing the workflow from repository access via the `Repository Manager` to the core `Analysis Pipeline`. The `Analysis Pipeline` performs static analysis, now including the scanning and analysis of TypeScript configuration files, and AI-driven interpretation of code. Results are then processed by the `Output Generation Engine` to produce user-consumable documentation and visualizations. All job states and metadata are persistently managed by the `Job Database`, while the `Configuration & Utilities` component provides essential shared services across the system.",
   "components": [
     {
       "name": "API Service",
@@ -42,9 +42,7 @@
           "reference_end_line": null
         }
       ],
-      "assigned_files": [
-        "../../local_app.py"
-      ],
+      "assigned_files": [],
       "can_expand": true
     },
     {
@@ -59,11 +57,11 @@
         }
       ],
       "assigned_files": [],
-      "can_expand": true
+      "can_expand": false
     },
     {
       "name": "Analysis Pipeline",
-      "description": "This component encapsulates the core logic for static analysis and AI-driven interpretation of the codebase. It takes the raw source code, extracts structural information, and then uses AI models to generate insights, summaries, and initial documentation drafts.",
+      "description": "This component encapsulates the core logic for static analysis and AI-driven interpretation of the codebase. It takes the raw source code, extracts structural information, and then uses AI models to generate insights, summaries, and initial documentation drafts. Its capabilities have been enhanced to include scanning and analyzing TypeScript configuration files, further enriching the depth of static analysis.",
       "referenced_source_code": [
         {
           "qualified_name": "demo.generate_docs_remote",
@@ -86,9 +84,7 @@
           "reference_end_line": null
         }
       ],
-      "assigned_files": [
-        "../../local_app.py"
-      ],
+      "assigned_files": [],
       "can_expand": false
     },
     {
@@ -162,12 +158,62 @@
     {
       "relation": "provides settings to",
       "src_name": "Configuration & Utilities",
-      "dst_name": "all components"
+      "dst_name": "API Service"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "Configuration & Utilities",
+      "dst_name": "Job Database"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "Configuration & Utilities",
+      "dst_name": "Orchestration Engine"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "Configuration & Utilities",
+      "dst_name": "Repository Manager"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "Configuration & Utilities",
+      "dst_name": "Analysis Pipeline"
+    },
+    {
+      "relation": "provides settings to",
+      "src_name": "Configuration & Utilities",
+      "dst_name": "Output Generation Engine"
     },
     {
       "relation": "offers utility functions to",
       "src_name": "Configuration & Utilities",
-      "dst_name": "all components"
+      "dst_name": "API Service"
+    },
+    {
+      "relation": "offers utility functions to",
+      "src_name": "Configuration & Utilities",
+      "dst_name": "Job Database"
+    },
+    {
+      "relation": "offers utility functions to",
+      "src_name": "Configuration & Utilities",
+      "dst_name": "Orchestration Engine"
+    },
+    {
+      "relation": "offers utility functions to",
+      "src_name": "Configuration & Utilities",
+      "dst_name": "Repository Manager"
+    },
+    {
+      "relation": "offers utility functions to",
+      "src_name": "Configuration & Utilities",
+      "dst_name": "Analysis Pipeline"
+    },
+    {
+      "relation": "offers utility functions to",
+      "src_name": "Configuration & Utilities",
+      "dst_name": "Output Generation Engine"
     }
   ]
 }

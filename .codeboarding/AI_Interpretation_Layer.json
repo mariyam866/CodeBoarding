@@ -1,9 +1,9 @@
 {
-  "description": "The system operates with an Application Orchestrator at its core, managing the overall flow from user query to final response. It initiates the QueryProcessor to handle and embed incoming queries, which are then used by the DocumentRetriever to query the VectorStore for relevant documents. A key enhancement is the PromptFactory, which now employs an abstract factory pattern to centralize and standardize prompt generation for various agents and language models, including specialized prompts for Gemini Flash. The Application Orchestrator and ResponseGenerator both interact with the PromptFactory to obtain optimized prompts, enabling the ResponseGenerator to craft accurate and contextually rich natural language responses based on the retrieved documents and the user's query. This modular design ensures extensibility and consistent interaction with large language models.",
+  "description": "The project's architecture is primarily centered around a Retrieval Augmented Generation (RAG) system, orchestrated by the `Application Orchestrator`. This orchestrator initiates the `QueryProcessor` to embed user queries, which then interact with the `VectorStore` via the `DocumentRetriever` to fetch relevant documents. The `ResponseGenerator` synthesizes a final answer using a large language model, leveraging specialized prompts provided by the `PromptFactory`. Complementing this core RAG functionality, a new `Static Analyzer` component has been introduced. This component operates as a distinct, parallel functional area, focusing on static analysis, particularly for TypeScript configurations, and does not directly interact with the RAG system's data flow.",
   "components": [
     {
       "name": "Application Orchestrator",
-      "description": "Manages the overall application flow, coordinating interactions between QueryProcessor, DocumentRetriever, ResponseGenerator, and now leveraging the PromptFactory for agent prompt generation. It receives user queries and delivers final responses, adapting its agent coordination mechanisms due to recent core agent logic refactoring and the new prompt management system.",
+      "description": "Manages the overall application flow, coordinating interactions between QueryProcessor, DocumentRetriever, ResponseGenerator, and leveraging the PromptFactory for agent prompt generation. It receives user queries and delivers final responses, adapting its agent coordination mechanisms due to recent core agent logic refactoring and the new prompt management system.",
       "referenced_source_code": [
         {
           "qualified_name": "agents.agent",
@@ -11,7 +11,31 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [
+        "../../agents/__init__.py",
+        "../../agents/diff_analyzer.py",
+        "../../agents/details_agent.py",
+        "../../agents/validator_agent.py",
+        "../../agents/abstraction_agent.py",
+        "../../agents/planner_agent.py",
+        "../../agents/meta_agent.py",
+        "../../agents/agent_responses.py",
+        "../../agents/agent.py",
+        "../../agents/tools/read_source.py",
+        "../../agents/tools/read_file_structure.py",
+        "../../agents/tools/__init__.py",
+        "../../agents/tools/external_deps.py",
+        "../../agents/tools/read_packages.py",
+        "../../agents/tools/read_cfg.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_git_diff.y",
+        "../../agents/tools/get_method_invocations.py",
+        "../../agents/tools/read_file.py",
+        "../../agents/tools/utils.py",
+        "../../agents/tools/read_structure.py",
+        "../../agents/tools/read_docs.py"
+      ],
+      "can_expand": true
     },
     {
       "name": "QueryProcessor",
@@ -23,7 +47,9 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "VectorStore",
@@ -31,11 +57,13 @@
       "referenced_source_code": [
         {
           "qualified_name": "langchain_community.vectorstores.chroma.Chroma:similarity_search",
-          "reference_file": "langchain_community.vectorstores.chroma.Chroma:similarity_search",
+          "reference_file": "langchain_community/vectorstores/chroma.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "DocumentRetriever",
@@ -47,7 +75,9 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": false
     },
     {
       "name": "ResponseGenerator",
@@ -59,7 +89,9 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ]
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "PromptFactory",
@@ -71,12 +103,36 @@
           "reference_start_line": 29,
           "reference_end_line": 90
         }
-      ]
+      ],
+      "assigned_files": [
+        "agents/prompts/__init__.py",
+        "agents/prompts/gemini_flash_prompts_bidirectional.py",
+        "agents/prompts/abstract_prompt_factory.py",
+        "agents/prompts/prompt_factory.py",
+        "agents/prompts/gemini_flash_prompts_unidirectional.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Static Analyzer",
+      "description": "A new, independent functional area responsible for performing static analysis, specifically focusing on scanning TypeScript configurations. This component operates in parallel to the core RAG system, providing distinct capabilities without directly altering the RAG data flow.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "static_analyzer.typescript_config_scanner",
+          "reference_file": "static_analyzer/typescript_config_scanner.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [],
+      "can_expand": true
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": []
+      "referenced_source_code": [],
+      "assigned_files": [],
+      "can_expand": false
     }
   ],
   "components_relations": [
@@ -123,6 +179,11 @@
     {
       "relation": "returns response to",
       "src_name": "ResponseGenerator",
+      "dst_name": "Application Orchestrator"
+    },
+    {
+      "relation": "operates independently",
+      "src_name": "Static Analyzer",
       "dst_name": "Application Orchestrator"
     }
   ]

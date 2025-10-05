@@ -9,6 +9,9 @@ graph LR
     ProjectScanner["ProjectScanner"]
     StaticAnalysisResults["StaticAnalysisResults"]
     Unclassified["Unclassified"]
+    Orchestration_Engine -- "orchestrates" --> ProjectScanner
+    ProjectScanner -- "produces" --> StaticAnalysisResults
+    Orchestration_Engine -- "consumes" --> StaticAnalysisResults
     Orchestration_Engine -- "orchestrates" --> MetaAgent
     Orchestration_Engine -- "exchanges data with" --> MetaAgent
     Orchestration_Engine -- "orchestrates" --> AbstractionAgent
@@ -19,9 +22,6 @@ graph LR
     Orchestration_Engine -- "exchanges data with" --> PlannerAgent
     Orchestration_Engine -- "orchestrates" --> ValidatorAgent
     Orchestration_Engine -- "exchanges data with" --> ValidatorAgent
-    Orchestration_Engine -- "manages" --> ProjectScanner
-    ProjectScanner -- "produces" --> StaticAnalysisResults
-    StaticAnalysisResults -- "is used by" --> Orchestration_Engine
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
 ```
 
@@ -29,7 +29,7 @@ graph LR
 
 ## Details
 
-The core of the system is the `Orchestration Engine`, which centrally manages the documentation generation pipeline. It begins by managing the `ProjectScanner` to collect raw static analysis data, which is then stored in `StaticAnalysisResults`. The `Orchestration Engine` then iteratively orchestrates a suite of specialized AI agents—`MetaAgent`, `AbstractionAgent`, `DetailsAgent`, `PlannerAgent`, and `ValidatorAgent`—exchanging data with them to progressively refine the architectural understanding. This iterative process, driven by the `Orchestration Engine`, ensures comprehensive analysis, from initial metadata gathering and high-level abstraction to detailed component examination, workflow planning, and final validation, culminating in accurate and consistent architectural documentation.
+The core of the system is the Orchestration Engine, which drives the entire documentation generation process. It begins by engaging the ProjectScanner to gather comprehensive static analysis data from the codebase, now including specialized TypeScript configuration scanning. This collected data is then encapsulated within StaticAnalysisResults, serving as the foundational input for subsequent analysis stages. The Orchestration Engine then orchestrates a series of specialized AI agents (MetaAgent, AbstractionAgent, DetailsAgent, PlannerAgent, ValidatorAgent) to progressively analyze the project, generate architectural abstractions, detail component responsibilities, plan future analysis, and validate the generated documentation, ensuring accuracy and consistency. The system is centered around an Orchestration Engine that manages the entire documentation generation pipeline. It initiates the ProjectScanner to collect static analysis data, including specialized TypeScript configuration scans, which is then stored in StaticAnalysisResults. The Orchestration Engine then coordinates a suite of AI agents—MetaAgent, AbstractionAgent, DetailsAgent, PlannerAgent, and ValidatorAgent—to perform various analysis tasks, generate architectural insights, plan subsequent analysis, and validate the overall output, ensuring a comprehensive and accurate documentation process.
 
 ### Orchestration Engine [[Expand]](./Orchestration_Engine.md)
 The central control unit that manages the entire documentation generation pipeline, coordinating all analysis and generation stages. It initializes and coordinates AI agents, handles pre-analysis, processes components, determines update needs, applies feedback, and saves results.
@@ -86,12 +86,13 @@ An AI agent that validates the generated analysis and provides feedback, ensurin
 
 
 ### ProjectScanner
-A component responsible for initiating and collecting static analysis data from the codebase, serving as the primary input for the analysis pipeline.
+A component responsible for initiating and collecting static analysis data from the codebase, including specialized scanning for TypeScript configurations, serving as the primary input for the analysis pipeline.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`scanner`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/typescript_config_scanner.py" target="_blank" rel="noopener noreferrer">`typescript_config_scanner`</a>
 
 
 ### StaticAnalysisResults

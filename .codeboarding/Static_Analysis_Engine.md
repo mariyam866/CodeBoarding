@@ -16,15 +16,16 @@ graph LR
 
 ## Details
 
-The Static Analysis Engine subsystem is responsible for performing deep, language-specific analysis of source code, including reference resolution and integration with the VS Code environment. It processes raw source code and produces structured analysis results for downstream components.
+This static analysis subsystem is designed to process source code and configuration files, with a specialized focus on TypeScript projects. The `Code Scanner` initiates the process by performing lexical and syntactical analysis, now enhanced with dedicated capabilities for parsing TypeScript configuration files to provide richer context. The `Reference Resolver` then builds upon this foundation by identifying and resolving symbolic relationships within the code. The `LSP Client (TypeScript)` acts as the primary interface for developers, leveraging the combined outputs of the `Code Scanner` and `Reference Resolver` to deliver real-time code intelligence. Finally, the `Analysis Result Provider` aggregates and formats all generated analysis data, making it ready for further processing by an AI interpretation layer to derive architectural insights and documentation. This architecture ensures a robust and comprehensive analysis pipeline, particularly for complex TypeScript applications.
 
 ### Code Scanner
-This component performs the initial lexical and syntactical analysis of source code. It breaks down raw code into tokens and constructs an intermediate representation (e.g., an Abstract Syntax Tree), serving as the foundational input for further analysis.
+This component performs the initial lexical and syntactical analysis of source code, breaking it down into tokens and constructing an intermediate representation (e.g., an Abstract Syntax Tree). It now includes specialized capabilities for processing TypeScript configuration files, providing crucial context for TypeScript projects. This foundational input serves as the basis for further analysis.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer.scanner`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/typescript_config_scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer.typescript_config_scanner`</a>
 
 
 ### Reference Resolver
@@ -37,7 +38,7 @@ This component identifies and resolves symbolic references within the code, such
 
 
 ### LSP Client (TypeScript)
-This component acts as the interface for integrating the static analysis capabilities with the VS Code environment, specifically tailored for TypeScript. It communicates via the Language Server Protocol (LSP) to enable real-time code intelligence features like go-to-definition, hover information, and diagnostics.
+This component acts as the interface for integrating the static analysis capabilities with the VS Code environment, specifically tailored for TypeScript. It communicates via the Language Server Protocol (LSP) to enable real-time code intelligence features like go-to-definition, hover information, and diagnostics, leveraging the enhanced TypeScript configuration analysis.
 
 
 **Related Classes/Methods**:
@@ -47,7 +48,7 @@ This component acts as the interface for integrating the static analysis capabil
 
 
 ### Analysis Result Provider
-This component is responsible for gathering and formatting the comprehensive output from the `Code Scanner` and `Reference Resolver`. It structures the analysis results into a consumable format specifically designed for subsequent processing by the `AI Interpretation Layer` to generate architectural insights and documentation.
+This component is responsible for gathering and formatting the comprehensive output from the `Code Scanner` (including TypeScript configuration data) and `Reference Resolver`. It structures the analysis results into a consumable format specifically designed for subsequent processing by the `AI Interpretation Layer` to generate architectural insights and documentation.
 
 
 **Related Classes/Methods**:

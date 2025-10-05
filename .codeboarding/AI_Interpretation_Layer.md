@@ -6,6 +6,7 @@ graph LR
     DocumentRetriever["DocumentRetriever"]
     ResponseGenerator["ResponseGenerator"]
     PromptFactory["PromptFactory"]
+    Static_Analyzer["Static Analyzer"]
     Unclassified["Unclassified"]
     Application_Orchestrator -- "initiates" --> QueryProcessor
     Application_Orchestrator -- "requests prompts from" --> PromptFactory
@@ -16,16 +17,17 @@ graph LR
     Application_Orchestrator -- "sends context to" --> ResponseGenerator
     ResponseGenerator -- "utilizes prompts from" --> PromptFactory
     ResponseGenerator -- "returns response to" --> Application_Orchestrator
+    Static_Analyzer -- "operates independently" --> Application_Orchestrator
 ```
 
 [![CodeBoarding](https://img.shields.io/badge/Generated%20by-CodeBoarding-9cf?style=flat-square)](https://github.com/CodeBoarding/CodeBoarding)[![Demo](https://img.shields.io/badge/Try%20our-Demo-blue?style=flat-square)](https://www.codeboarding.org/diagrams)[![Contact](https://img.shields.io/badge/Contact%20us%20-%20contact@codeboarding.org-lightgrey?style=flat-square)](mailto:contact@codeboarding.org)
 
 ## Details
 
-The system operates with an Application Orchestrator at its core, managing the overall flow from user query to final response. It initiates the QueryProcessor to handle and embed incoming queries, which are then used by the DocumentRetriever to query the VectorStore for relevant documents. A key enhancement is the PromptFactory, which now employs an abstract factory pattern to centralize and standardize prompt generation for various agents and language models, including specialized prompts for Gemini Flash. The Application Orchestrator and ResponseGenerator both interact with the PromptFactory to obtain optimized prompts, enabling the ResponseGenerator to craft accurate and contextually rich natural language responses based on the retrieved documents and the user's query. This modular design ensures extensibility and consistent interaction with large language models.
+The project's architecture is primarily centered around a Retrieval Augmented Generation (RAG) system, orchestrated by the `Application Orchestrator`. This orchestrator initiates the `QueryProcessor` to embed user queries, which then interact with the `VectorStore` via the `DocumentRetriever` to fetch relevant documents. The `ResponseGenerator` synthesizes a final answer using a large language model, leveraging specialized prompts provided by the `PromptFactory`. Complementing this core RAG functionality, a new `Static Analyzer` component has been introduced. This component operates as a distinct, parallel functional area, focusing on static analysis, particularly for TypeScript configurations, and does not directly interact with the RAG system's data flow.
 
 ### Application Orchestrator
-Manages the overall application flow, coordinating interactions between QueryProcessor, DocumentRetriever, ResponseGenerator, and now leveraging the PromptFactory for agent prompt generation. It receives user queries and delivers final responses, adapting its agent coordination mechanisms due to recent core agent logic refactoring and the new prompt management system.
+Manages the overall application flow, coordinating interactions between QueryProcessor, DocumentRetriever, ResponseGenerator, and leveraging the PromptFactory for agent prompt generation. It receives user queries and delivers final responses, adapting its agent coordination mechanisms due to recent core agent logic refactoring and the new prompt management system.
 
 
 **Related Classes/Methods**:
@@ -76,6 +78,15 @@ Centralizes the creation and management of prompts for various agents and langua
 **Related Classes/Methods**:
 
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/prompts/prompt_factory.py#L29-L90" target="_blank" rel="noopener noreferrer">`prompt_factory.PromptFactory`:29-90</a>
+
+
+### Static Analyzer
+A new, independent functional area responsible for performing static analysis, specifically focusing on scanning TypeScript configurations. This component operates in parallel to the core RAG system, providing distinct capabilities without directly altering the RAG data flow.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/typescript_config_scanner.py" target="_blank" rel="noopener noreferrer">`static_analyzer.typescript_config_scanner`</a>
 
 
 ### Unclassified

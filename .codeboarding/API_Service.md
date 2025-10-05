@@ -17,8 +17,18 @@ graph LR
     Repository_Manager -- "provides source code to" --> Analysis_Pipeline
     Analysis_Pipeline -- "generates raw analysis data for" --> Output_Generation_Engine
     Output_Generation_Engine -- "provides final results to" --> API_Service
-    Configuration_Utilities -- "provides settings to" --> all_components
-    Configuration_Utilities -- "offers utility functions to" --> all_components
+    Configuration_Utilities -- "provides settings to" --> API_Service
+    Configuration_Utilities -- "provides settings to" --> Job_Database
+    Configuration_Utilities -- "provides settings to" --> Orchestration_Engine
+    Configuration_Utilities -- "provides settings to" --> Repository_Manager
+    Configuration_Utilities -- "provides settings to" --> Analysis_Pipeline
+    Configuration_Utilities -- "provides settings to" --> Output_Generation_Engine
+    Configuration_Utilities -- "offers utility functions to" --> API_Service
+    Configuration_Utilities -- "offers utility functions to" --> Job_Database
+    Configuration_Utilities -- "offers utility functions to" --> Orchestration_Engine
+    Configuration_Utilities -- "offers utility functions to" --> Repository_Manager
+    Configuration_Utilities -- "offers utility functions to" --> Analysis_Pipeline
+    Configuration_Utilities -- "offers utility functions to" --> Output_Generation_Engine
     click API_Service href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/API_Service.md" "Details"
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
     click Repository_Manager href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Repository_Manager.md" "Details"
@@ -29,7 +39,7 @@ graph LR
 
 ## Details
 
-The CodeBoarding system operates with an `API Service` as its entry point, handling user requests and initiating code analysis jobs. These jobs are managed by an `Orchestration Engine` which coordinates the entire workflow, from fetching code via the `Repository Manager` to executing the `Analysis Pipeline` (encompassing static analysis and AI interpretation). The `Job Database` maintains the state and metadata of all ongoing and completed jobs. Once the analysis is complete, the `Output Generation Engine` formats the results into user-consumable documentation and visualizations, which are then retrieved by the `API Service`. A `Configuration & Utilities` component provides essential services and settings across the entire system, ensuring consistent operation and reusability. This architecture supports an asynchronous, pipeline-driven approach to code documentation and analysis.
+The CodeBoarding system operates on a pipeline/event-driven and producer-consumer architectural pattern, centered around an `API Service` that handles user interactions and initiates analysis jobs. The `Orchestration Engine` coordinates these jobs, managing the workflow from repository access via the `Repository Manager` to the core `Analysis Pipeline`. The `Analysis Pipeline` performs static analysis, now including the scanning and analysis of TypeScript configuration files, and AI-driven interpretation of code. Results are then processed by the `Output Generation Engine` to produce user-consumable documentation and visualizations. All job states and metadata are persistently managed by the `Job Database`, while the `Configuration & Utilities` component provides essential shared services across the system.
 
 ### API Service [[Expand]](./API_Service.md)
 The API Service acts as the primary external interface for CodeBoarding, responsible for receiving and processing user requests related to code analysis and visualization. It handles the initiation of new analysis jobs, provides mechanisms for users to retrieve the status of ongoing jobs, and serves the final analysis results, including generated documentation and visualizations. Furthermore, it integrates with external systems like GitHub Actions to trigger automated documentation generation workflows. This component is crucial for orchestrating the interaction between users and the backend analysis pipeline, aligning with the project's pipeline/event-driven and producer-consumer architectural patterns.
@@ -68,7 +78,7 @@ Handles interactions with code repositories (e.g., GitHub), including cloning, f
 
 
 ### Analysis Pipeline
-This component encapsulates the core logic for static analysis and AI-driven interpretation of the codebase. It takes the raw source code, extracts structural information, and then uses AI models to generate insights, summaries, and initial documentation drafts.
+This component encapsulates the core logic for static analysis and AI-driven interpretation of the codebase. It takes the raw source code, extracts structural information, and then uses AI models to generate insights, summaries, and initial documentation drafts. Its capabilities have been enhanced to include scanning and analyzing TypeScript configuration files, further enriching the depth of static analysis.
 
 
 **Related Classes/Methods**:

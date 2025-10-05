@@ -1,5 +1,5 @@
 {
-  "description": "The core of the system is the `Orchestration Engine`, which centrally manages the documentation generation pipeline. It begins by managing the `ProjectScanner` to collect raw static analysis data, which is then stored in `StaticAnalysisResults`. The `Orchestration Engine` then iteratively orchestrates a suite of specialized AI agents—`MetaAgent`, `AbstractionAgent`, `DetailsAgent`, `PlannerAgent`, and `ValidatorAgent`—exchanging data with them to progressively refine the architectural understanding. This iterative process, driven by the `Orchestration Engine`, ensures comprehensive analysis, from initial metadata gathering and high-level abstraction to detailed component examination, workflow planning, and final validation, culminating in accurate and consistent architectural documentation.",
+  "description": "The core of the system is the Orchestration Engine, which drives the entire documentation generation process. It begins by engaging the ProjectScanner to gather comprehensive static analysis data from the codebase, now including specialized TypeScript configuration scanning. This collected data is then encapsulated within StaticAnalysisResults, serving as the foundational input for subsequent analysis stages. The Orchestration Engine then orchestrates a series of specialized AI agents (MetaAgent, AbstractionAgent, DetailsAgent, PlannerAgent, ValidatorAgent) to progressively analyze the project, generate architectural abstractions, detail component responsibilities, plan future analysis, and validate the generated documentation, ensuring accuracy and consistency. The system is centered around an Orchestration Engine that manages the entire documentation generation pipeline. It initiates the ProjectScanner to collect static analysis data, including specialized TypeScript configuration scans, which is then stored in StaticAnalysisResults. The Orchestration Engine then coordinates a suite of AI agents—MetaAgent, AbstractionAgent, DetailsAgent, PlannerAgent, and ValidatorAgent—to perform various analysis tasks, generate architectural insights, plan subsequent analysis, and validate the overall output, ensuring a comprehensive and accurate documentation process.",
   "components": [
     {
       "name": "Orchestration Engine",
@@ -13,9 +13,8 @@
         }
       ],
       "assigned_files": [
-        "../../diagram_analysis/__init__.py",
-        "../../diagram_analysis/analysis_json.py",
-        "../../diagram_analysis/diagram_generator.py"
+        "../../diagram_analysis/diagram_generator.py",
+        "../../diagram_analysis/analysis_json.py"
       ],
       "can_expand": true
     },
@@ -31,7 +30,7 @@
         }
       ],
       "assigned_files": [
-        "../../diagram_analysis/version.py"
+        "../../agents/meta_agent.py"
       ],
       "can_expand": true
     },
@@ -46,7 +45,9 @@
           "reference_end_line": null
         }
       ],
-      "assigned_files": [],
+      "assigned_files": [
+        "../../agents/abstraction_agent.py"
+      ],
       "can_expand": true
     },
     {
@@ -60,7 +61,9 @@
           "reference_end_line": null
         }
       ],
-      "assigned_files": [],
+      "assigned_files": [
+        "../../agents/details_agent.py"
+      ],
       "can_expand": true
     },
     {
@@ -74,7 +77,9 @@
           "reference_end_line": null
         }
       ],
-      "assigned_files": [],
+      "assigned_files": [
+        "../../agents/planner_agent.py"
+      ],
       "can_expand": true
     },
     {
@@ -88,22 +93,33 @@
           "reference_end_line": null
         }
       ],
-      "assigned_files": [],
+      "assigned_files": [
+        "../../agents/validator_agent.py"
+      ],
       "can_expand": true
     },
     {
       "name": "ProjectScanner",
-      "description": "A component responsible for initiating and collecting static analysis data from the codebase, serving as the primary input for the analysis pipeline.",
+      "description": "A component responsible for initiating and collecting static analysis data from the codebase, including specialized scanning for TypeScript configurations, serving as the primary input for the analysis pipeline.",
       "referenced_source_code": [
         {
           "qualified_name": "scanner",
           "reference_file": "static_analyzer/scanner.py",
           "reference_start_line": null,
           "reference_end_line": null
+        },
+        {
+          "qualified_name": "typescript_config_scanner",
+          "reference_file": "static_analyzer/typescript_config_scanner.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
-      "assigned_files": [],
-      "can_expand": false
+      "assigned_files": [
+        "../../static_analyzer/scanner.py",
+        "static_analyzer/typescript_config_scanner.py"
+      ],
+      "can_expand": true
     },
     {
       "name": "StaticAnalysisResults",
@@ -116,70 +132,25 @@
           "reference_end_line": null
         }
       ],
-      "assigned_files": [],
+      "assigned_files": [
+        "../../static_analyzer/analysis_result.py"
+      ],
       "can_expand": false
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
       "referenced_source_code": [],
-      "assigned_files": [],
+      "assigned_files": [
+        "../../diagram_analysis/__init__.py",
+        "../../diagram_analysis/version.py"
+      ],
       "can_expand": false
     }
   ],
   "components_relations": [
     {
       "relation": "orchestrates",
-      "src_name": "Orchestration Engine",
-      "dst_name": "MetaAgent"
-    },
-    {
-      "relation": "exchanges data with",
-      "src_name": "Orchestration Engine",
-      "dst_name": "MetaAgent"
-    },
-    {
-      "relation": "orchestrates",
-      "src_name": "Orchestration Engine",
-      "dst_name": "AbstractionAgent"
-    },
-    {
-      "relation": "exchanges data with",
-      "src_name": "Orchestration Engine",
-      "dst_name": "AbstractionAgent"
-    },
-    {
-      "relation": "orchestrates",
-      "src_name": "Orchestration Engine",
-      "dst_name": "DetailsAgent"
-    },
-    {
-      "relation": "exchanges data with",
-      "src_name": "Orchestration Engine",
-      "dst_name": "DetailsAgent"
-    },
-    {
-      "relation": "orchestrates",
-      "src_name": "Orchestration Engine",
-      "dst_name": "PlannerAgent"
-    },
-    {
-      "relation": "exchanges data with",
-      "src_name": "Orchestration Engine",
-      "dst_name": "PlannerAgent"
-    },
-    {
-      "relation": "orchestrates",
-      "src_name": "Orchestration Engine",
-      "dst_name": "ValidatorAgent"
-    },
-    {
-      "relation": "exchanges data with",
-      "src_name": "Orchestration Engine",
-      "dst_name": "ValidatorAgent"
-    },
-    {
-      "relation": "manages",
       "src_name": "Orchestration Engine",
       "dst_name": "ProjectScanner"
     },
@@ -189,9 +160,59 @@
       "dst_name": "StaticAnalysisResults"
     },
     {
-      "relation": "is used by",
-      "src_name": "StaticAnalysisResults",
-      "dst_name": "Orchestration Engine"
+      "relation": "consumes",
+      "src_name": "Orchestration Engine",
+      "dst_name": "StaticAnalysisResults"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "Orchestration Engine",
+      "dst_name": "MetaAgent"
+    },
+    {
+      "relation": "exchanges data with",
+      "src_name": "Orchestration Engine",
+      "dst_name": "MetaAgent"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "Orchestration Engine",
+      "dst_name": "AbstractionAgent"
+    },
+    {
+      "relation": "exchanges data with",
+      "src_name": "Orchestration Engine",
+      "dst_name": "AbstractionAgent"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "Orchestration Engine",
+      "dst_name": "DetailsAgent"
+    },
+    {
+      "relation": "exchanges data with",
+      "src_name": "Orchestration Engine",
+      "dst_name": "DetailsAgent"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "Orchestration Engine",
+      "dst_name": "PlannerAgent"
+    },
+    {
+      "relation": "exchanges data with",
+      "src_name": "Orchestration Engine",
+      "dst_name": "PlannerAgent"
+    },
+    {
+      "relation": "orchestrates",
+      "src_name": "Orchestration Engine",
+      "dst_name": "ValidatorAgent"
+    },
+    {
+      "relation": "exchanges data with",
+      "src_name": "Orchestration Engine",
+      "dst_name": "ValidatorAgent"
     }
   ]
 }

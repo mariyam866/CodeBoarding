@@ -1,5 +1,5 @@
 {
-  "description": "The CodeBoarding system operates through a robust, multi-component architecture designed for automated documentation generation. The API Service acts as the primary external interface, handling user requests and initiating documentation jobs. These jobs are managed by the Orchestration Engine, which coordinates the entire pipeline, leveraging the Job Database for persistent state management. Code acquisition and version control interactions are handled by the Repository Manager. Deep, language-specific code analysis, now with enhanced VS Code integration, is performed by the Static Analysis Engine, providing detailed structural information. This data is then fed to the AI Interpretation Layer, a sophisticated collection of AI agents that generate high-level architectural insights, utilizing a modular prompt management system. Finally, the Output Generation Engine transforms these insights into various documentation formats, delivering them back to the API Service and integrating with GitHub Actions.",
+  "description": "The CodeBoarding system orchestrates the automated generation of software documentation. The `API Service` acts as the entry point, receiving user requests for documentation jobs. These jobs are then managed by the `Orchestration Engine`, which persists job states in the `Job Database`. The `Orchestration Engine` initiates the core analysis process by first interacting with the `Repository Manager` to retrieve the necessary source code. This code is then passed to the `Static Analysis Engine`, which performs deep, language-specific analysis, now including comprehensive TypeScript configuration scanning for deeper analysis of TypeScript projects. The rich analysis results from the `Static Analysis Engine` are fed into the `AI Interpretation Layer`. This layer, comprising various specialized AI agents and an enhanced prompt management system, interprets the static analysis data, generates high-level architectural insights, and performs diff analysis by querying the `Repository Manager` for version differences. Finally, these enhanced insights are passed to the `Output Generation Engine`, which transforms them into various documentation formats and integrates with external systems like GitHub Actions, delivering the final documentation back to the `API Service`.",
   "components": [
     {
       "name": "API Service",
@@ -78,7 +78,7 @@
     },
     {
       "name": "Static Analysis Engine",
-      "description": "Performs deep, language-specific analysis of source code, now explicitly including **reference resolution capabilities** and **enhanced integration with the VS Code environment**, potentially leveraging VS Code-specific settings or protocols.",
+      "description": "Performs deep, language-specific analysis of source code, now explicitly including **reference resolution capabilities**, **enhanced integration with the VS Code environment**, and **comprehensive TypeScript configuration scanning** for deeper analysis of TypeScript projects. It potentially leverages VS Code-specific settings or protocols.",
       "referenced_source_code": [
         {
           "qualified_name": "scanner",
@@ -109,6 +109,12 @@
           "reference_file": "vscode_constants.py",
           "reference_start_line": null,
           "reference_end_line": null
+        },
+        {
+          "qualified_name": "typescript_config_scanner",
+          "reference_file": "static_analyzer/typescript_config_scanner.py",
+          "reference_start_line": null,
+          "reference_end_line": null
         }
       ],
       "assigned_files": [
@@ -120,6 +126,7 @@
         "static_analyzer/graph.py",
         "static_analyzer/analysis_result.py",
         "static_analyzer/scanner.py",
+        "static_analyzer/typescript_config_scanner.py",
         "static_analyzer/lsp_client/__init__.py",
         "static_analyzer/lsp_client/typescript_client.py",
         "static_analyzer/lsp_client/client.py"
@@ -226,7 +233,7 @@
         "agents/tools/read_packages.py",
         "agents/tools/read_cfg.py",
         "agents/tools/get_method_invocations.py",
-        "agents/tools/read_git_diff.py",
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_git_diff.y",
         "agents/tools/read_file.py",
         "agents/tools/utils.py",
         "agents/tools/read_structure.py",
@@ -295,13 +302,6 @@
         "demo.py",
         "logging_config.py"
       ],
-      "can_expand": false
-    },
-    {
-      "name": "Unclassified",
-      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [],
       "can_expand": false
     }
   ],

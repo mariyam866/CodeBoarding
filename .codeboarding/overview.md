@@ -8,7 +8,6 @@ graph LR
     AI_Interpretation_Layer["AI Interpretation Layer"]
     Output_Generation_Engine["Output Generation Engine"]
     Unclassified["Unclassified"]
-    Unclassified["Unclassified"]
     API_Service -- "initiates jobs and triggers analysis within" --> Orchestration_Engine
     API_Service -- "requests GitHub Action jobs from" --> Orchestration_Engine
     Orchestration_Engine -- "manages job state in" --> Job_Database
@@ -34,7 +33,7 @@ graph LR
 
 ## Details
 
-The CodeBoarding system operates through a robust, multi-component architecture designed for automated documentation generation. The API Service acts as the primary external interface, handling user requests and initiating documentation jobs. These jobs are managed by the Orchestration Engine, which coordinates the entire pipeline, leveraging the Job Database for persistent state management. Code acquisition and version control interactions are handled by the Repository Manager. Deep, language-specific code analysis, now with enhanced VS Code integration, is performed by the Static Analysis Engine, providing detailed structural information. This data is then fed to the AI Interpretation Layer, a sophisticated collection of AI agents that generate high-level architectural insights, utilizing a modular prompt management system. Finally, the Output Generation Engine transforms these insights into various documentation formats, delivering them back to the API Service and integrating with GitHub Actions.
+The CodeBoarding system orchestrates the automated generation of software documentation. The `API Service` acts as the entry point, receiving user requests for documentation jobs. These jobs are then managed by the `Orchestration Engine`, which persists job states in the `Job Database`. The `Orchestration Engine` initiates the core analysis process by first interacting with the `Repository Manager` to retrieve the necessary source code. This code is then passed to the `Static Analysis Engine`, which performs deep, language-specific analysis, now including comprehensive TypeScript configuration scanning for deeper analysis of TypeScript projects. The rich analysis results from the `Static Analysis Engine` are fed into the `AI Interpretation Layer`. This layer, comprising various specialized AI agents and an enhanced prompt management system, interprets the static analysis data, generates high-level architectural insights, and performs diff analysis by querying the `Repository Manager` for version differences. Finally, these enhanced insights are passed to the `Output Generation Engine`, which transforms them into various documentation formats and integrates with external systems like GitHub Actions, delivering the final documentation back to the `API Service`.
 
 ### API Service [[Expand]](./API_Service.md)
 The external interface for CodeBoarding, handling user requests, job initiation, status retrieval, and integrating with GitHub Actions for automated documentation generation.
@@ -74,7 +73,7 @@ Manages all interactions with source code repositories, including cloning, fetch
 
 
 ### Static Analysis Engine [[Expand]](./Static_Analysis_Engine.md)
-Performs deep, language-specific analysis of source code, now explicitly including **reference resolution capabilities** and **enhanced integration with the VS Code environment**, potentially leveraging VS Code-specific settings or protocols.
+Performs deep, language-specific analysis of source code, now explicitly including **reference resolution capabilities**, **enhanced integration with the VS Code environment**, and **comprehensive TypeScript configuration scanning** for deeper analysis of TypeScript projects. It potentially leverages VS Code-specific settings or protocols.
 
 
 **Related Classes/Methods**:
@@ -84,6 +83,7 @@ Performs deep, language-specific analysis of source code, now explicitly includi
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/abstraction_agent.py" target="_blank" rel="noopener noreferrer">`analysis_result`</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/reference_resolve_mixin.py" target="_blank" rel="noopener noreferrer">`reference_resolve_mixin`</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainvscode_constants.py" target="_blank" rel="noopener noreferrer">`vscode_constants`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/typescript_config_scanner.py" target="_blank" rel="noopener noreferrer">`typescript_config_scanner`</a>
 
 
 ### AI Interpretation Layer [[Expand]](./AI_Interpretation_Layer.md)
@@ -119,12 +119,6 @@ Transforms the final, validated architectural insights into various human-readab
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainoutput_generators/sphinx.py" target="_blank" rel="noopener noreferrer">`sphinx`</a>
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maingithub_action.py" target="_blank" rel="noopener noreferrer">`github_action`</a>
 
-
-### Unclassified
-Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
-
-
-**Related Classes/Methods**: _None_
 
 ### Unclassified
 Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
