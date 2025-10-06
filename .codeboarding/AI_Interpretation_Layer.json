@@ -1,5 +1,5 @@
 {
-  "description": "The project's architecture is primarily centered around a Retrieval Augmented Generation (RAG) system, orchestrated by the `Application Orchestrator`. This orchestrator initiates the `QueryProcessor` to embed user queries, which then interact with the `VectorStore` via the `DocumentRetriever` to fetch relevant documents. The `ResponseGenerator` synthesizes a final answer using a large language model, leveraging specialized prompts provided by the `PromptFactory`. Complementing this core RAG functionality, a new `Static Analyzer` component has been introduced. This component operates as a distinct, parallel functional area, focusing on static analysis, particularly for TypeScript configurations, and does not directly interact with the RAG system's data flow.",
+  "description": "The system orchestrates a Retrieval-Augmented Generation (RAG) process, managed by the `Application Orchestrator`. User queries are first processed by the `QueryProcessor` and embedded for similarity search within the `VectorStore`. The `DocumentRetriever` then fetches relevant documents, which are passed back to the `Application Orchestrator`. The `ResponseGenerator` crafts the final natural language response, leveraging a `PromptFactory` that centralizes and provides structured prompts for various Large Language Models, including specialized prompts for both Gemini Flash and Claude models. A separate `Static Analyzer` component operates independently, focusing on TypeScript configuration scanning.",
   "components": [
     {
       "name": "Application Orchestrator",
@@ -28,12 +28,12 @@
         "../../agents/tools/external_deps.py",
         "../../agents/tools/read_packages.py",
         "../../agents/tools/read_cfg.py",
-        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_git_diff.y",
         "../../agents/tools/get_method_invocations.py",
+        "../../agents/tools/read_git_diff.py",
         "../../agents/tools/read_file.py",
         "../../agents/tools/utils.py",
         "../../agents/tools/read_structure.py",
-        "../../agents/tools/read_docs.py"
+        "/home/ubuntu/CodeBoarding/repo/CodeBoarding/agents/tools/read_docs.y"
       ],
       "can_expand": true
     },
@@ -81,7 +81,7 @@
     },
     {
       "name": "ResponseGenerator",
-      "description": "Generates a natural language response using a large language model based on the query and retrieved documents, now significantly enhanced by leveraging structured prompts from the PromptFactory, including specialized prompts for models like Gemini Flash.",
+      "description": "Generates a natural language response using a large language model based on the query and retrieved documents, now significantly enhanced by leveraging structured prompts from the PromptFactory, including specialized prompts for models like Gemini Flash and Claude.",
       "referenced_source_code": [
         {
           "qualified_name": "langchain_core.language_models.llms.BaseLLM:invoke",
@@ -95,21 +95,23 @@
     },
     {
       "name": "PromptFactory",
-      "description": "Centralizes the creation and management of prompts for various agents and language models through an abstract factory pattern. It provides a structured and standardized approach to prompt generation, leveraging an AbstractPromptFactory interface and specialized implementations like GeminiFlashPromptsBidirectional and GeminiFlashPromptsUnidirectional. This ensures consistent and optimized interactions with LLMs, notably for Gemini Flash, by managing an expanded library of prompts.",
+      "description": "Centralizes the creation and management of prompts for various agents and language models through an abstract factory pattern. It provides a structured and standardized approach to prompt generation, leveraging an AbstractPromptFactory interface and specialized implementations like GeminiFlashPromptsBidirectional, GeminiFlashPromptsUnidirectional, ClaudePromptsBidirectional, and ClaudePromptsUnidirectional. This ensures consistent and optimized interactions with LLMs, notably for Gemini Flash and Claude models, by managing an expanded library of prompts.",
       "referenced_source_code": [
         {
           "qualified_name": "prompt_factory.PromptFactory",
           "reference_file": "agents/prompts/prompt_factory.py",
           "reference_start_line": 29,
-          "reference_end_line": 90
+          "reference_end_line": 98
         }
       ],
       "assigned_files": [
         "agents/prompts/__init__.py",
+        "agents/prompts/claude_prompts_bidirectional.py",
         "agents/prompts/gemini_flash_prompts_bidirectional.py",
         "agents/prompts/abstract_prompt_factory.py",
         "agents/prompts/prompt_factory.py",
-        "agents/prompts/gemini_flash_prompts_unidirectional.py"
+        "agents/prompts/gemini_flash_prompts_unidirectional.py",
+        "agents/prompts/claude_prompts_unidirectional.py"
       ],
       "can_expand": true
     },

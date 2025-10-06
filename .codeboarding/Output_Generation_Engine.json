@@ -1,120 +1,84 @@
 {
-  "description": "The system's architecture is centered around an Output Generation Orchestrator that manages the end-to-end process of generating architectural documentation. This orchestrator first leverages a Repository Manager to prepare the target codebase. It then initiates the Diagram Generator Core, which performs the core architectural analysis. The Diagram Generator Core now integrates a dedicated Static Analyzer component to perform specialized static code analysis, such as scanning TypeScript configurations. The findings from this analysis are structured and stored within the Analysis Insights Data Model. Finally, the Output Generation Orchestrator dispatches these insights to the Output Generators, which, supported by Output Utility Functions, transform the analysis results into various documentation formats.",
+  "description": "The Output Generation Engine subsystem transforms validated architectural insights into various documentation formats and integrates with external systems like GitHub Actions. The main flow involves the `github_action` component acting as the primary entry point, orchestrating the selection and execution of specific output format generators (Markdown, HTML, MDX, Sphinx/RST) based on user configuration. Its purpose is to provide diverse documentation outputs and enable seamless integration within a CI/CD environment.",
   "components": [
     {
-      "name": "Output Generation Orchestrator",
-      "description": "Manages the end-to-end process of generating architectural documentation, initiating repository preparation, architectural analysis, and dispatching insights for documentation generation.",
+      "name": "github_action",
+      "description": "Acts as the primary entry point for initiating output generation within a GitHub Actions workflow. It orchestrates the selection and execution of specific output format generators based on user configuration.",
       "referenced_source_code": [
         {
-          "qualified_name": "orchestrator.OutputGenerationOrchestrator",
-          "reference_file": "orchestrator.py",
+          "qualified_name": "github_action",
+          "reference_file": "github_action.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
       ],
       "assigned_files": [
-        "orchestrator.py"
+        "../../github_action.py"
       ],
       "can_expand": true
     },
     {
-      "name": "Repository Manager",
-      "description": "Prepares the target repository for analysis.",
+      "name": "output_generators.markdown",
+      "description": "Generates documentation in Markdown format.",
       "referenced_source_code": [
         {
-          "qualified_name": "repository_manager.RepositoryManager",
-          "reference_file": "repository_manager.py",
+          "qualified_name": "output_generators.markdown",
+          "reference_file": "output_generators/markdown.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
       ],
       "assigned_files": [
-        "repository_manager.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "Diagram Generator Core",
-      "description": "The central analytical component responsible for performing static analysis to generate architectural insights.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "diagram_generator_core.DiagramGeneratorCore",
-          "reference_file": "diagram_analysis/diagram_generator.py",
-          "reference_start_line": 25,
-          "reference_end_line": 200
-        }
-      ],
-      "assigned_files": [
-        "../../diagram_analysis/diagram_generator.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "Static Analyzer",
-      "description": "Performs specialized static analysis, such as scanning TypeScript configuration files.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "static_analyzer.StaticAnalyzer",
-          "reference_file": "static_analyzer/reference_resolve_mixin.py",
-          "reference_start_line": 1,
-          "reference_end_line": 100
-        }
-      ],
-      "assigned_files": [
-        "../../static_analyzer/reference_resolve_mixin.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "Analysis Insights Data Model",
-      "description": "Structures and stores the results of the architectural analysis.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "analysis_insights_model.AnalysisInsightsDataModel",
-          "reference_file": "analysis_insights_model.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "assigned_files": [
-        "analysis_insights_model.py"
+        "../../output_generators/markdown.py"
       ],
       "can_expand": false
     },
     {
-      "name": "Output Generators",
-      "description": "Produces the final documentation in various formats using the structured analysis insights.",
+      "name": "output_generators.html",
+      "description": "Generates documentation in HTML format.",
       "referenced_source_code": [
         {
-          "qualified_name": "output_generators.OutputGenerators",
-          "reference_file": "output_generators/__init__.py",
+          "qualified_name": "output_generators.html",
+          "reference_file": "output_generators/html.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
       ],
       "assigned_files": [
-        "../../output_generators/__init__.py",
-        "../../output_generators/sphinx.py",
-        "../../output_generators/mdx.py",
         "../../output_generators/html.py",
-        "../../output_generators/html_template.py",
-        "../../output_generators/markdown.py"
+        "../../output_generators/html_template.py"
       ],
       "can_expand": true
     },
     {
-      "name": "Output Utility Functions",
-      "description": "Provides common formatting and utility tasks for the output generators.",
+      "name": "output_generators.mdx",
+      "description": "Generates documentation in MDX (Markdown with JSX) format.",
       "referenced_source_code": [
         {
-          "qualified_name": "output_utils.OutputUtilityFunctions",
-          "reference_file": "output_utils.py",
+          "qualified_name": "output_generators.mdx",
+          "reference_file": "output_generators/mdx.py",
           "reference_start_line": null,
           "reference_end_line": null
         }
       ],
       "assigned_files": [
-        "output_utils.py"
+        "../../output_generators/mdx.py"
+      ],
+      "can_expand": false
+    },
+    {
+      "name": "output_generators.sphinx",
+      "description": "Generates documentation in reStructuredText (RST) format, specifically tailored for Sphinx documentation projects, including embedded Mermaid diagrams.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "output_generators.sphinx",
+          "reference_file": "output_generators/sphinx.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [
+        "../../output_generators/sphinx.py"
       ],
       "can_expand": false
     },
@@ -123,46 +87,31 @@
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
       "referenced_source_code": [],
       "assigned_files": [
-        "../../github_action.py"
+        "../../output_generators/__init__.py"
       ],
       "can_expand": false
     }
   ],
   "components_relations": [
     {
-      "relation": "initiates",
-      "src_name": "Output Generation Orchestrator",
-      "dst_name": "Repository Manager"
+      "relation": "delegates to",
+      "src_name": "github_action",
+      "dst_name": "output_generators.markdown"
     },
     {
-      "relation": "initiates",
-      "src_name": "Output Generation Orchestrator",
-      "dst_name": "Diagram Generator Core"
+      "relation": "delegates to",
+      "src_name": "github_action",
+      "dst_name": "output_generators.html"
     },
     {
-      "relation": "dispatches to",
-      "src_name": "Output Generation Orchestrator",
-      "dst_name": "Output Generators"
+      "relation": "delegates to",
+      "src_name": "github_action",
+      "dst_name": "output_generators.mdx"
     },
     {
-      "relation": "utilizes",
-      "src_name": "Diagram Generator Core",
-      "dst_name": "Static Analyzer"
-    },
-    {
-      "relation": "produces",
-      "src_name": "Diagram Generator Core",
-      "dst_name": "Analysis Insights Data Model"
-    },
-    {
-      "relation": "consumes",
-      "src_name": "Output Generators",
-      "dst_name": "Analysis Insights Data Model"
-    },
-    {
-      "relation": "utilizes",
-      "src_name": "Output Generators",
-      "dst_name": "Output Utility Functions"
+      "relation": "delegates to",
+      "src_name": "github_action",
+      "dst_name": "output_generators.sphinx"
     }
   ]
 }

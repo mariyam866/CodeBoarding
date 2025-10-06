@@ -1,27 +1,24 @@
 ```mermaid
 graph LR
     Orchestration_Engine["Orchestration Engine"]
-    MetaAgent["MetaAgent"]
-    AbstractionAgent["AbstractionAgent"]
-    DetailsAgent["DetailsAgent"]
-    PlannerAgent["PlannerAgent"]
-    ValidatorAgent["ValidatorAgent"]
-    ProjectScanner["ProjectScanner"]
-    StaticAnalysisResults["StaticAnalysisResults"]
+    Project_Scanner["Project Scanner"]
+    Static_Analysis_Results["Static Analysis Results"]
+    AI_Agents["AI Agents"]
+    Prompt_Factory["Prompt Factory"]
+    Agent_Response_Processor["Agent Response Processor"]
     Unclassified["Unclassified"]
-    Orchestration_Engine -- "orchestrates" --> ProjectScanner
-    ProjectScanner -- "produces" --> StaticAnalysisResults
-    Orchestration_Engine -- "consumes" --> StaticAnalysisResults
-    Orchestration_Engine -- "orchestrates" --> MetaAgent
-    Orchestration_Engine -- "exchanges data with" --> MetaAgent
-    Orchestration_Engine -- "orchestrates" --> AbstractionAgent
-    Orchestration_Engine -- "exchanges data with" --> AbstractionAgent
-    Orchestration_Engine -- "orchestrates" --> DetailsAgent
-    Orchestration_Engine -- "exchanges data with" --> DetailsAgent
-    Orchestration_Engine -- "orchestrates" --> PlannerAgent
-    Orchestration_Engine -- "exchanges data with" --> PlannerAgent
-    Orchestration_Engine -- "orchestrates" --> ValidatorAgent
-    Orchestration_Engine -- "exchanges data with" --> ValidatorAgent
+    Orchestration_Engine -- "orchestrates" --> Project_Scanner
+    Project_Scanner -- "produces" --> Static_Analysis_Results
+    Orchestration_Engine -- "consumes" --> Static_Analysis_Results
+    Orchestration_Engine -- "orchestrates" --> AI_Agents
+    Orchestration_Engine -- "exchanges data with" --> AI_Agents
+    AI_Agents -- "utilizes" --> Prompt_Factory
+    Prompt_Factory -- "generates prompts for" --> AI_Agents
+    AI_Agents -- "sends responses to" --> Agent_Response_Processor
+    Agent_Response_Processor -- "processes responses for" --> Orchestration_Engine
+    AI_Agents -- "consumes" --> Static_Analysis_Results
+    Prompt_Factory -- "provides prompts to" --> Orchestration_Engine
+    Agent_Response_Processor -- "provides processed data to" --> AI_Agents
     click Orchestration_Engine href "https://github.com/CodeBoarding/CodeBoarding/blob/main/.codeboarding/Orchestration_Engine.md" "Details"
 ```
 
@@ -29,7 +26,7 @@ graph LR
 
 ## Details
 
-The core of the system is the Orchestration Engine, which drives the entire documentation generation process. It begins by engaging the ProjectScanner to gather comprehensive static analysis data from the codebase, now including specialized TypeScript configuration scanning. This collected data is then encapsulated within StaticAnalysisResults, serving as the foundational input for subsequent analysis stages. The Orchestration Engine then orchestrates a series of specialized AI agents (MetaAgent, AbstractionAgent, DetailsAgent, PlannerAgent, ValidatorAgent) to progressively analyze the project, generate architectural abstractions, detail component responsibilities, plan future analysis, and validate the generated documentation, ensuring accuracy and consistency. The system is centered around an Orchestration Engine that manages the entire documentation generation pipeline. It initiates the ProjectScanner to collect static analysis data, including specialized TypeScript configuration scans, which is then stored in StaticAnalysisResults. The Orchestration Engine then coordinates a suite of AI agents—MetaAgent, AbstractionAgent, DetailsAgent, PlannerAgent, and ValidatorAgent—to perform various analysis tasks, generate architectural insights, plan subsequent analysis, and validate the overall output, ensuring a comprehensive and accurate documentation process.
+The system operates around an Orchestration Engine that manages the entire documentation generation pipeline. It initiates the process by leveraging the Project Scanner to gather static analysis data, which is then stored in Static Analysis Results. The Orchestration Engine then coordinates a suite of AI Agents, each with specialized roles, to analyze this data. These agents utilize a sophisticated Prompt Factory to construct dynamic prompts for the LLM, enabling both "bidirectional" and "unidirectional" communication patterns. Agent responses are processed by the Agent Response Processor before being fed back to the Orchestration Engine for further coordination, feedback application, and final result saving. This architecture emphasizes a modular, agent-based approach with a highly adaptable prompting mechanism for intelligent code analysis and documentation generation.
 
 ### Orchestration Engine [[Expand]](./Orchestration_Engine.md)
 The central control unit that manages the entire documentation generation pipeline, coordinating all analysis and generation stages. It initializes and coordinates AI agents, handles pre-analysis, processes components, determines update needs, applies feedback, and saves results.
@@ -40,52 +37,7 @@ The central control unit that manages the entire documentation generation pipeli
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/maindiagram_analysis/diagram_generator.py" target="_blank" rel="noopener noreferrer">`diagram_generator`</a>
 
 
-### MetaAgent
-An AI agent responsible for performing initial project metadata analysis, providing foundational context for subsequent analysis stages.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/meta_agent.py" target="_blank" rel="noopener noreferrer">`meta_agent`</a>
-
-
-### AbstractionAgent
-An AI agent that generates high-level architectural abstractions from the analyzed code, identifying major components and their relationships.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/abstraction_agent.py" target="_blank" rel="noopener noreferrer">`abstraction_agent`</a>
-
-
-### DetailsAgent
-An AI agent that provides detailed analysis of individual components, delving into their responsibilities, internal structure, and specific interactions.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/details_agent.py" target="_blank" rel="noopener noreferrer">`details_agent`</a>
-
-
-### PlannerAgent
-An AI agent that plans the next set of components to analyze, optimizing the analysis workflow based on dependencies and previous results.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/planner_agent.py" target="_blank" rel="noopener noreferrer">`planner_agent`</a>
-
-
-### ValidatorAgent
-An AI agent that validates the generated analysis and provides feedback, ensuring accuracy and consistency of the documentation.
-
-
-**Related Classes/Methods**:
-
-- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/validator_agent.py" target="_blank" rel="noopener noreferrer">`validator_agent`</a>
-
-
-### ProjectScanner
+### Project Scanner
 A component responsible for initiating and collecting static analysis data from the codebase, including specialized scanning for TypeScript configurations, serving as the primary input for the analysis pipeline.
 
 
@@ -95,13 +47,46 @@ A component responsible for initiating and collecting static analysis data from 
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/typescript_config_scanner.py" target="_blank" rel="noopener noreferrer">`typescript_config_scanner`</a>
 
 
-### StaticAnalysisResults
+### Static Analysis Results
 A data structure that holds the comprehensive results of static analysis, making this information accessible to the Orchestration Engine and AI agents.
 
 
 **Related Classes/Methods**:
 
 - <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainstatic_analyzer/analysis_result.py" target="_blank" rel="noopener noreferrer">`analysis_result`</a>
+
+
+### AI Agents
+A collective component representing all specialized AI agents (MetaAgent, AbstractionAgent, DetailsAgent, PlannerAgent, ValidatorAgent) responsible for various stages of code analysis and documentation generation. These agents now incorporate advanced prompting strategies for more complex reasoning.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/meta_agent.py" target="_blank" rel="noopener noreferrer">`meta_agent`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/abstraction_agent.py" target="_blank" rel="noopener noreferrer">`abstraction_agent`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/details_agent.py" target="_blank" rel="noopener noreferrer">`details_agent`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/planner_agent.py" target="_blank" rel="noopener noreferrer">`planner_agent`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/validator_agent.py" target="_blank" rel="noopener noreferrer">`validator_agent`</a>
+
+
+### Prompt Factory
+Responsible for dynamically constructing and managing prompts for the LLM, supporting both "bidirectional" and "unidirectional" communication patterns, enabling sophisticated reasoning and interaction strategies for the AI Agents.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/prompts/prompt_factory.py#L37-L53" target="_blank" rel="noopener noreferrer">`prompt_factory`:37-53</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/prompts/claude_prompts_bidirectional.py" target="_blank" rel="noopener noreferrer">`claude_prompts_bidirectional`</a>
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/prompts/claude_prompts_unidirectional.py" target="_blank" rel="noopener noreferrer">`claude_prompts_unidirectional`</a>
+
+
+### Agent Response Processor
+Handles the parsing, validation, and structuring of responses received from the LLM, ensuring that the output is correctly interpreted and formatted for subsequent processing by the Orchestration Engine and other AI Agents.
+
+
+**Related Classes/Methods**:
+
+- <a href="https://github.com/CodeBoarding/CodeBoarding/blob/mainagents/agent_responses.py" target="_blank" rel="noopener noreferrer">`agent_responses`</a>
 
 
 ### Unclassified
