@@ -47,7 +47,8 @@
       "assigned_files": [
         "diagram_analysis/__init__.py",
         "diagram_analysis/analysis_json.py",
-        "diagram_analysis/diagram_generator.py"
+        "diagram_analysis/diagram_generator.py",
+        "diagram_analysis/version.py"
       ],
       "can_expand": true
     },
@@ -313,9 +314,15 @@
         "utils.py",
         "setup.py",
         "demo.py",
-        "logging_config.py",
-        "diagram_analysis/version.py"
+        "logging_config.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     },
     {
